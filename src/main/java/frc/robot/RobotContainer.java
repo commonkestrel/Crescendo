@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Swerve;
 
 public class RobotContainer {
     private final CommandXboxController m_controller = new CommandXboxController(IOConstants.controllerPort);
 
     private static final Swerve m_drive = Swerve.getInstance();
+    private static final Conveyor m_conveyor = Conveyor.getInstance();
 
     public RobotContainer() {
         configureBindings();
@@ -32,9 +34,19 @@ public class RobotContainer {
                 true, true
             );
         }, m_drive));
+
+        m_conveyor.setDefaultCommand(Commands.run(() -> {
+            if (m_conveyor.noteDetected()) {
+                m_conveyor.stop();
+            } else {
+                m_conveyor.setSpeed(0.8);
+            }
+        }, m_conveyor));
     }
 
-    private void configureBindings() {}
+    private void configureBindings() {
+        m_controller.rightBumper().onTrue(m_conveyor.advance());
+    }
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");

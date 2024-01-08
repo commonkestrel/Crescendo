@@ -147,6 +147,11 @@ public final class Constants {
         public static final double maxSpeed = 4.5; // TODO: Find this
     }
 
+    public static final class ConveyorConstants {
+        public static final double distanceFactor = 1.0; // TODO: Find this
+        public static final int detectorChannel = 0;
+    }
+
     /** Various motor constants taken from datasheets. */
     public static final class MotorConstants {
         /** Free speed of a NEO motor (in RPM). */
@@ -184,5 +189,11 @@ public final class Constants {
         public static final int dRotId = 8;
 
         public static final int pdhId = 10;
+
+        public static final int conveyorId = 11;
+    }
+
+    public static final class GameConstants {
+        public static final double noteDiameter = 14.0;
     }
 }
