@@ -150,6 +150,10 @@ public final class Constants {
     public static final class ConveyorConstants {
         public static final double distanceFactor = 1.0; // TODO: Find this
         public static final int detectorChannel = 0;
+
+        public static final double driveKP = 1.0;
+        public static final double driveKI = 0.0;
+        public static final double driveKD = 0.0;
     }
 
     /** Various motor constants taken from datasheets. */

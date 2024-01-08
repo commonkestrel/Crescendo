@@ -23,9 +23,9 @@ public class Conveyor extends SubsystemBase {
                 new PIDSpark(
                     IOConstants.conveyorId,
                     MotorType.kBrushless,
-                    1.0,
-                    0.0,
-                    0.0
+                    ConveyorConstants.driveKP,
+                    ConveyorConstants.driveKI,
+                    ConveyorConstants.driveKD
                 ),
                 ConveyorConstants.detectorChannel
             );
