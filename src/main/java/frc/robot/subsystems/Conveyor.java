@@ -62,7 +62,7 @@ public class Conveyor extends SubsystemBase {
         return !m_detector.get();
     }
 
-    public Command waitUntilNote() {
+    public Command waitForNote() {
         Command wait = Commands
             .runOnce(() -> m_drive.set(0.8))
             .andThen(
