@@ -1,13 +1,13 @@
 package wildlib;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 
 /** Utility class for a Spark Max PID controller */
-public class PIDSparkMax extends CANSparkMax {
+public class PIDSpark extends CANSparkBase {
     private static double kP = 0.2; 
     private static double kI = 1e-4;
     private static double kD = 0; 
@@ -26,7 +26,7 @@ public class PIDSparkMax extends CANSparkMax {
         kReverse,
     }
 
-    /** Creates a new {@link PIDSparkMax} with default {@code kP}, {@code kI}, {@code kD} values.
+    /** Creates a new {@link PIDSpark} with default {@code kP}, {@code kI}, {@code kD} values.
      * <br><br>
      * Default values are:<br><br>
      * <strong><code>kP:</code></strong> <code>0.2</code> <br><br>
@@ -38,11 +38,11 @@ public class PIDSparkMax extends CANSparkMax {
      *             Brushless motor wires must be connected to their matching colors and the hall sensor must be plugged in. 
      *             Brushed motors must be connected to the Red and Black terminals only.
      */
-    public PIDSparkMax(int deviceId, MotorType type) {
+    public PIDSpark(int deviceId, MotorType type) {
         this(deviceId, type, kP, kI, kD);
     }
 
-    /** Creates a new {@link PIDSparkMax} with specified {@code kP}, {@code kI}, {@code kD} values.
+    /** Creates a new {@link PIDSpark} with specified {@code kP}, {@code kI}, {@code kD} values.
      * 
      * @param deviceId The motor CAN Id
      * @param type The motor type connected to the controller. 
@@ -52,7 +52,7 @@ public class PIDSparkMax extends CANSparkMax {
      * @param integral Sets the {@code kI} of the PID.
      * @param derivative Sets the {@code kD} of the PID.
      */
-    public PIDSparkMax(int deviceId, MotorType type, double proportional, double integral, double derivative) {
+    public PIDSpark(int deviceId, MotorType type, double proportional, double integral, double derivative) {
         super(deviceId, type);
         m_encoder = super.getEncoder();
         m_controller = super.getPIDController();
