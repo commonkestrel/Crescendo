@@ -56,10 +56,23 @@ public class Conveyor extends SubsystemBase {
 
     public void setSpeed(double speed) {
         m_drive.set(speed);
-    } 
+    }
 
     public boolean noteDetected() {
         return !m_detector.get();
+    }
+
+    public Command waitUntilNote() {
+        Command wait = Commands
+            .runOnce(() -> m_drive.set(0.8))
+            .andThen(
+                Commands.waitUntil(this::noteDetected),
+                Commands.runOnce(this::stop)
+            );
+            
+        wait.addRequirements(this);
+
+        return wait;
     }
 
     @Override
