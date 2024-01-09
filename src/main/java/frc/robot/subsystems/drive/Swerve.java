@@ -1,7 +1,8 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.drive;
 
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.subsystems.MAXSwerveModule.ModuleLabel;
+import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
+
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.IOConstants;
 
