@@ -115,10 +115,10 @@ public final class Constants {
         /** Angular velocity factor for the turn motor (in rads/s). */
         public static final double turnEncoderVelocityFactor = turnEncoderPositionFactor / 60;
 
-        /** Minimum value of the absolute turn encoder. */
+        /** Minimum value of the absolute turn encoder in radians. */
         public static final double turnEncoderPositionPIDMinInput = 0;
-        /** Maximum value of the absolute turn encoder. */
-        public static final double turnEncoderPositionPIDMaxInput = turnEncoderPositionFactor; // radians (rad)
+        /** Maximum value of the absolute turn encoder in radians. */
+        public static final double turnEncoderPositionPIDMaxInput = turnEncoderPositionFactor;
 
         public static final double driveKP = 0.05;
         public static final double driveKI = 0;
@@ -147,10 +147,12 @@ public final class Constants {
         public static final double maxSpeed = 4.5; // TODO: Find this
     }
 
+    /** Constants used for the  */
     public static final class ConveyorConstants {
         public static final double distanceFactor = 1.0; // TODO: Find this
         public static final int detectorChannel = 0;
 
+        // TODO: Tune this
         public static final double driveKP = 1.0;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
