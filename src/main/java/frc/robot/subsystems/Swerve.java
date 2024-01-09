@@ -2,17 +2,17 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.MAXSwerveModule.ModuleLabel;
-import wildlib.utils.SwerveUtils;
-
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.IOConstants;
 
+import wildlib.utils.SwerveUtils;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.wpilibj.I2C;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -89,8 +89,6 @@ public class Swerve extends SubsystemBase {
      * Track and base dimensions are measured from the centers of each wheel.
      */
     private Swerve() {
-        SmartDashboard.putData("Field", m_field);
-
         base = DriveConstants.wheelBase;
         track = DriveConstants.trackWidth;
 
@@ -125,6 +123,9 @@ public class Swerve extends SubsystemBase {
             DriveConstants.pathFollowerConfig,
             this
         );
+
+        PathPlannerLogging.setLogActivePathCallback((poses) -> m_field.getObject("path").setPoses(poses));
+        SmartDashboard.putData("Field", m_field);
     }
 
     /** Updates the odometry every event cycle */
