@@ -78,5 +78,6 @@ public class Conveyor extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Conveyor Distance", m_drive.getPosition());
+        SmartDashboard.putBoolean("Note Ready", noteDetected());
     }
 }
