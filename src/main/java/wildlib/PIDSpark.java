@@ -6,7 +6,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 
-/** Utility class for a Spark Max PID controller */
+/** 
+ * Utility class for a Spark Max PID controller
+ * 
+ * @author Chris Ibok
+ * @author Jett Bergthold
+ */
 public class PIDSpark extends CANSparkBase {
     private static double kP = 0.2; 
     private static double kI = 1e-4;

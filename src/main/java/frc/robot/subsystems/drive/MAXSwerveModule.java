@@ -21,6 +21,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
  * a NEO for a driving, a NEO 550 for turning, Spark
  * MAXs for control, and Through Bore Absolute Encoder
  * through the wheels' axis of yaw rotation.
+ * 
+ * @author Jett Bergthold
  */
 public class MAXSwerveModule implements Sendable {
     public enum ModuleLabel {

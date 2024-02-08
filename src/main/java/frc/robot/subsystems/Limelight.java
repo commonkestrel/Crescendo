@@ -5,6 +5,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,7 +27,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Limelight {
+/**
+ * A utility class for interfacing with the Limelight on our robot
+ * 
+ * This is just a modified version of Limelight to be subsystem oriented.
+ * 
+ * @author Limelight Team
+ * @author Jett Bergthold
+ */
+public class Limelight extends SubsystemBase {
     private static Limelight m_instance;
 
     public static Limelight getInstance() {

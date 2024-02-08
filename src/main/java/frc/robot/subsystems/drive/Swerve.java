@@ -1,7 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
