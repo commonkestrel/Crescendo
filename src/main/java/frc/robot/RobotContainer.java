@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
-import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drive.Swerve;
 
@@ -20,7 +20,7 @@ public class RobotContainer {
     private final CommandXboxController m_controller = new CommandXboxController(IOConstants.controllerPort);
 
     private static final Swerve m_swerve = Swerve.getInstance();
-    private static final Conveyor m_conveyor = Conveyor.getInstance();
+    private static final Intake m_intake = Intake.getInstance();
     private static final Limelight m_limelight = Limelight.getInstance();
 
     public RobotContainer() {
@@ -40,19 +40,19 @@ public class RobotContainer {
             );
         }, m_swerve));
 
-        m_conveyor.setDefaultCommand(Commands.run(() -> {
-            if (m_conveyor.noteDetected()) {
-                m_conveyor.stop();
+        m_intake.setDefaultCommand(Commands.run(() -> {
+            if (m_intake.noteDetected()) {
+                m_intake.stop();
             } else {
-                m_conveyor.setSpeed(0.8);
+                m_intake.setSpeed(0.8);
             }
-        }, m_conveyor));
+        }, m_intake));
     }
 
     private void configureBindings() {
-        m_controller.rightBumper().onTrue(m_conveyor.advance());
+        m_controller.rightBumper().onTrue(m_intake.advance());
 
-        NamedCommands.registerCommand("score", m_conveyor.waitForNote().andThen(m_conveyor.advance()));
+        NamedCommands.registerCommand("score", m_intake.waitForNote().andThen(m_intake.advance()));
     }
 
     public Command getAutonomousCommand() {
