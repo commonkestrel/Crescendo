@@ -148,9 +148,10 @@ public final class Constants {
     }
 
     /** Constants used for the  */
-    public static final class ConveyorConstants {
-        public static final double distanceFactor = 1.0; // TODO: Find this
+    public static final class IntakeConstants {
+        public static final double distanceFactor = 1.0; // TODO: Find this (gear ratio * wheel radius * pi)
         public static final int detectorChannel = 0;
+        public static final double intakeSpeed = 1.0;
 
         // TODO: Tune this
         public static final double driveKP = 1.0;
