@@ -27,13 +27,13 @@ public class Intake extends SubsystemBase {
         if (m_instance == null) {
             m_instance = new Intake(
                 new PIDSpark(
-                    IOConstants.conveyorId,
+                    IOConstants.intakeId,
                     MotorType.kBrushless,
                     IntakeConstants.driveKP,
                     IntakeConstants.driveKI,
                     IntakeConstants.driveKD
                 ),
-                IntakeConstants.detectorChannel
+                IOConstants.detectorChannel
             );
         }
 
