@@ -124,6 +124,7 @@ public class Swerve extends SubsystemBase {
             this::getSpeeds,
             this::driveRelative,
             DriveConstants.pathFollowerConfig,
+            () -> true,
             this
         );
 
