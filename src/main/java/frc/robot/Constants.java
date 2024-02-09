@@ -150,10 +150,18 @@ public final class Constants {
     /** Constants used for the  */
     public static final class IntakeConstants {
         public static final double distanceFactor = 1.0; // TODO: Find this (gear ratio * wheel radius * pi)
-        public static final int detectorChannel = 0;
-        public static final double intakeSpeed = 1.0;
 
-        // TODO: Tune this
+        // TODO: Tune intake PID
+        public static final double driveKP = 1.0;
+        public static final double driveKI = 0.0;
+        public static final double driveKD = 0.0;
+    }
+
+    public static final class ShooterConstants {
+        // TODO: Tune target shooter velocity
+        public static final double targetVelocity = 1.0;
+
+        // TODO: Tune shooter PID
         public static final double driveKP = 1.0;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
@@ -197,7 +205,10 @@ public final class Constants {
 
         public static final int pdhId = 10;
 
-        public static final int conveyorId = 11;
+        public static final int intakeId = 11;
+        public static final int shooterId = 12;
+
+        public static final int detectorChannel = 0;
     }
 
     public static final class GameConstants {
