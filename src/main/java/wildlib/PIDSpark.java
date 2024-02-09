@@ -112,13 +112,23 @@ public class PIDSpark extends CANSparkBase {
     }
 
     /** 
-     * Overwrites the current position of the motor encoder.
+     * Sets the controller reference position.
      * 
      * @param position The reference position to use in the PID.
      * @return {@link REVLibError#kOk} if successful.
      */
     public REVLibError setTargetPostion(double position) {
         return m_controller.setReference(position, ControlType.kPosition);
+    }
+
+    /**
+     * Sets the controller reference velocity.
+     *  
+     * @param velocity The reference velocity to use in the PID.
+     * @return {@link REVLibError#kOk} if successful.
+     */
+    public REVLibError setTargetVelocity(double velocity) {
+        return m_controller.setReference(velocity, ControlType.kVelocity);
     }
 
     /**
