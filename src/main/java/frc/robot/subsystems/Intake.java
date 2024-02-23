@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IOConstants;
 import wildlib.NotYetImplemented;
@@ -45,20 +47,45 @@ public class Intake extends SubsystemBase {
         m_detector = new DigitalInput(detectorChannel);
 
         m_drive.setPositionConversionFactor(IntakeConstants.distanceFactor);
+        m_drive.setIdleMode(IdleMode.kBrake);
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(Commands.run(() -> {
-            throw new NotYetImplemented();
-        }));
+        setDefaultCommand(Commands.either(
+            Commands.run(m_drive::stopMotor),
+            Commands.run(() -> m_drive.setTargetVelocity(IntakeConstants.idleTarget)),
+            m_detector::get
+        ));    
     }
 
-    public Command advance() {
-        throw new NotYetImplemented();
+    public Command advanceAmp() {
+        Command advance = waitForNote()
+            .andThen(
+                Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.ampTarget)),
+                // TODO: Tune the wait time
+                Commands.waitSeconds(3.0),
+                Commands.runOnce(m_drive::stopMotor)
+            );
+        advance.addRequirements(this);
+        
+        return advance;
+    }
+
+    public Command advanceSpeaker() {        
+        Command advance = waitForNote()
+            .andThen(
+                Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.speakerTarget)),
+                // TODO: Tune the wait time
+                Commands.waitSeconds(3.0),
+                Commands.runOnce(m_drive::stopMotor)
+            );
+        advance.addRequirements(this);
+        
+        return advance;
     }
 
     public void stop() {
-        throw new NotYetImplemented();
+        m_drive.stopMotor();
     }
     
     /**
@@ -67,20 +94,30 @@ public class Intake extends SubsystemBase {
      * @param speed The speed value to set. Should be between -1.0 and 1.0.
      */
     public void setSpeed(double speed) {
-        throw new NotYetImplemented();
+        m_drive.set(speed);
     }
 
     public boolean noteDetected() {
-        throw new NotYetImplemented();
+        return m_detector.get();
     }
 
     public Command waitForNote() {
-        throw new NotYetImplemented();
+        if (m_detector.get()) {
+            return Commands.none();
+        } else {
+            Command waitFor = Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.idleTarget))
+                .andThen(
+                    Commands.waitUntil(m_detector::get),
+                    Commands.runOnce(m_drive::stopMotor)
+                );
+            waitFor.addRequirements(this);
+            return waitFor;
+        }
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake Rotations", m_drive.getPosition());
+        SmartDashboard.putNumber("Intake Velocity", m_drive.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
     }
 }
