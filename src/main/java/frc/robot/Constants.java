@@ -46,10 +46,8 @@ public final class Constants {
         public static final double maxAcceleration = 4.0; // TODO: Actually find this.
 
         /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
-        public static final double directionSlewRate = Math.PI / 2;
-        /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
         public static final double magnitudeSlewRate = 1.0;
-        /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+        /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
         public static final double rotationalSlewRate = 2.0;
 
         /** Used to invert the gyroscope direction. */
@@ -140,7 +138,7 @@ public final class Constants {
         public static final IdleMode turnMotorIdleMode = IdleMode.kBrake;
 
         /** Drive motor smart current limit (in Amps). */
-        public static final int driveMotorCurrentLimit = 50; // amps (A)
+        public static final int driveMotorCurrentLimit = 60; // amps (A)
         /** Rotation motor smart current limit (in Amps).  */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
@@ -149,14 +147,14 @@ public final class Constants {
 
     /** Constants used for the  */
     public static final class IntakeConstants {
-        public static final double distanceFactor = 1.0; // TODO: Find this (gear ratio * wheel radius * pi)
+        public static final double distanceFactor = 0.375 * Math.PI; // TODO: Find this (gear ratio * wheel radius * pi)
         // TODO: Tune target intake velocity for speaker
         /** Target intake velocity for shooting into the Speaker */
-        public static final double speakerTarget = 0.80;
+        public static final double speakerTarget = -4100;
         // TODO: Tune target intake velocity for amp
         /** Target intake velocity for shooting into the Amp */
-        public static final double ampTarget = 0.40;
-        public static final double idleTarget = 0.35;
+        public static final double ampTarget = -2000;
+        public static final double idleTarget = -1800;
 
         // TODO: Tune intake PID
         public static final double driveKP = 1.0;
@@ -166,9 +164,9 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = 0.65;
+        public static final double speakerTarget = -3600;
         // TODO: Tune target shooter velocity for amp
-        public static final double ampTarget = 0.25;
+        public static final double ampTarget = -1700;
         // 
         public static final double idleTarget = ampTarget;
 
@@ -199,10 +197,6 @@ public final class Constants {
 
         public static final boolean rotInverted = true;
 
-        public static final double transDeadband = 0.05;
-
-        public static final double rotDeadband = 0.05;
-
         //---------- CAN IDs ------------//
         public static final int aPowerId = 1;
         public static final int aRotId = 2;
@@ -229,5 +223,71 @@ public final class Constants {
 
     public static final class GameConstants {
         public static final double noteDiameter = 14.0;
+    }
+
+    public static final class DriverConstants {
+        public static final class Default {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
+
+        public static final class Jett {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
+
+        public static final class Chris {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
+
+        public static final class Parker {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
     }
 }

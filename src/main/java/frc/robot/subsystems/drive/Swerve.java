@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drive;
 
+import frc.robot.CurrentDriver;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
@@ -78,7 +79,7 @@ public class Swerve extends SubsystemBase {
      * Motors and dimensions are placed like so on the diagram:
      * <pre>
      * 
-     * &ensp;   Track
+     * &ensp;    Track
      *  ┌─────────┐
      * ┌───────────┐
      * │A         B│  ─┐
@@ -194,7 +195,7 @@ public class Swerve extends SubsystemBase {
             double inputTranslationMag = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
 
             // Calculate the direction slew rate based on an estimate of the lateral acceleration
-            double directionSlewRate = currentTranslationMag != 0.0? Math.abs(DriveConstants.directionSlewRate / currentTranslationMag) : 500.0;
+            double directionSlewRate = currentTranslationMag != 0.0? Math.abs(CurrentDriver.getDirSlewRate() / currentTranslationMag) : 500.0;
 
             double currentTime = WPIUtilJNI.now() * 1e-6;
             double elapsedTime = currentTime - prevTime;
