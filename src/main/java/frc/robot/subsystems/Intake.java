@@ -8,10 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IOConstants;
-import wildlib.NotYetImplemented;
 import wildlib.PIDSpark;
 
 /** 
@@ -59,12 +57,14 @@ public class Intake extends SubsystemBase {
     }
 
     public Command advanceAmp() {
-        Command advance = waitForNote()
+        Command advance = waitForNote(0.5)
             .andThen(
-                Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.ampTarget)),
-                // TODO: Tune the wait time
-                Commands.waitSeconds(3.0),
-                Commands.runOnce(m_drive::stopMotor)
+                Commands.either(Commands.sequence(
+                    Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.ampTarget)),
+                    // TODO: Tune the wait time
+                    Commands.waitSeconds(1.0),
+                    Commands.runOnce(m_drive::stopMotor)
+                ), Commands.none(), this::noteDetected)
             );
         advance.addRequirements(this);
         
@@ -72,12 +72,14 @@ public class Intake extends SubsystemBase {
     }
 
     public Command advanceSpeaker() {        
-        Command advance = waitForNote()
+        Command advance = waitForNote(0.5)
             .andThen(
-                Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.speakerTarget)),
-                // TODO: Tune the wait time
-                Commands.waitSeconds(3.0),
-                Commands.runOnce(m_drive::stopMotor)
+                Commands.either(Commands.sequence(
+                    Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.speakerTarget)),
+                    // TODO: Tune the wait time
+                    Commands.waitSeconds(1.0),
+                    Commands.runOnce(m_drive::stopMotor)
+                ), Commands.none(), this::noteDetected)
             );
         advance.addRequirements(this);
         
@@ -101,13 +103,19 @@ public class Intake extends SubsystemBase {
         return m_detector.get();
     }
 
-    public Command waitForNote() {
+    /**
+     * Waits for a Note to be detected in the conveyor.
+     * 
+     * @param timeout How long to wait before giving up.
+     * @return A command that waits for a Note
+     */
+    public Command waitForNote(double timeout) {
         if (m_detector.get()) {
             return Commands.none();
         } else {
             Command waitFor = Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.idleTarget))
                 .andThen(
-                    Commands.waitUntil(m_detector::get),
+                    Commands.waitUntil(m_detector::get).withTimeout(timeout),
                     Commands.runOnce(m_drive::stopMotor)
                 );
             waitFor.addRequirements(this);
