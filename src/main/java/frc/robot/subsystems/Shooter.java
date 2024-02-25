@@ -43,22 +43,33 @@ public class Shooter extends SubsystemBase {
         }, this));
     }
 
+    /**
+     * Waits for the wheels to ramp to shoot for Amp
+     */
     public Command rampAmp() {
         Command shoot = Commands.runOnce(() -> m_drive.setTargetVelocity(ShooterConstants.ampTarget))
-            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_drive.getVelocity(), ShooterConstants.ampTarget, 0.05)));
+            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_drive.getVelocity(), ShooterConstants.ampTarget, 10)));
         shoot.addRequirements(this);
 
         return shoot;
     }
 
+    /**
+     * Waits for the wheels to ramp to shoot for Speaker
+     */
     public Command rampSpeaker() {
         Command shoot = Commands.runOnce(() -> m_drive.setTargetVelocity(ShooterConstants.speakerTarget))
-            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_drive.getVelocity(), ShooterConstants.speakerTarget, 0.05)));
+            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_drive.getVelocity(), ShooterConstants.speakerTarget, 10)));
         shoot.addRequirements(this);
 
         return shoot;
     }
 
+    /**
+     * Waits for the note to be shot.
+     * 
+     * @return A command that waits for the note to shoot that requires this instance.
+     */
     public Command waitForShoot() {
         Command waitForShoot = Commands.waitSeconds(ShooterConstants.shootTime);
         waitForShoot.addRequirements(this);
