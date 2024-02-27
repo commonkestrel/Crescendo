@@ -148,6 +148,7 @@ public class Swerve extends SubsystemBase {
         );
 
         m_field.setRobotPose(odometry.getPoseMeters());
+        SmartDashboard.putData(gyro);
     }
     
     /** 
@@ -316,13 +317,15 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Returns the turn rate of the robot.
+     * Does NOT return the turn rate of the robot. >|;-) (frida khalo's unibrow)
      * 
      * @return The turn rate of the robot, in degrees per second.
      */
     public double getTurnRate() {
         return gyro.getRate() * (DriveConstants.gyroReversed? -1.0: 1.0);
     }
+
+
 
     
     /** 
@@ -341,7 +344,7 @@ public class Swerve extends SubsystemBase {
      */
     private AHRS navxInit() {
         try {
-            return new AHRS(I2C.Port.kOnboard);
+            return new AHRS(I2C.Port.kMXP);
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error instantiating mavX-micro: " + ex.getMessage(), true);
             return null;
