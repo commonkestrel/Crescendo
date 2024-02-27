@@ -147,14 +147,14 @@ public final class Constants {
 
     /** Constants used for the  */
     public static final class IntakeConstants {
-        public static final double distanceFactor = 0.375 * Math.PI; // TODO: Find this (gear ratio * wheel radius * pi)
+        public static final double distanceFactor = 1.0/4.0 * 1.5 * Math.PI; // gear ratio * wheel radius * pi
         // TODO: Tune target intake velocity for speaker
         /** Target intake velocity for shooting into the Speaker */
-        public static final double speakerTarget = -4100;
+        public static final double speakerTarget = 4100;
         // TODO: Tune target intake velocity for amp
         /** Target intake velocity for shooting into the Amp */
-        public static final double ampTarget = -2000;
-        public static final double idleTarget = -1800;
+        public static final double ampTarget = 2000;
+        public static final double idleTarget = 1800;
 
         // TODO: Tune intake PID
         public static final double driveKP = 1.0;
@@ -164,11 +164,13 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = -3600;
+        public static final double speakerTarget = 3600;
         // TODO: Tune target shooter velocity for amp
-        public static final double ampTarget = -1700;
+        public static final double ampTarget = 1700;
         // 
-        public static final double idleTarget = ampTarget;
+        public static final double idleTarget = 1000;
+        //
+        public static final double intakeTarget = -1000;
 
         public static final double shootTime = 5.0;
 
@@ -176,6 +178,10 @@ public final class Constants {
         public static final double driveKP = 1.0;
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
+    }
+
+    public static final class ClimberConstants {
+        public static final double extendedPosition = 1.0;
     }
 
     /** Various motor constants taken from datasheets. */
@@ -191,7 +197,8 @@ public final class Constants {
     }
 
     public static final class IOConstants {
-        public static final int controllerPort = 0;
+        public static final int driveControllerPort = 0;
+        public static final int mechControllerPort = 0;
 
         public static final boolean xyInverted = true;
 
@@ -218,7 +225,7 @@ public final class Constants {
         public static final int climbLeftId = 13;
         public static final int climbRightId = 14;
 
-        public static final int detectorChannel = 0;
+        public static final int detectorChannel = 3;
     }
 
     public static final class GameConstants {
