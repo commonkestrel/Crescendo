@@ -14,7 +14,7 @@ public final class CurrentDriver {
 
     private static final SendableChooser<Driver> m_driver = new SendableChooser<>();
 
-    public void initDriverStation() {
+    public static void initDriverStation() {
         m_driver.setDefaultOption("Default", Driver.Default);
         m_driver.addOption("Jett", Driver.Jett);
         m_driver.addOption("Chris", Driver.Chris);
@@ -112,7 +112,7 @@ public final class CurrentDriver {
     //         return DriverConstants.Default.magSlewRate;
     //     }
     // }
-    
+
     // public static double getRotSlewRate() {
     //     switch (m_driver.getSelected()) {
     //     case Default:
