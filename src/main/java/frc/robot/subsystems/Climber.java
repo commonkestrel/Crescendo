@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IOConstants;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import wildlib.NotYetImplemented;
 import wildlib.PIDSpark;
@@ -28,6 +30,14 @@ public class Climber extends SubsystemBase {
     private Climber(PIDSpark leftMotor, PIDSpark rightMotor) {
         m_left = leftMotor;
         m_right = rightMotor;
+    }
+
+    // TODO: Create a command that fully extends the arms
+    public Command release() {
+        Command release = Commands.runOnce(() -> {
+            m_left.setTargetPostion(ClimberConstants.extendedPosition);
+        });
+        throw new NotYetImplemented();
     }
 
     // TODO: Create a command that allows us to climb and hang
