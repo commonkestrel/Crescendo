@@ -10,9 +10,12 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
-import frc.robot.subsystems.Climber;
+import frc.robot.commands.IntakeIdleCommand;
+import frc.robot.commands.IntakeSource;
+import frc.robot.commands.ShootAmp;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -20,11 +23,12 @@ import frc.robot.subsystems.drive.Swerve;
 import wildlib.Toggle;
 
 public class RobotContainer {
-    private final CommandXboxController m_controller = new CommandXboxController(IOConstants.controllerPort);
+    private final CommandXboxController m_driveController = new CommandXboxController(IOConstants.driveControllerPort);
+    private final CommandXboxController m_mechController = new CommandXboxController(IOConstants.mechControllerPort);
 
     private static final Swerve m_swerve = Swerve.getInstance();
-    // private static final Intake m_intake = Intake.getInstance();
-    // private static final Shooter m_shooter = Shooter.getInstance();
+    private static final Intake m_intake = Intake.getInstance();
+    private static final Shooter m_shooter = Shooter.getInstance();
     private static final Limelight m_limelight = Limelight.getInstance();
     // Motors not attached yet
     // private static final Climber m_climber = Climber.getInstance();
@@ -32,14 +36,15 @@ public class RobotContainer {
     private static Toggle m_shootingSpeaker = new Toggle(false);
 
     public RobotContainer() {
+        configureSmartDashboard();
         configureDefaults();
-        // configureBindings();
+        configureBindings();
 
         m_swerve.setDefaultCommand(Commands.run(() -> {
-            double forward = MathUtil.applyDeadband(m_controller.getLeftY(), CurrentDriver.getTransDeadband());
-            double strafe = MathUtil.applyDeadband(m_controller.getLeftX(), CurrentDriver.getTransDeadband());
-            double rotation = MathUtil.applyDeadband(m_controller.getRightX(), CurrentDriver.getRotDeadband());
-            double speed = m_controller.getRightTriggerAxis();
+            double forward = MathUtil.applyDeadband(m_driveController.getLeftY(), CurrentDriver.getTransDeadband());
+            double strafe = MathUtil.applyDeadband(m_driveController.getLeftX(), CurrentDriver.getTransDeadband());
+            double rotation = MathUtil.applyDeadband(m_driveController.getRightX(), CurrentDriver.getRotDeadband());
+            double speed = m_driveController.getRightTriggerAxis();
 
             m_swerve.drive(
                 forward * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
@@ -50,35 +55,40 @@ public class RobotContainer {
         }, m_swerve));
     }
 
-    private void configureDefaults() {
-        // m_intake.initDefaultCommand();
-        // m_shooter.initDefaultCommand();
+    private void configureSmartDashboard() {
+        CurrentDriver.initDriverStation();
     }
 
-    // private void configureBindings() {
-    //     m_controller.rightBumper().onTrue(Commands.either(shootAmp(), shootSpeaker(), m_shootingSpeaker));
-    //     m_controller.a().onTrue(m_shootingSpeaker.setFalse());
-    //     m_controller.y().onTrue(m_shootingSpeaker.setTrue());
+    private void configureDefaults() {
+        m_intake.setDefaultCommand(new IntakeIdleCommand(m_intake));
+        m_shooter.initDefaultCommand();
+    }
 
-    //     NamedCommands.registerCommand("score", shootAmp());
-    // }
+    private void configureBindings() {
+        m_mechController.rightBumper().whileTrue(Commands.either(shootAmp(), shootSpeaker(), m_shootingSpeaker));
 
-    // private Command shootAmp() {
-    //     return Commands.sequence(
-    //         m_shooter.rampAmp(), 
-    //         m_intake.advanceAmp().alongWith(m_shooter.waitForShoot())
-    //     );
-    // }
+        m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
+        m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
+        m_mechController.povDown().whileTrue(new IntakeSource(m_intake, m_shooter));
 
-    // private Command shootSpeaker() {
-    //     return Commands.sequence(
-    //         m_shooter.rampSpeaker(), 
-    //         m_intake.advanceSpeaker().alongWith(m_shooter.waitForShoot())
-    //     );
-    // }
+        m_driveController.x().onTrue(Commands.run(m_swerve::crossWheels));
+
+        NamedCommands.registerCommand("score", shootAmp());
+    }
+
+    private Command shootAmp() {
+        return new ShootAmp(m_intake, m_shooter);
+    }
+
+    private Command shootSpeaker() {
+        return Commands.sequence(
+            m_shooter.rampSpeaker(), 
+            m_intake.advanceSpeaker().alongWith(m_shooter.waitForShoot())
+        );
+    }
 
     public Command getAutonomousCommand() {
         return new PathPlannerAuto("Two-piece Auto");
     }
 }
-// :)
+// :)boombayah
