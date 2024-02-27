@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,12 +11,11 @@ import frc.robot.Constants.ShooterConstants;
 import wildlib.PIDSpark;
 import wildlib.utils.MathUtils;
 
-// TODO: Construct skeleton
 /**
  * A subsystem representing the shooter on our robot
  */
 public class Shooter extends SubsystemBase {
-    private final PIDSpark m_drive;
+    private final PIDSpark m_motor;
 
     private static Shooter m_instance;
 
@@ -34,21 +34,30 @@ public class Shooter extends SubsystemBase {
     }
 
     private Shooter(PIDSpark drive) {
-        m_drive = drive;
+        m_motor = drive;
+        m_motor.setInverted(true);
     }
 
     public void initDefaultCommand() {
         setDefaultCommand(Commands.run(() -> {
-            m_drive.setTargetVelocity(ShooterConstants.idleTarget);
+            m_motor.set(0);
         }, this));
+    }
+
+    public REVLibError setTargetVelocity(double velocity) {
+        return m_motor.setTargetPostion(velocity);
+    }
+
+    public double getVelocity() {
+        return m_motor.getVelocity();
     }
 
     /**
      * Waits for the wheels to ramp to shoot for Amp
      */
     public Command rampAmp() {
-        Command shoot = Commands.runOnce(() -> m_drive.setTargetVelocity(ShooterConstants.ampTarget))
-            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_drive.getVelocity(), ShooterConstants.ampTarget, 10)));
+        Command shoot = Commands.runOnce(() -> m_motor.setTargetVelocity(ShooterConstants.ampTarget))
+            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_motor.getVelocity(), ShooterConstants.ampTarget, 10)));
         shoot.addRequirements(this);
 
         return shoot;
@@ -58,8 +67,8 @@ public class Shooter extends SubsystemBase {
      * Waits for the wheels to ramp to shoot for Speaker
      */
     public Command rampSpeaker() {
-        Command shoot = Commands.runOnce(() -> m_drive.setTargetVelocity(ShooterConstants.speakerTarget))
-            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_drive.getVelocity(), ShooterConstants.speakerTarget, 10)));
+        Command shoot = Commands.runOnce(() -> m_motor.setTargetVelocity(ShooterConstants.speakerTarget))
+            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_motor.getVelocity(), ShooterConstants.speakerTarget, 10)));
         shoot.addRequirements(this);
 
         return shoot;

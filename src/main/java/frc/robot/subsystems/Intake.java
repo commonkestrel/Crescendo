@@ -1,9 +1,10 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,8 +19,8 @@ import wildlib.PIDSpark;
  * @author Jett Bergthold
  */
 public class Intake extends SubsystemBase {
-    private final PIDSpark m_drive;
-    private final DigitalInput m_detector;
+    private final PIDSpark m_motor;
+    private final AnalogInput m_detector;
 
     private static Intake m_instance;
 
@@ -41,29 +42,37 @@ public class Intake extends SubsystemBase {
     }
 
     private Intake(PIDSpark drive, int detectorChannel) {
-        m_drive = drive;
-        m_detector = new DigitalInput(detectorChannel);
+        m_motor = drive;
+        m_detector = new AnalogInput(detectorChannel);
 
-        m_drive.setPositionConversionFactor(IntakeConstants.distanceFactor);
-        m_drive.setIdleMode(IdleMode.kBrake);
+        m_motor.setPositionConversionFactor(IntakeConstants.distanceFactor);
+        m_motor.setIdleMode(IdleMode.kBrake);
+        m_motor.setInverted(true);
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(Commands.either(
-            Commands.run(m_drive::stopMotor),
-            Commands.run(() -> m_drive.setTargetVelocity(IntakeConstants.idleTarget)),
-            m_detector::get
-        ));    
+        Command defaultCommand = Commands.either(
+            Commands.runOnce(m_motor::stopMotor),
+            Commands.runOnce(() -> m_motor.set(-0.3)),
+            this::noteDetected
+        );
+        defaultCommand.addRequirements(this);
+
+        setDefaultCommand(defaultCommand);    
+    }
+
+    public REVLibError setTargetVelocity(double velocity) {
+        return m_motor.setTargetVelocity(velocity);
     }
 
     public Command advanceAmp() {
         Command advance = waitForNote(0.5)
             .andThen(
                 Commands.either(Commands.sequence(
-                    Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.ampTarget)),
+                    Commands.runOnce(() -> m_motor.setTargetVelocity(IntakeConstants.ampTarget)),
                     // TODO: Tune the wait time
                     Commands.waitSeconds(1.0),
-                    Commands.runOnce(m_drive::stopMotor)
+                    Commands.runOnce(m_motor::stopMotor)
                 ), Commands.none(), this::noteDetected)
             );
         advance.addRequirements(this);
@@ -75,10 +84,10 @@ public class Intake extends SubsystemBase {
         Command advance = waitForNote(0.5)
             .andThen(
                 Commands.either(Commands.sequence(
-                    Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.speakerTarget)),
+                    Commands.runOnce(() -> m_motor.setTargetVelocity(IntakeConstants.speakerTarget)),
                     // TODO: Tune the wait time
                     Commands.waitSeconds(1.0),
-                    Commands.runOnce(m_drive::stopMotor)
+                    Commands.runOnce(m_motor::stopMotor)
                 ), Commands.none(), this::noteDetected)
             );
         advance.addRequirements(this);
@@ -87,7 +96,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void stop() {
-        m_drive.stopMotor();
+        m_motor.stopMotor();
     }
     
     /**
@@ -96,11 +105,11 @@ public class Intake extends SubsystemBase {
      * @param speed The speed value to set. Should be between -1.0 and 1.0.
      */
     public void setSpeed(double speed) {
-        m_drive.set(speed);
+        m_motor.set(speed);
     }
 
     public boolean noteDetected() {
-        return m_detector.get();
+        return m_detector.getVoltage() >= 3.0;
     }
 
     /**
@@ -110,13 +119,13 @@ public class Intake extends SubsystemBase {
      * @return A command that waits for a Note
      */
     public Command waitForNote(double timeout) {
-        if (m_detector.get()) {
+        if (noteDetected()) {
             return Commands.none();
         } else {
-            Command waitFor = Commands.runOnce(() -> m_drive.setTargetVelocity(IntakeConstants.idleTarget))
+            Command waitFor = Commands.runOnce(() -> m_motor.setTargetVelocity(IntakeConstants.idleTarget))
                 .andThen(
-                    Commands.waitUntil(m_detector::get).withTimeout(timeout),
-                    Commands.runOnce(m_drive::stopMotor)
+                    Commands.waitUntil(this::noteDetected).withTimeout(timeout),
+                    Commands.runOnce(m_motor::stopMotor)
                 );
             waitFor.addRequirements(this);
             return waitFor;
@@ -125,7 +134,10 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake Velocity", m_drive.getVelocity());
+        SmartDashboard.putNumber("Intake Velocity", m_motor.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
+        SmartDashboard.putNumber("Detector Voltage", m_detector.getVoltage());
+
+        m_motor.getPIDController().setP(SmartDashboard.getNumber("Intake P", IntakeConstants.driveKP));
     }
 }
