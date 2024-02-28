@@ -5,13 +5,13 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class IntakeSource extends Command {
+public class IntakeSourceCommand extends Command {
     private final Intake m_intake;
     private final Shooter m_shooter;
 
     private boolean m_noteDetected;
 
-    public IntakeSource(Intake intake, Shooter shooter) {
+    public IntakeSourceCommand(Intake intake, Shooter shooter) {
         m_intake = intake;
         m_shooter = shooter;
         m_noteDetected = false;

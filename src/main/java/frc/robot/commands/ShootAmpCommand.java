@@ -6,7 +6,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import wildlib.utils.MathUtils;
 
-public class ShootAmp extends Command {
+public class ShootAmpCommand extends Command {
     private enum State {
         Feed,
         RevUp,
@@ -18,7 +18,7 @@ public class ShootAmp extends Command {
     
     private State m_currentState;
 
-    public ShootAmp(Intake intake, Shooter shooter) {
+    public ShootAmpCommand(Intake intake, Shooter shooter) {
         m_intake = intake;
         m_shooter = shooter;
         addRequirements(m_intake, m_shooter);
