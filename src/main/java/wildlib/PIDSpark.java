@@ -117,7 +117,7 @@ public class PIDSpark extends CANSparkBase {
      * @param position The reference position to use in the PID.
      * @return {@link REVLibError#kOk} if successful.
      */
-    public REVLibError setTargetPostion(double position) {
+    public REVLibError setTargetPosition(double position) {
         return m_controller.setReference(position, ControlType.kPosition);
     }
 
