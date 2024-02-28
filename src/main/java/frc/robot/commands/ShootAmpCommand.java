@@ -11,12 +11,14 @@ public class ShootAmpCommand extends Command {
         Feed,
         RevUp,
         Shoot,
+        Wait,
     }
 
     private final Intake m_intake;
     private final Shooter m_shooter;
     
     private State m_currentState;
+    private long m_lastDetected;
 
     public ShootAmpCommand(Intake intake, Shooter shooter) {
         m_intake = intake;
@@ -52,6 +54,13 @@ public class ShootAmpCommand extends Command {
             }
             break;
         case Shoot:
+            if (!m_intake.noteDetected()) {
+                m_intake.stop();
+                m_lastDetected = System.nanoTime();
+                m_currentState = State.Wait;
+            }
+            break;
+        case Wait: 
             break;
         }
     }
@@ -63,6 +72,7 @@ public class ShootAmpCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_currentState == State.Shoot && !m_intake.noteDetected();
+        // Wait one second after the note is last detected before ending
+        return m_currentState == State.Wait && System.nanoTime() - m_lastDetected > 1e9;
     }
 }
