@@ -10,12 +10,11 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.IntakeIdleCommand;
-import frc.robot.commands.IntakeSource;
-import frc.robot.commands.ShootAmp;
+import frc.robot.commands.IntakeSourceCommand;
+import frc.robot.commands.ShootAmpCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -69,7 +68,7 @@ public class RobotContainer {
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
-        m_mechController.povDown().whileTrue(new IntakeSource(m_intake, m_shooter));
+        m_mechController.povDown().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
 
         m_driveController.x().onTrue(Commands.run(m_swerve::crossWheels));
 
@@ -77,7 +76,7 @@ public class RobotContainer {
     }
 
     private Command shootAmp() {
-        return new ShootAmp(m_intake, m_shooter);
+        return new ShootAmpCommand(m_intake, m_shooter);
     }
 
     private Command shootSpeaker() {
