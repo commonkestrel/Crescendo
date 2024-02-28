@@ -11,10 +11,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
 import frc.robot.commands.ShootAmpCommand;
+import frc.robot.commands.ShootSpeakerCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -64,15 +66,17 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        m_mechController.rightBumper().whileTrue(Commands.either(shootAmp(), shootSpeaker(), m_shootingSpeaker));
+        m_mechController.rightBumper().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
         m_mechController.povDown().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
 
         m_driveController.x().onTrue(Commands.run(m_swerve::crossWheels));
+        m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
 
-        NamedCommands.registerCommand("score", shootAmp());
+        NamedCommands.registerCommand("scoreAmp", shootAmp());
+        NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());
     }
 
     private Command shootAmp() {
@@ -80,10 +84,7 @@ public class RobotContainer {
     }
 
     private Command shootSpeaker() {
-        return Commands.sequence(
-            m_shooter.rampSpeaker(), 
-            m_intake.advanceSpeaker().alongWith(m_shooter.waitForShoot())
-        );
+        return new ShootSpeakerCommand(m_intake, m_shooter);
     }
 
     public Command getAutonomousCommand() {
