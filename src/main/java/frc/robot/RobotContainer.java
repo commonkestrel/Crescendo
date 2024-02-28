@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
+import frc.robot.commands.RampAmpCommand;
+import frc.robot.commands.RampSpeakerCommand;
 import frc.robot.commands.ShootAmpCommand;
 import frc.robot.commands.ShootSpeakerCommand;
 import frc.robot.subsystems.Intake;
@@ -67,6 +69,7 @@ public class RobotContainer {
 
     private void configureBindings() {
         m_mechController.rightBumper().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
+        m_mechController.leftBumper().whileTrue(Commands.either(new RampSpeakerCommand(m_shooter), new RampAmpCommand(m_shooter), m_shootingSpeaker));
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
