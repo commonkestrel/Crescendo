@@ -187,11 +187,14 @@ public final class Constants {
         public static final float maxPosition = 0.0f;
 
         public static final double extendedPosition = maxPosition;
+        // TODO: Tune the climber retract position
+        // I figured make it a little more than `minPosition` to give the PID some room to stablize
         public static final double retractedPosition = -47.5;
 
-        public static final double conversionFactor = 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
+        public static final double conversionFactor = 1.0;// 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
         public static final double spikeCurrent = 20.0;
 
+        // TODO: Tune climber PID constants
         public static final double leftKP = 1.0;
         public static final double leftKI = 0.0;
         public static final double leftKD = 0.0;
