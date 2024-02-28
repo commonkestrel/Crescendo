@@ -2,15 +2,14 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IOConstants;
+import wildlib.PIDSpark;
 
 import com.revrobotics.REVLibError;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import wildlib.NotYetImplemented;
-import wildlib.PIDSpark;
 
 public class Climber extends SubsystemBase {
     private static Climber m_instance;
@@ -32,6 +31,18 @@ public class Climber extends SubsystemBase {
     private Climber(PIDSpark leftMotor, PIDSpark rightMotor) {
         m_left = leftMotor;
         m_right = rightMotor;
+
+        m_left.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.minPosition);
+        m_left.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.maxPosition);
+
+        m_left.setPositionConversionFactor(ClimberConstants.conversionFactor);
+        m_left.setIdleMode(IdleMode.kBrake);
+
+        m_right.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.minPosition);
+        m_right.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.maxPosition);
+
+        m_right.setPositionConversionFactor(ClimberConstants.conversionFactor);
+        m_right.setIdleMode(IdleMode.kBrake);
     }
 
     public REVLibError setLeftTargetPosition(double position) {
@@ -56,5 +67,13 @@ public class Climber extends SubsystemBase {
 
     public void stopRight() {
         m_right.stopMotor();
+    }
+
+    public double getLeftCurrent() {
+        return m_left.getOutputCurrent();
+    }
+
+    public double getRightCurrent() {
+        return m_right.getOutputCurrent();
     }
 }
