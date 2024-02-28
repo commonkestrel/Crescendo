@@ -41,6 +41,9 @@ public class RampedAmpCommand extends Command {
                 m_lastDetected = System.nanoTime();
                 m_currentState = State.Wait;
             }
+            break;
+        case Wait:
+            break;
         }
     }
     
