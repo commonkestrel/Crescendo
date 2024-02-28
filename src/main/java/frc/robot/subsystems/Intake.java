@@ -109,7 +109,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean noteDetected() {
-        return m_detector.getVoltage() >= 3.0;
+        return m_detector.getVoltage() < 3.0;
     }
 
     /**

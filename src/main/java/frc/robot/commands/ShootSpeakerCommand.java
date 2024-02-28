@@ -6,7 +6,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import wildlib.utils.MathUtils;
 
-public class ShootAmpCommand extends Command {
+public class ShootSpeakerCommand extends Command {
     private enum State {
         Feed,
         RevUp,
@@ -18,7 +18,7 @@ public class ShootAmpCommand extends Command {
     
     private State m_currentState;
 
-    public ShootAmpCommand(Intake intake, Shooter shooter) {
+    public ShootSpeakerCommand(Intake intake, Shooter shooter) {
         m_intake = intake;
         m_shooter = shooter;
         addRequirements(m_intake, m_shooter);
@@ -33,7 +33,7 @@ public class ShootAmpCommand extends Command {
             m_intake.setSpeed(0.5);
         }
         m_currentState = State.Feed;
-        m_shooter.setSpeed(0.25);
+        m_shooter.setSpeed(0.75);
     }
 
     @Override
@@ -46,8 +46,9 @@ public class ShootAmpCommand extends Command {
             }
             break;
         case RevUp:
-            if (m_shooter.getVelocity() >= ShooterConstants.ampTarget) {
-                m_intake.setSpeed(0.5);
+            System.out.println(m_shooter.getVelocity());
+            if (m_shooter.getVelocity() >= ShooterConstants.speakerTarget) {
+                m_intake.setSpeed(1.0);
                 m_currentState = State.Shoot;
             }
             break;
@@ -58,7 +59,7 @@ public class ShootAmpCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_shooter.setTargetVelocity(ShooterConstants.idleTarget);
+        m_shooter.setSpeed(0.0);
     }
 
     @Override

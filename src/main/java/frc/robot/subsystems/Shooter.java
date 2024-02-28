@@ -44,6 +44,10 @@ public class Shooter extends SubsystemBase {
         }, this));
     }
 
+    public void setSpeed(double speed) {
+        m_motor.set(speed);
+    }
+
     public REVLibError setTargetVelocity(double velocity) {
         return m_motor.setTargetVelocity(velocity);
     }

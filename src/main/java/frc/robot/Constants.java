@@ -164,9 +164,9 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = 3600;
+        public static final double speakerTarget = 4100;
         // TODO: Tune target shooter velocity for amp
-        public static final double ampTarget = 1700;
+        public static final double ampTarget = 1000;
         // 
         public static final double idleTarget = 1000;
         //
@@ -181,7 +181,14 @@ public final class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final double extendedPosition = 1.0;
+        public static final float minPosition = 0.0f;
+        public static final float maxPosition = 15.0f;
+
+        public static final double extendedPosition = maxPosition;
+        public static final double retractedPosition = 0.25;
+
+        public static final double conversionFactor = 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
+        public static final double spikeCurrent = 20.0;
     }
 
     /** Various motor constants taken from datasheets. */

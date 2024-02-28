@@ -22,8 +22,13 @@ public class IntakeIdleCommand extends Command {
 
     @Override
     public void initialize() {
-        m_intake.setSpeed(0.4);
-        m_currentState = State.Running;
+        if (m_intake.noteDetected()) {
+            m_currentState = State.Stopped;
+            m_intake.stop();
+        } else {
+            m_intake.setSpeed(0.4);
+            m_currentState = State.Running;
+        }
     }
 
     @Override
