@@ -56,7 +56,6 @@ public class ShootSpeakerCommand extends Command {
             break;
         case Shoot:
             if (!m_intake.noteDetected()) {
-                m_intake.setSpeed(0.0);
                 m_lastDetected = System.nanoTime();
                 m_currentState = State.Wait;
             }

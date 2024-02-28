@@ -55,7 +55,6 @@ public class ShootAmpCommand extends Command {
             break;
         case Shoot:
             if (!m_intake.noteDetected()) {
-                m_intake.stop();
                 m_lastDetected = System.nanoTime();
                 m_currentState = State.Wait;
             }
