@@ -145,7 +145,7 @@ public final class Constants {
         public static final double maxSpeed = 4.5; // TODO: Find this
     }
 
-    /** Constants used for the  */
+    /** Various constants used for the intake subsystem and commands */
     public static final class IntakeConstants {
         public static final double distanceFactor = 1.0/4.0 * 1.5 * Math.PI; // gear ratio * wheel radius * pi
         // TODO: Tune target intake velocity for speaker
@@ -162,6 +162,7 @@ public final class Constants {
         public static final double driveKD = 0.0;
     }
 
+    /** Various constants used for the intake shooter and commands */
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
         public static final double speakerTarget = 4100;
@@ -180,15 +181,24 @@ public final class Constants {
         public static final double driveKD = 0.0;
     }
 
+    /** Various constants used for the climber subsystem and commands */
     public static final class ClimberConstants {
-        public static final float minPosition = 0.0f;
-        public static final float maxPosition = 15.0f;
+        public static final float minPosition = -50.0f;
+        public static final float maxPosition = 0.0f;
 
         public static final double extendedPosition = maxPosition;
-        public static final double retractedPosition = 0.25;
+        public static final double retractedPosition = -47.5;
 
         public static final double conversionFactor = 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
         public static final double spikeCurrent = 20.0;
+
+        public static final double leftKP = 1.0;
+        public static final double leftKI = 0.0;
+        public static final double leftKD = 0.0;
+
+        public static final double rightKP = 1.0;
+        public static final double rightKI = 0.0;
+        public static final double rightKD = 0.0;
     }
 
     /** Various motor constants taken from datasheets. */

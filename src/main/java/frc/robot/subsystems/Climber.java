@@ -20,8 +20,18 @@ public class Climber extends SubsystemBase {
     public static Climber getInstance() {
         if (m_instance == null) {
             m_instance = new Climber(
-                new PIDSpark(IOConstants.climbLeftId, MotorType.kBrushless), 
-                new PIDSpark(IOConstants.climbRightId, MotorType.kBrushless)
+                new PIDSpark(IOConstants.climbLeftId,
+                    MotorType.kBrushless,
+                    ClimberConstants.leftKP,
+                    ClimberConstants.leftKI,
+                    ClimberConstants.leftKD
+                ),
+                new PIDSpark(IOConstants.climbRightId,
+                    MotorType.kBrushless,
+                    ClimberConstants.rightKP,
+                    ClimberConstants.rightKI,
+                    ClimberConstants.rightKD
+                )
             );
         }
 
