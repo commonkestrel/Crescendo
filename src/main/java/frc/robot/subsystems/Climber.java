@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IOConstants;
+
+import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,16 +34,27 @@ public class Climber extends SubsystemBase {
         m_right = rightMotor;
     }
 
-    // TODO: Create a command that fully extends the arms
-    public Command release() {
-        Command release = Commands.runOnce(() -> {
-            m_left.setTargetPostion(ClimberConstants.extendedPosition);
-        });
-        throw new NotYetImplemented();
+    public REVLibError setLeftTargetPosition(double position) {
+        return m_left.setTargetPosition(position);
     }
 
-    // TODO: Create a command that allows us to climb and hang
-    public Command climb() {
-        throw new NotYetImplemented();
+    public REVLibError setRightTargetPosition(double position) {
+        return m_right.setTargetPosition(position);
+    }
+
+    public double getLeftPosition() {
+        return m_left.getPosition();
+    }
+
+    public double getRightPosition() {
+        return m_right.getPosition();
+    }
+
+    public void stopLeft() {
+        m_left.stopMotor();
+    }
+
+    public void stopRight() {
+        m_right.stopMotor();
     }
 }
