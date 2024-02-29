@@ -71,7 +71,7 @@ public class Swerve extends SubsystemBase {
     final SwerveDriveKinematics kinematics;
     SwerveDriveOdometry odometry;
 
-    private final Limelight m_limelight = Limelight.getInstance();
+    private static final Limelight m_limelight = Limelight.getInstance();
     private final Field2d m_field = new Field2d();
 
     /**
@@ -186,11 +186,10 @@ public class Swerve extends SubsystemBase {
      * @param fieldRelative Whether the provided x and y speeds are relative to the field.
      * @param rateLimit     Whether to enable slew rate limiting for smoother control.
      */
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, byte autoPosition) {
         double xSpeedCommanded;
         double ySpeedCommanded;
-
-        if (rateLimit) {
+            if (rateLimit) {
             // Convewrt XY to polar for rate limiting
             double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
             double inputTranslationMag = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
@@ -222,6 +221,19 @@ public class Swerve extends SubsystemBase {
             xSpeedCommanded = currentTranslationMag * Math.cos(currentTranslationDir);
             ySpeedCommanded = currentTranslationMag * Math.sin(currentTranslationDir);
             currentRotation = rotLimiter.calculate(rot);
+        } else if (autoPosition == 1) {
+            //TODO: Check what needs to be inverted, don't have the target values yet
+            double tX = m_limelight.getTX() * -1.0;
+            double tY = m_limelight.getTY();
+            double kPa = .035; //TODO: Tune this
+        double kPy = .1; //TODO: Tune this
+        double kPx = .1; //TODO: Tune this
+        //TODO: Ask Jett how to fix tis
+         currentRotation = tX * kPa;
+         xSpeedCommanded = tY * kPx;
+         ySpeedCommanded = tY * Math.sin(Math.toRadians(tX)) * kPy;
+         fieldRelative = false;
+
         } else {
             xSpeedCommanded = xSpeed;
             ySpeedCommanded = ySpeed;

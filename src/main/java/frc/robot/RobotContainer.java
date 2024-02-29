@@ -12,10 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
-import frc.robot.Constants.IOConstants;
 import frc.robot.commands.ClimberReleaseCommand;
-import frc.robot.commands.ClimberRetractCommand;
+import frc.robot.Constants.IOConstants;
+
 import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
 import frc.robot.commands.RampAmpCommand;
