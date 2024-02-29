@@ -5,7 +5,7 @@ import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 import wildlib.utils.MathUtils;
 
-public class ClimbCommand extends Command {
+public class ClimberRetractCommand extends Command {
     private enum State {
         Seeking,
         LeftCollision,
@@ -16,7 +16,7 @@ public class ClimbCommand extends Command {
     private final Climber m_climber;
     private State m_currentState;
 
-    public ClimbCommand(Climber climber) {
+    public ClimberRetractCommand(Climber climber) {
         m_climber = climber;
         addRequirements(m_climber);
 
