@@ -186,7 +186,7 @@ public class Swerve extends SubsystemBase {
      * @param fieldRelative Whether the provided x and y speeds are relative to the field.
      * @param rateLimit     Whether to enable slew rate limiting for smoother control.
      */
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, byte autoPosition) {
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean autoPosition) {
         double xSpeedCommanded;
         double ySpeedCommanded;
             if (rateLimit) {
@@ -221,14 +221,14 @@ public class Swerve extends SubsystemBase {
             xSpeedCommanded = currentTranslationMag * Math.cos(currentTranslationDir);
             ySpeedCommanded = currentTranslationMag * Math.sin(currentTranslationDir);
             currentRotation = rotLimiter.calculate(rot);
-        } else if (autoPosition == 1) {
+        } else if (autoPosition) {
             //TODO: Check what needs to be inverted, don't have the target values yet
+            //TODO: Ask Jett how to fix tis
             double tX = m_limelight.getTX() * -1.0;
             double tY = m_limelight.getTY();
             double kPa = .035; //TODO: Tune this
-        double kPy = .1; //TODO: Tune this
-        double kPx = .1; //TODO: Tune this
-        //TODO: Ask Jett how to fix tis
+            double kPy = .1; //TODO: Tune this
+            double kPx = .1; //TODO: Tune this
          currentRotation = tX * kPa;
          xSpeedCommanded = tY * kPx;
          ySpeedCommanded = tY * Math.sin(Math.toRadians(tX)) * kPy;

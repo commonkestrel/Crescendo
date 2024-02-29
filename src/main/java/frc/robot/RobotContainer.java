@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.ClimberReleaseCommand;
 import frc.robot.Constants.IOConstants;
-
+import frc.robot.commands.ClimberRetractCommand;
 import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
 import frc.robot.commands.RampAmpCommand;
@@ -56,7 +56,7 @@ public class RobotContainer {
                 forward * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
                 strafe * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
                 rotation * speed * (IOConstants.rotInverted ^ CurrentDriver.getRotInverted() ? -1.0 : 1.0),
-                true, true
+                true, true, m_driveController.getLeftTriggerAxis()>0
             );
         }, m_swerve));
     }
