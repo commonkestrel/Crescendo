@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -32,14 +33,16 @@ public class ShootSpeakerCommand extends Command {
     public void initialize() {
         if (!m_intake.noteDetected()) {
             m_currentState = State.RevUp;
-            m_intake.setSpeed(0.5);
+            m_intake.setTargetVelocity(IntakeConstants.idleTarget);
         }
         m_currentState = State.Feed;
-        m_shooter.setSpeed(0.75);
+        m_shooter.setTargetVelocity(ShooterConstants.speakerTarget);
     }
 
     @Override
     public void execute() {
+        System.out.print("Shooter: "); System.out.println(m_shooter.getVelocity());
+        System.out.print("Intake: "); System.out.println(m_intake.getVelocity());
         switch (m_currentState) {
         case Feed:
             if (m_intake.noteDetected()) {
@@ -48,7 +51,6 @@ public class ShootSpeakerCommand extends Command {
             }
             break;
         case RevUp:
-            System.out.println(m_shooter.getVelocity());
             if (m_shooter.getVelocity() >= ShooterConstants.speakerTarget) {
                 m_intake.setSpeed(1.0);
                 m_currentState = State.Shoot;
@@ -59,6 +61,8 @@ public class ShootSpeakerCommand extends Command {
                 m_lastDetected = System.nanoTime();
                 m_currentState = State.Wait;
             }
+            break;
+        case Wait:
             break;
         }
     }

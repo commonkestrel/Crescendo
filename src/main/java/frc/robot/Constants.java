@@ -150,24 +150,26 @@ public final class Constants {
         public static final double distanceFactor = 1.0/4.0 * 1.5 * Math.PI; // gear ratio * wheel radius * pi
         // TODO: Tune target intake velocity for speaker
         /** Target intake velocity for shooting into the Speaker */
-        public static final double speakerTarget = 4100;
+        public static final double speakerTarget = 5000;
         // TODO: Tune target intake velocity for amp
         /** Target intake velocity for shooting into the Amp */
-        public static final double ampTarget = 2000;
+        public static final double ampTarget = 4000;
         public static final double idleTarget = 1800;
+        public static final double intakeTarget = -1000;
 
         // TODO: Tune intake PID
-        public static final double driveKP = 1.0;
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
+        public static final double motorKP = 0.00001;
+        public static final double motorKI = 2e-7;
+        public static final double motorKD = 0.02;
+        public static final double motorKF = 0.0002;
     }
 
     /** Various constants used for the intake shooter and commands */
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = 4100;
+        public static final double speakerTarget = 5000;
         // TODO: Tune target shooter velocity for amp
-        public static final double ampTarget = 1000;
+        public static final double ampTarget = 2200;
         // 
         public static final double idleTarget = 1000;
         //
@@ -176,28 +178,29 @@ public final class Constants {
         public static final double shootTime = 5.0;
 
         // TODO: Tune shooter PID
-        public static final double driveKP = 1.0;
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
+        public static final double motorKP = 0.0001;
+        public static final double motorKI = 2.5e-7;
+        public static final double motorKD = 0.03;
+        public static final double motorKF = 0.00015;
     }
 
     /** Various constants used for the climber subsystem and commands */
     public static final class ClimberConstants {
-        public static final float minPosition = -50.0f;
+        public static final float minPosition = -220.0f;
         public static final float maxPosition = 0.0f;
 
         public static final double extendedPosition = maxPosition;
         // TODO: Tune the climber retract position
         // I figured make it a little more than `minPosition` to give the PID some room to stablize
-        public static final double retractedPosition = -47.5;
+        public static final double retractedPosition = -220.0;
 
         public static final double conversionFactor = 1.0;// 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
-        public static final double spikeCurrent = 20.0;
+        public static final double spikeCurrent = 40.0;
 
         // TODO: Tune climber PID constants
         public static final double leftKP = 1.0;
         public static final double leftKI = 0.0;
-        public static final double leftKD = 0.0;
+        public static final double leftKD = 0.1;
 
         public static final double rightKP = 1.0;
         public static final double rightKI = 0.0;

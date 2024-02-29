@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
@@ -85,5 +86,11 @@ public class Climber extends SubsystemBase {
 
     public double getRightCurrent() {
         return m_right.getOutputCurrent();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Climber Left Position", m_left.getPosition());
+        SmartDashboard.putNumber("Climber Right Position", m_right.getPosition());
     }
 }

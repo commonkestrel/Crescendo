@@ -18,7 +18,7 @@ public class RampAmpCommand extends Command {
 
     @Override
     public void initialize() {
-        m_shooter.setSpeed(0.25);
+        m_shooter.setTargetVelocity(ShooterConstants.ampTarget);
     }
 
     @Override

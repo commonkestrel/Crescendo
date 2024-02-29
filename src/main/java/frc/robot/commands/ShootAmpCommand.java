@@ -32,10 +32,10 @@ public class ShootAmpCommand extends Command {
     public void initialize() {
         if (!m_intake.noteDetected()) {
             m_currentState = State.RevUp;
-            m_intake.setSpeed(0.5);
+            m_intake.setTargetVelocity(ShooterConstants.idleTarget);
         }
         m_currentState = State.Feed;
-        m_shooter.setSpeed(0.25);
+        m_shooter.setTargetVelocity(ShooterConstants.ampTarget);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ShootAmpCommand extends Command {
             break;
         case RevUp:
             if (m_shooter.getVelocity() >= ShooterConstants.ampTarget) {
-                m_intake.setSpeed(0.5);
+                m_intake.setSpeed(0.4);
                 m_currentState = State.Shoot;
             }
             break;

@@ -58,6 +58,21 @@ public class PIDSpark extends CANSparkBase {
      * @param derivative Sets the {@code kD} of the PID.
      */
     public PIDSpark(int deviceId, MotorType type, double proportional, double integral, double derivative) {
+        this(deviceId, type, proportional, integral, derivative, 0.0);
+    }
+
+    /** Creates a new {@link PIDSpark} with specified {@code kP}, {@code kI}, {@code kD} values.
+     * 
+     * @param deviceId The motor CAN Id
+     * @param type The motor type connected to the controller. 
+     *             Brushless motor wires must be connected to their matching colors and the hall sensor must be plugged in. 
+     *             Brushed motors must be connected to the Red and Black terminals only.
+     * @param proportional Sets the {@code kP} of the PID.
+     * @param integral Sets the {@code kI} of the PID.
+     * @param derivative Sets the {@code kD} of the PID.
+     * @param feedforward Sets the {@code kFF} of the PID.
+     */
+    public PIDSpark(int deviceId, MotorType type, double proportional, double integral, double derivative, double feedforward) {
         super(deviceId, type);
         m_encoder = super.getEncoder();
         m_controller = super.getPIDController();
@@ -65,6 +80,7 @@ public class PIDSpark extends CANSparkBase {
         m_controller.setP(proportional);
         m_controller.setI(integral);
         m_controller.setD(derivative);
+        m_controller.setFF(feedforward);
         
         m_controller.setIZone(kIz);
         m_controller.setFF(kFF);

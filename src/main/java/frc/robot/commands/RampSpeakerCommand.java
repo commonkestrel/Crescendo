@@ -18,7 +18,7 @@ public class RampSpeakerCommand extends Command {
 
     @Override
     public void initialize() {
-        m_shooter.setSpeed(0.75);
+        m_shooter.setTargetVelocity(ShooterConstants.speakerTarget);
     }
 
     @Override

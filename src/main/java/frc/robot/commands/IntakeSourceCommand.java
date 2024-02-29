@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -20,8 +21,8 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void initialize() {
-        m_intake.setSpeed(-0.2);
-        m_shooter.setSpeed(-0.2);
+        m_intake.setTargetVelocity(IntakeConstants.intakeTarget);
+        m_shooter.setTargetVelocity(ShooterConstants.intakeTarget);
         m_noteDetected = m_intake.noteDetected();
     }
 

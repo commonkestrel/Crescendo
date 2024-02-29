@@ -30,9 +30,10 @@ public class Intake extends SubsystemBase {
                 new PIDSpark(
                     IOConstants.intakeId,
                     MotorType.kBrushless,
-                    IntakeConstants.driveKP,
-                    IntakeConstants.driveKI,
-                    IntakeConstants.driveKD
+                    IntakeConstants.motorKP,
+                    IntakeConstants.motorKI,
+                    IntakeConstants.motorKD,
+                    IntakeConstants.motorKF
                 ),
                 IOConstants.detectorChannel
             );
@@ -132,12 +133,16 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    public double getVelocity() {
+        return m_motor.getVelocity();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake Velocity", m_motor.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
         SmartDashboard.putNumber("Detector Voltage", m_detector.getVoltage());
 
-        m_motor.getPIDController().setP(SmartDashboard.getNumber("Intake P", IntakeConstants.driveKP));
+        m_motor.getPIDController().setP(SmartDashboard.getNumber("Intake P", IntakeConstants.motorKP));
     }
 }

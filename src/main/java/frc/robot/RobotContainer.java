@@ -10,15 +10,19 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.Constants.IOConstants;
+import frc.robot.commands.ClimberReleaseCommand;
+import frc.robot.commands.ClimberRetractCommand;
 import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
 import frc.robot.commands.RampAmpCommand;
 import frc.robot.commands.RampSpeakerCommand;
 import frc.robot.commands.ShootAmpCommand;
 import frc.robot.commands.ShootSpeakerCommand;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -34,7 +38,7 @@ public class RobotContainer {
     private static final Shooter m_shooter = Shooter.getInstance();
     private static final Limelight m_limelight = Limelight.getInstance();
     // Motors not attached yet
-    // private static final Climber m_climber = Climber.getInstance();
+    private static final Climber m_climber = Climber.getInstance();
 
     private static Toggle m_shootingSpeaker = new Toggle(false);
 
@@ -73,7 +77,10 @@ public class RobotContainer {
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
-        m_mechController.povDown().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
+        m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
+
+        m_mechController.povDown().whileTrue(new ClimberRetractCommand(m_climber));
+        m_mechController.povUp().whileTrue(new ClimberReleaseCommand(m_climber));
 
         m_driveController.x().onTrue(Commands.run(m_swerve::crossWheels));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
@@ -91,7 +98,10 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Two-piece Auto");
+        return new ParallelCommandGroup(
+            new PathPlannerAuto("Two-piece Auto"),
+            new ClimberRetractCommand(m_climber)
+        );
     }
 }
-// :)boombayah
+// :)
