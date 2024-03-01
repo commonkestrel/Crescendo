@@ -75,6 +75,6 @@ public class ShootSpeakerCommand extends Command {
     @Override
     public boolean isFinished() {
         // Wait one second after the note is last detected before ending
-        return m_currentState == State.Wait && System.nanoTime() - m_lastDetected > 1e9;
+        return m_currentState == State.Wait && System.nanoTime() - m_lastDetected >= 1e9;
     }
 }
