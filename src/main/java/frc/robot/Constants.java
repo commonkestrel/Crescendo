@@ -212,7 +212,6 @@ public final class Constants {
         public static final double conversionFactor = 1.0;// 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
         public static final double spikeCurrent = 40.0;
 
-        // TODO: Tune climber PID constants
         public static final double leftKP = 1.0;
         public static final double leftKI = 0.0;
         public static final double leftKD = 0.1;
