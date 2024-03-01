@@ -104,16 +104,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        double offset;
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
-            offset = Units.degreesToRadians(-90.0);
-        } else if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            offset = Units.degreesToRadians(90.0);
-        } else {
-            offset = 0.0;
-        }
+        double offset = m_swerve.getAmpOffset();
 
         return Commands.sequence(
             new ResetHeading(m_swerve, offset),

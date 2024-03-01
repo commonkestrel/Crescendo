@@ -1,12 +1,16 @@
 package frc.robot.subsystems.drive;
 
 import frc.robot.CurrentDriver;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
 
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.IOConstants;
+
+import java.util.Optional;
 
 import wildlib.utils.SwerveUtils;
 
@@ -17,6 +21,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -26,6 +31,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -287,7 +293,17 @@ public class Swerve extends SubsystemBase {
 
     /** Zeros the heading of the robot. */
     public void zeroHeading() {
+        gyro.setAngleAdjustment(0.0);
         gyro.reset();
+    }
+
+    /** 
+     * Sets the angle offset of the gyroscope.
+     * 
+     * WARNING: Does not affect `getYaw()` or quaternion values
+     */
+    public void resetHeading(double radians) {
+        gyro.setAngleAdjustment(gyro.getAngleAdjustment() + radians);
     }
 
     /**
@@ -298,6 +314,18 @@ public class Swerve extends SubsystemBase {
     public double getHeading() {
         // Map continuous gyro degrees to -180 to 180
         return Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)).getDegrees();
+    }
+
+    public double getAmpOffset() {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
+            return Units.degreesToRadians(-90.0);
+        } else if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+            return Units.degreesToRadians(90.0);
+        } else {
+            return 0.0;
+        }
     }
 
     public ChassisSpeeds getSpeeds() {
