@@ -67,11 +67,11 @@ public class CenterAmpCommand extends Command {
             break;
         case Found:
             double averageDistance = m_limelight.getBotPose()[6];
-            double angle = m_limelight.getTY() + 90 + m_drive.getHeading();
+            double angle = m_limelight.getTX() - m_drive.getAmpOffset() + m_drive.getHeading();
             double transDistance = averageDistance * Math.sin(Units.degreesToRadians(angle));
 
             if (
-                MathUtils.closeEnough(m_limelight.getTY(), 0.0, 5.0)
+                MathUtils.closeEnough(m_limelight.getTX(), 0.0, 5.0)
                 && MathUtils.closeEnough(transDistance, 0.0, 0.25)
             ) {
                 m_currentState = State.Forward;
@@ -91,7 +91,7 @@ public class CenterAmpCommand extends Command {
             }
 
             double translation = m_transController.calculate(transDistance);
-            double rotation = m_rotController.calculate(m_limelight.getTY());
+            double rotation = m_rotController.calculate(m_limelight.getTX());
 
             m_drive.drive(translation, 0.0, rotation, true, true);
 
