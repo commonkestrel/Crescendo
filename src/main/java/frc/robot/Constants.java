@@ -9,6 +9,20 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+    public static final class AutoConstants {
+        public static final int ampPipeline = 1;
+
+        public static final double limelightAngle = 40.0;
+
+        public static final double rotKP = 1.0;
+        public static final double rotKI = 0.0;
+        public static final double rotKD = 0.0;
+
+        public static final double transKP = 1.0;
+        public static final double transKI = 0.0;
+        public static final double transKD = 0.0;
+    }
+
     /** 
      * Drivetrain and output control constants.
      * Most are copied from the <a href="https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java">MAXSwerve Java example</a>.
@@ -41,7 +55,8 @@ public final class Constants {
         /** Max translaitonal speed (m/s) */
         public static final double maxTranslationalSpeed = 4.8; // TODO: Actually find this;
         /** Max angular speed (rads/s) */
-        public static final double maxAngularSpeed = Math.PI; // TODO: Actually find this;
+        public static final double maxAngularSpeed = Units.degreesToRadians(360); // TODO: Actually find this;
+        public static final double maxAngularAccel = Units.degreesToRadians(540);
         /** Max translation acceleration (m/s) */
         public static final double maxAcceleration = 4.0; // TODO: Actually find this.
 
@@ -167,7 +182,7 @@ public final class Constants {
     /** Various constants used for the intake shooter and commands */
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = 5000;
+        public static final double speakerTarget = 4800;
         // TODO: Tune target shooter velocity for amp
         public static final double ampTarget = 2200;
         // 
@@ -179,7 +194,7 @@ public final class Constants {
 
         // TODO: Tune shooter PID
         public static final double motorKP = 0.0001;
-        public static final double motorKI = 2.5e-7;
+        public static final double motorKI = 5e-7;
         public static final double motorKD = 0.03;
         public static final double motorKF = 0.00015;
     }
