@@ -87,6 +87,8 @@ public class CenterAmpCommand extends Command {
                     new PathConstraints(DriveConstants.maxAngularSpeed, DriveConstants.maxAcceleration, DriveConstants.maxAngularSpeed, DriveConstants.maxAngularAccel)
                 );
 
+                m_driveCommand.initialize();
+
                 break;
             }
 
@@ -97,7 +99,9 @@ public class CenterAmpCommand extends Command {
 
             break;
         case Forward:
-            
+            m_driveCommand.execute();
+
+            break;
         }
     }
 
