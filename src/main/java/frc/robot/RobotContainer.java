@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.CenterAmpCommand;
 import frc.robot.commands.ClimberReleaseCommand;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.ClimberRetractCommand;
@@ -56,7 +57,7 @@ public class RobotContainer {
                 forward * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
                 strafe * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
                 rotation * speed * (IOConstants.rotInverted ^ CurrentDriver.getRotInverted() ? -1.0 : 1.0),
-                true, true, m_driveController.getLeftTriggerAxis()>0
+                true, true
             );
         }, m_swerve));
     }
@@ -83,6 +84,7 @@ public class RobotContainer {
 
         m_driveController.x().onTrue(Commands.run(m_swerve::crossWheels));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
+        m_driveController.povRight().whileTrue(new CenterAmpCommand(m_swerve, m_limelight));
 
         NamedCommands.registerCommand("scoreAmp", shootAmp());
         NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());
