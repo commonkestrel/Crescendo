@@ -4,13 +4,17 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CenterAmpCommand;
 import frc.robot.commands.ClimberReleaseCommand;
@@ -20,6 +24,7 @@ import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
 import frc.robot.commands.RampAmpCommand;
 import frc.robot.commands.RampSpeakerCommand;
+import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ShootAmpCommand;
 import frc.robot.commands.ShootSpeakerCommand;
 import frc.robot.subsystems.Climber;
@@ -99,9 +104,23 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new ParallelCommandGroup(
-            new PathPlannerAuto("Two-piece Auto"),
-            new ClimberRetractCommand(m_climber)
+        double offset;
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
+            offset = Units.degreesToRadians(-90.0);
+        } else if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+            offset = Units.degreesToRadians(90.0);
+        } else {
+            offset = 0.0;
+        }
+
+        return Commands.sequence(
+            new ResetHeading(m_swerve, offset),
+            Commands.parallel(
+                new PathPlannerAuto("Two-piece Auto"),
+                new ClimberRetractCommand(m_climber)
+            )
         );
     }
 }
