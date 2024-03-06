@@ -66,6 +66,7 @@ public class ShootAmpCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        m_intake.setSpeed(0.0);
         m_shooter.setTargetVelocity(ShooterConstants.idleTarget);
     }
 

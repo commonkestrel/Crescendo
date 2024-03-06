@@ -21,6 +21,7 @@ import wildlib.PIDSpark;
 public class Intake extends SubsystemBase {
     private final PIDSpark m_motor;
     private final AnalogInput m_detector;
+    private boolean m_overrideSensor = false;
 
     private static Intake m_instance;
 
@@ -49,6 +50,7 @@ public class Intake extends SubsystemBase {
         m_motor.setPositionConversionFactor(IntakeConstants.distanceFactor);
         m_motor.setIdleMode(IdleMode.kBrake);
         m_motor.setInverted(true);
+        m_motor.burnFlash();
     }
 
     public void initDefaultCommand() {
@@ -110,7 +112,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean noteDetected() {
-        return m_detector.getVoltage() < 3.0;
+        return m_overrideSensor || m_detector.getVoltage() < 3.0;
     }
 
     /**
@@ -137,12 +139,14 @@ public class Intake extends SubsystemBase {
         return m_motor.getVelocity();
     }
 
+    public void toggleOverride() {
+        m_overrideSensor = !m_overrideSensor;
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake Velocity", m_motor.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
         SmartDashboard.putNumber("Detector Voltage", m_detector.getVoltage());
-
-        m_motor.getPIDController().setP(SmartDashboard.getNumber("Intake P", IntakeConstants.motorKP));
     }
 }

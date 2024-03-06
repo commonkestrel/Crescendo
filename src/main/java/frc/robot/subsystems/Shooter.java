@@ -38,6 +38,7 @@ public class Shooter extends SubsystemBase {
     private Shooter(PIDSpark drive) {
         m_motor = drive;
         m_motor.setInverted(true);
+        m_motor.burnFlash();
     }
 
     public void initDefaultCommand() {

@@ -16,12 +16,14 @@ import wildlib.utils.SwerveUtils;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -136,6 +138,11 @@ public class Swerve extends SubsystemBase {
         );
 
         PathPlannerLogging.setLogActivePathCallback((poses) -> m_field.getObject("path").setPoses(poses));
+
+        final MatchType match = DriverStation.getMatchType();
+        if (match == MatchType.Elimination || match == MatchType.Qualification) {
+            PPLibTelemetry.enableCompetitionMode();
+        }
         SmartDashboard.putData("Field", m_field);
     }
 
@@ -153,8 +160,13 @@ public class Swerve extends SubsystemBase {
             }
         );
 
-        m_field.setRobotPose(odometry.getPoseMeters());
-        SmartDashboard.putData(gyro);
+        // SmartDashboard.putNumber("A Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("B Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("C Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("D Module Speed", aModule.getState().speedMetersPerSecond);
+
+        // m_field.setRobotPose(odometry.getPoseMeters());
+        // SmartDashboard.putData(gyro);
     }
     
     /** 

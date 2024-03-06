@@ -66,7 +66,7 @@ public class CenterAmpCommand extends Command {
 
             break;
         case Found:
-            double averageDistance = m_limelight.getBotPose()[6];
+            double averageDistance = m_limelight.getBotPose()[6] * Math.cos(Units.degreesToRadians(m_limelight.getTY()));
             double angle = m_limelight.getTX() - m_drive.getAmpOffset() + m_drive.getHeading();
             double transDistance = averageDistance * Math.sin(Units.degreesToRadians(angle));
 

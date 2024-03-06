@@ -51,7 +51,7 @@ public class ShootSpeakerCommand extends Command {
             }
             break;
         case RevUp:
-            if (MathUtils.closeEnough(m_shooter.getVelocity(), ShooterConstants.speakerTarget, 10.0)) {
+            if (MathUtils.closeEnough(m_shooter.getVelocity(), ShooterConstants.speakerTarget, 40.0)) {
                 m_intake.setSpeed(1.0);
                 m_currentState = State.Shoot;
             }
@@ -69,6 +69,7 @@ public class ShootSpeakerCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        m_intake.setSpeed(0.0);
         m_shooter.setSpeed(0.0);
     }
 

@@ -26,7 +26,7 @@ public class IntakeIdleCommand extends Command {
             m_currentState = State.Stopped;
             m_intake.stop();
         } else {
-            m_intake.setSpeed(0.3);
+            m_intake.setSpeed(0.4);
             m_currentState = State.Running;
         }
     }
@@ -35,15 +35,17 @@ public class IntakeIdleCommand extends Command {
     public void execute() {
         switch (m_currentState) {
         case Running:
-            if (!m_intake.noteDetected()) {
-                m_intake.setSpeed(0.3);
-                m_currentState = State.Running;
-            }
-        case Stopped:
             if (m_intake.noteDetected()) {
-                m_intake.stop();
+                m_intake.setSpeed(0.0);
                 m_currentState = State.Stopped;
             }
+            break;
+        case Stopped:
+            if (!m_intake.noteDetected()) {
+                m_intake.setSpeed(0.4);
+                m_currentState = State.Running;
+            }
+            break;
         }
     }
 

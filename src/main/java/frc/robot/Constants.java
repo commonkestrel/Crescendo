@@ -68,7 +68,7 @@ public final class Constants {
         /** Used to invert the gyroscope direction. */
         public static final boolean gyroReversed = true;
         /** Max input speed. */
-        public static final double speed = 0.5;
+        public static final double speed = 1.0;
 
         public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
             new PIDConstants(5.0, 0.0, 0.0), // TODO: Tune this
@@ -140,7 +140,7 @@ public final class Constants {
         public static final double driveMinOutput = -1;
         public static final double driveMaxOutput = 1;
 
-        public static final double turnKP = 1;
+        public static final double turnKP = 0.1;
         public static final double turnKI = 0;
         public static final double turnKD = 0;
         public static final double turnFF = 0;
@@ -148,7 +148,7 @@ public final class Constants {
         public static final double turnMaxOutput = 1;
         
         /** Drive motor idle mode for Spark Max. */
-        public static final IdleMode driveMotorIdleMode = IdleMode.kBrake;
+        public static final IdleMode driveMotorIdleMode = IdleMode.kCoast;
         /** Rotation motor idle mode for Spark Max. */
         public static final IdleMode turnMotorIdleMode = IdleMode.kBrake;
 
@@ -165,8 +165,7 @@ public final class Constants {
         public static final double distanceFactor = 1.0/4.0 * 1.5 * Math.PI; // gear ratio * wheel radius * pi
         // TODO: Tune target intake velocity for speaker
         /** Target intake velocity for shooting into the Speaker */
-        public static final double speakerTarget = 5000;
-        // TODO: Tune target intake velocity for amp
+        public static final double speakerTarget = 4700;       // TODO: Tune target intake velocity for amp
         /** Target intake velocity for shooting into the Amp */
         public static final double ampTarget = 4000;
         public static final double idleTarget = 1800;
@@ -201,20 +200,21 @@ public final class Constants {
 
     /** Various constants used for the climber subsystem and commands */
     public static final class ClimberConstants {
-        public static final float minPosition = -220.0f;
+        public static final float rightMinPosition = -200.0f;
+        public static final float leftMinPosition = -200.0f;
         public static final float maxPosition = 0.0f;
 
         public static final double extendedPosition = maxPosition;
         // TODO: Tune the climber retract position
         // I figured make it a little more than `minPosition` to give the PID some room to stablize
-        public static final double retractedPosition = -220.0;
+        public static final double retractedPosition = -200.0;
 
         public static final double conversionFactor = 1.0;// 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
         public static final double spikeCurrent = 40.0;
 
         public static final double leftKP = 1.0;
         public static final double leftKI = 0.0;
-        public static final double leftKD = 0.1;
+        public static final double leftKD = 0.0;
 
         public static final double rightKP = 1.0;
         public static final double rightKI = 0.0;
@@ -235,7 +235,7 @@ public final class Constants {
 
     public static final class IOConstants {
         public static final int driveControllerPort = 0;
-        public static final int mechControllerPort = 0;
+        public static final int mechControllerPort = 1;
 
         public static final boolean xyInverted = true;
 
@@ -263,6 +263,14 @@ public final class Constants {
         public static final int climbRightId = 14;
 
         public static final int detectorChannel = 3;
+        public static final int ledPort = 1;
+        public static final int ledLength = 60;
+    }
+
+    public static final class LEDConstants {
+        public static final long flashLength = 1_000_000_000;
+        public static final long fastFlashLength = 250_000_000;
+        public static final double fadePeriod = 2e9;
     }
 
     public static final class GameConstants {
@@ -279,11 +287,11 @@ public final class Constants {
     
             public static final double rotDeadband = 0.05;
             /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
-            public static final double dirSlewRate = Math.PI / 2;
+            public static final double dirSlewRate = Math.PI;
             /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
-            public static final double magSlewRate = 1.0;
+            public static final double magSlewRate = 3.0;
             /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
-            public static final double rotSlewRate = 2.0;
+            public static final double rotSlewRate = 3.0;
         }
 
         public static final class Jett {
