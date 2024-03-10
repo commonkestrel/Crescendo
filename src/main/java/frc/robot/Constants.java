@@ -140,7 +140,7 @@ public final class Constants {
         public static final double driveMinOutput = -1;
         public static final double driveMaxOutput = 1;
 
-        public static final double turnKP = 0.1;
+        public static final double turnKP = 1.0;
         public static final double turnKI = 0;
         public static final double turnKD = 0;
         public static final double turnFF = 0;
@@ -262,7 +262,8 @@ public final class Constants {
         public static final int climbLeftId = 13;
         public static final int climbRightId = 14;
 
-        public static final int detectorChannel = 3;
+        public static final int detectorChannel = 4;
+        public static final int noteBeambreakChannel = 3;
         public static final int ledPort = 1;
         public static final int ledLength = 60;
     }

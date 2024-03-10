@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -25,6 +27,7 @@ public class Shooter extends SubsystemBase {
             m_instance = new Shooter(new PIDSpark(
                 IOConstants.shooterId,
                 MotorType.kBrushless,
+                PIDSpark.SparkFlexModel(),
                 ShooterConstants.motorKP,
                 ShooterConstants.motorKI,
                 ShooterConstants.motorKD,

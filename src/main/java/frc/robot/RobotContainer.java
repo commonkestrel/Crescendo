@@ -105,6 +105,8 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("scoreAmp", shootAmp());
         NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());
+        NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
+        NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
 
     }
 

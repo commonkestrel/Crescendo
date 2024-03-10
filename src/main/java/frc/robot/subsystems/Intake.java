@@ -4,7 +4,7 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,7 +20,8 @@ import wildlib.PIDSpark;
  */
 public class Intake extends SubsystemBase {
     private final PIDSpark m_motor;
-    private final AnalogInput m_detector;
+    private final DigitalInput m_detector;
+    private final DigitalInput m_noteBeambreak;
     private boolean m_overrideSensor = false;
 
     private static Intake m_instance;
@@ -31,21 +32,24 @@ public class Intake extends SubsystemBase {
                 new PIDSpark(
                     IOConstants.intakeId,
                     MotorType.kBrushless,
+                    PIDSpark.SparkFlexModel(),
                     IntakeConstants.motorKP,
                     IntakeConstants.motorKI,
                     IntakeConstants.motorKD,
                     IntakeConstants.motorKF
                 ),
-                IOConstants.detectorChannel
+                IOConstants.detectorChannel,
+                IOConstants.noteBeambreakChannel
             );
         }
 
         return m_instance;
     }
 
-    private Intake(PIDSpark drive, int detectorChannel) {
+    private Intake(PIDSpark drive, int detectorChannel, int noteBeambreakChannel) {
         m_motor = drive;
-        m_detector = new AnalogInput(detectorChannel);
+        m_detector = new DigitalInput(detectorChannel);
+        m_noteBeambreak = new DigitalInput(noteBeambreakChannel);
 
         m_motor.setPositionConversionFactor(IntakeConstants.distanceFactor);
         m_motor.setIdleMode(IdleMode.kBrake);
@@ -112,7 +116,10 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean noteDetected() {
-        return m_overrideSensor || m_detector.getVoltage() < 3.0;
+        return m_overrideSensor || !m_noteBeambreak.get();
+
+        // TODO: Use both sensors for robustness
+        //return m_overrideSensor || m_detector.get() || m_noteBeambreak.get();
     }
 
     /**
@@ -147,6 +154,8 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Intake Velocity", m_motor.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
-        SmartDashboard.putNumber("Detector Voltage", m_detector.getVoltage());
+        SmartDashboard.putBoolean("Beam Broken", m_noteBeambreak.get());
+        SmartDashboard.putBoolean("Note Limit Switch Closed", m_detector.get());
+        // SmartDashboard.putNumber("Detector Voltage", m_detector.getVoltage());
     }
 }

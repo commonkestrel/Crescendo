@@ -18,9 +18,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "Start to Amp"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Start to Amp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rampAmp"
+                }
+              }
+            ]
           }
         },
         {

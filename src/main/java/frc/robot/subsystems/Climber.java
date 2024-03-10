@@ -24,6 +24,7 @@ public class Climber extends SubsystemBase {
                 new PIDSpark(
                     IOConstants.climbLeftId,
                     MotorType.kBrushless,
+                    PIDSpark.SparkMaxModel(),
                     ClimberConstants.leftKP,
                     ClimberConstants.leftKI,
                     ClimberConstants.leftKD
@@ -31,6 +32,7 @@ public class Climber extends SubsystemBase {
                 new PIDSpark(
                     IOConstants.climbRightId,
                     MotorType.kBrushless,
+                    PIDSpark.SparkMaxModel(),
                     ClimberConstants.rightKP,
                     ClimberConstants.rightKI,
                     ClimberConstants.rightKD
