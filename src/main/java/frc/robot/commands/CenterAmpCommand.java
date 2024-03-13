@@ -3,12 +3,14 @@ package frc.robot.commands;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -20,34 +22,39 @@ public class CenterAmpCommand extends Command {
     private enum State {
         Search,
         Found,
-        Forward,
     }
 
     private final Swerve m_drive;
     private final Limelight m_limelight;
 
     private final PIDController m_rotController = new PIDController(AutoConstants.rotKP, AutoConstants.rotKI, AutoConstants.rotKD);
-    private final PIDController m_transController = new PIDController(AutoConstants.transKP, AutoConstants.transKI, AutoConstants.transKD);
+    private final PIDController m_xController = new PIDController(AutoConstants.xKP, AutoConstants.xKI, AutoConstants.xKD);
+    private final PIDController m_yController = new PIDController(AutoConstants.yKP, AutoConstants.yKI, AutoConstants.yKD);
 
-    private Command m_driveCommand;
     private State m_currentState;
 
 
     public CenterAmpCommand(Swerve drive, Limelight limelight) {
         m_drive = drive;
         m_limelight = limelight;
+
         addRequirements(m_drive);
     }
 
     @Override
     public void initialize() {
-        m_driveCommand = null;
         m_limelight.setPipelineIndex(AutoConstants.ampPipeline);
+        
         if (m_limelight.getTV()) {
             m_currentState = State.Found;
         } else {
             m_currentState = State.Search;
         }
+    
+        m_xController.reset();
+        m_yController.reset();
+        m_rotController.reset();
+
     }
 
     @Override
@@ -58,7 +65,8 @@ public class CenterAmpCommand extends Command {
             if (m_limelight.getTV()) {
                 m_currentState = State.Found;
                 m_drive.drive(0.0, 0.0, 0.0, false, false);
-                m_transController.setSetpoint(0.0);
+                m_xController.setSetpoint(0.0);
+                m_yController.setSetpoint(-0.36);
                 m_rotController.setSetpoint(0.0);
             } else {
                 m_drive.drive(0.0, 0.0, 0.2, false, true);
@@ -66,40 +74,22 @@ public class CenterAmpCommand extends Command {
 
             break;
         case Found:
-            double averageDistance = m_limelight.getBotPose()[6] * Math.cos(Units.degreesToRadians(m_limelight.getTY()));
-            double angle = m_limelight.getTX() - m_drive.getAmpOffset() + m_drive.getHeading();
-            double transDistance = averageDistance * Math.sin(Units.degreesToRadians(angle));
+            // for (double tx: m_limelight.get) {
 
-            if (
-                MathUtils.closeEnough(m_limelight.getTX(), 0.0, 5.0)
-                && MathUtils.closeEnough(transDistance, 0.0, 0.25)
-            ) {
-                m_currentState = State.Forward;
-                m_drive.drive(0.0, 0.0, 0.0, false, false);
-                Pose2d targetPose = m_drive.getPose();
-                targetPose.transformBy(
-                    new Transform2d(new Translation2d(averageDistance, 0.0),
-                    new Rotation2d())
-                );
-                
-                m_driveCommand = AutoBuilder.pathfindToPose(
-                    targetPose,
-                    new PathConstraints(DriveConstants.maxAngularSpeed, DriveConstants.maxAcceleration, DriveConstants.maxAngularSpeed, DriveConstants.maxAngularAccel)
-                );
+            // }
+            double[] botpose = m_limelight.getBotPose_TargetSpace();
+            double xDistance = botpose[0];
+            double yDistance = botpose[2];
+            double angle = -botpose[4];
 
-                m_driveCommand.initialize();
+            System.out.printf("Trans Distance: %f", xDistance);
+            System.out.printf("TY: %f", m_limelight.getTY());
 
-                break;
-            }
+            double xTranslation = MathUtil.clamp(m_xController.calculate(xDistance), -1.0, 1.0);
+            double yTranslation = MathUtil.clamp(m_yController.calculate(yDistance), -1.0, 1.0);
+            double rotation = MathUtil.clamp(m_rotController.calculate(angle), -1.0, 1.0);
 
-            double translation = m_transController.calculate(transDistance);
-            double rotation = m_rotController.calculate(m_limelight.getTX());
-
-            m_drive.drive(translation, 0.0, rotation, true, true);
-
-            break;
-        case Forward:
-            m_driveCommand.execute();
+            m_drive.drive(yTranslation, -xTranslation, rotation, true, false);
 
             break;
         }
@@ -107,13 +97,16 @@ public class CenterAmpCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        if (m_driveCommand != null) {
-            m_driveCommand.end(interrupted);
-        }
+        m_drive.drive(0.0, 0.0, 0.0, false, false);
     }
 
     @Override
     public boolean isFinished() {
-        return m_currentState == State.Forward && m_driveCommand.isFinished();
+        double[] botpose = m_limelight.getBotPose_TargetSpace();
+
+        return MathUtils.closeEnough(botpose[4], 0.0, 5.0)
+            && MathUtils.closeEnough(botpose[0], 0.0, 0.01)
+            && MathUtils.closeEnough(botpose[1], -0.36, 0.005)
+            && m_limelight.getTV();
     }
 }

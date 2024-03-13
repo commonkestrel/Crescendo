@@ -10,17 +10,21 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
     public static final class AutoConstants {
-        public static final int ampPipeline = 1;
+        public static final int ampPipeline = 0;
 
         public static final double limelightAngle = 40.0;
 
-        public static final double rotKP = 1.0;
+        public static final double rotKP = 0.01;
         public static final double rotKI = 0.0;
         public static final double rotKD = 0.0;
 
-        public static final double transKP = 1.0;
-        public static final double transKI = 0.0;
-        public static final double transKD = 0.0;
+        public static final double xKP = 0.5;
+        public static final double xKI = 0.0;
+        public static final double xKD = 0.01;
+
+        public static final double yKP = 0.35;
+        public static final double yKI = 0.0;
+        public static final double yKD = 0.008;
     }
 
     /** 

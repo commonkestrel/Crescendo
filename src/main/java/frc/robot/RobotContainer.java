@@ -87,13 +87,13 @@ public class RobotContainer {
 
     private void configureBindings() {
         m_mechController.rightBumper().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
-        // m_mechController.leftBumper().whileTrue(Commands.either(new RampSpeakerCommand(m_shooter), new RampAmpCommand(m_shooter), m_shootingSpeaker));
-        m_mechController.leftBumper().whileTrue(new OuttakeCommand(m_intake));
+        m_mechController.leftBumper().whileTrue(Commands.either(new RampSpeakerCommand(m_shooter), new RampAmpCommand(m_shooter), m_shootingSpeaker));
+        m_mechController.x().whileTrue(new OuttakeCommand(m_intake));
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
         m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
-        m_mechController.x().whileTrue(new IntakeCommand(m_intake));
+        // m_mechController.x().whileTrue(new IntakeCommand(m_intake));
 
         m_mechController.povDown().whileTrue(new ClimberRetractCommand(m_climber));
         m_mechController.povUp().whileTrue(new ClimberReleaseCommand(m_climber));
@@ -107,7 +107,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
-
     }
 
     private Command shootAmp() {
@@ -119,7 +118,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new ClimberRetractCommand(m_climber);
+        return null;
+        // return new ClimberRetractCommand(m_climber);
     }
 
     public Command getLimelightAuto() {
@@ -143,7 +143,7 @@ public class RobotContainer {
         ).withTimeout(1.0)
         .andThen(
             new InstantCommand(() -> m_swerve.drive(0.0, 0.0, 0.0, false, false), m_swerve)
-        ); 
+        );
         
         driveBack.addRequirements(m_swerve);
         return driveBack;
