@@ -71,6 +71,7 @@ public class Swerve extends SubsystemBase {
     private double currentRotation = 0.0;
     private double currentTranslationDir = 0.0;
     private double currentTranslationMag = 0.0;
+    private boolean cappedSpeed = false;
 
     private SlewRateLimiter magLimiter = new SlewRateLimiter(DriveConstants.magnitudeSlewRate);
     private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.rotationalSlewRate);
@@ -205,6 +206,12 @@ public class Swerve extends SubsystemBase {
      * @param rateLimit     Whether to enable slew rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+        if (cappedSpeed) {
+            xSpeed *= 0.25;
+            ySpeed *= 0.25;
+            rot *= 0.25;
+        }
+
         double xSpeedCommanded;
         double ySpeedCommanded;
             if (rateLimit) {
@@ -244,7 +251,7 @@ public class Swerve extends SubsystemBase {
             ySpeedCommanded = ySpeed;
             currentRotation = rot;
         }
-
+        
         double xSpeedDelivered = xSpeedCommanded * DriveConstants.maxTranslationalSpeed;
         double ySpeedDelivered = ySpeedCommanded * DriveConstants.maxTranslationalSpeed;
         double rotDelivered = currentRotation * DriveConstants.maxAngularSpeed;
@@ -280,6 +287,10 @@ public class Swerve extends SubsystemBase {
         bModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         cModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         dModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    }
+
+    public void capSpeed() {
+        cappedSpeed = !cappedSpeed;
     }
 
     /** 
