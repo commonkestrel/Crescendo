@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,8 +39,10 @@ import frc.robot.commands.ShootAmpCommand;
 import frc.robot.commands.ShootSpeakerCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Leds.State;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.Toggle;
 
@@ -50,9 +53,9 @@ public class RobotContainer {
     private static final Swerve m_swerve = Swerve.getInstance();
     private static final Intake m_intake = Intake.getInstance();
     private static final Shooter m_shooter = Shooter.getInstance();
-    private static final Limelight m_limelight = Limelight.getInstance();
-    // Motors not attached yet
     private static final Climber m_climber = Climber.getInstance();
+    private static final Limelight m_limelight = Limelight.getInstance();
+    private static final Leds m_leds = Leds.getInstance();
 
     private static Toggle m_shootingSpeaker = new Toggle(false);
 
@@ -81,7 +84,7 @@ public class RobotContainer {
     }
 
     private void configureDefaults() {
-        m_intake.setDefaultCommand(new IntakeIdleCommand(m_intake));
+        m_intake.setDefaultCommand(new IntakeIdleCommand(m_intake, m_leds));
         m_shooter.initDefaultCommand();
     }
 
@@ -99,9 +102,16 @@ public class RobotContainer {
         m_mechController.povUp().whileTrue(new ClimberReleaseCommand(m_climber));
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
 
+        m_driveController.back().onTrue(Commands.runOnce(m_swerve::capSpeed, m_swerve));
+
         m_driveController.x().whileTrue(Commands.run(m_swerve::crossWheels, m_swerve));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
         m_driveController.b().whileTrue(new CenterAmpCommand(m_swerve, m_limelight));
+        m_mechController.back().onTrue(Commands.runOnce(() -> {
+            System.out.println("Fill");
+            m_leds.set(State.Fade, Color.kBlue);
+            m_leds.update();
+        }));
 
         NamedCommands.registerCommand("scoreAmp", shootAmp());
         NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());

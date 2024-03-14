@@ -66,7 +66,7 @@ public class CenterAmpCommand extends Command {
                 m_currentState = State.Found;
                 m_drive.drive(0.0, 0.0, 0.0, false, false);
                 m_xController.setSetpoint(0.0);
-                m_yController.setSetpoint(-0.36);
+                m_yController.setSetpoint(-0.37);
                 m_rotController.setSetpoint(0.0);
             } else {
                 m_drive.drive(0.0, 0.0, 0.2, false, true);
@@ -106,7 +106,7 @@ public class CenterAmpCommand extends Command {
 
         return MathUtils.closeEnough(botpose[4], 0.0, 5.0)
             && MathUtils.closeEnough(botpose[0], 0.0, 0.01)
-            && MathUtils.closeEnough(botpose[1], -0.36, 0.005)
+            && MathUtils.closeEnough(botpose[1], -0.37, 0.005)
             && m_limelight.getTV();
     }
 }

@@ -57,7 +57,8 @@ public final class Constants {
         public static final double[] angularOffsets = {aAngularOffset, bAngularOffset, cAngularOffset, dAngularOffset};
 
         /** Max translaitonal speed (m/s) */
-        public static final double maxTranslationalSpeed = 4.8; // TODO: Actually find this;
+        public static final double maxTranslationalSpeed = 4.8;
+        public static final double kiddieMaxTranslationalSpeed = 1.2; // TODO: Actually find this;
         /** Max angular speed (rads/s) */
         public static final double maxAngularSpeed = Units.degreesToRadians(360); // TODO: Actually find this;
         public static final double maxAngularAccel = Units.degreesToRadians(540);
@@ -169,7 +170,7 @@ public final class Constants {
         public static final double distanceFactor = 1.0/4.0 * 1.5 * Math.PI; // gear ratio * wheel radius * pi
         // TODO: Tune target intake velocity for speaker
         /** Target intake velocity for shooting into the Speaker */
-        public static final double speakerTarget = 4700;       // TODO: Tune target intake velocity for amp
+        public static final double speakerTarget = 4750;       // TODO: Tune target intake velocity for amp
         /** Target intake velocity for shooting into the Amp */
         public static final double ampTarget = 4000;
         public static final double idleTarget = 1800;
@@ -185,7 +186,7 @@ public final class Constants {
     /** Various constants used for the intake shooter and commands */
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = 4800;
+        public static final double speakerTarget = 4550;
         // TODO: Tune target shooter velocity for amp
         public static final double ampTarget = 2200;
         // 
@@ -269,7 +270,7 @@ public final class Constants {
         public static final int detectorChannel = 4;
         public static final int noteBeambreakChannel = 3;
         public static final int ledPort = 1;
-        public static final int ledLength = 60;
+        public static final int ledLength = 20;
     }
 
     public static final class LEDConstants {
