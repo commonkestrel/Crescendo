@@ -10,19 +10,21 @@ import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.LEDConstants;
 
 public class Leds extends SubsystemBase {
-    public static enum State {
-        Solid,
-        Flash,
-        FastFlash,
-        Fade,
+    public static enum LedState {
+        kSolid,
+        kFlash,
+        kFastFlash,
+        kFade,
+        kRainbow,
     }
 
     private final AddressableLED m_led;
     private final AddressableLEDBuffer m_buffer;
     private long m_previousNanos = 0;
-    private State m_currentState = State.Solid;
+    private LedState m_currentState = LedState.kSolid;
     private Color m_currentColor = Color.kBlack;
     private boolean m_flashOn = true;
+    private int iRainbow = 0;
 
     private Optional<Short> m_flashPoint = Optional.empty();
     private Color m_flashColor;
@@ -53,7 +55,7 @@ public class Leds extends SubsystemBase {
         }
     }
 
-    public void set(State state, Color color) {
+    public void set(LedState state, Color color) {
         m_currentState = state;
         m_currentColor = color;
         m_previousNanos = System.nanoTime();
@@ -118,16 +120,35 @@ public class Leds extends SubsystemBase {
             }
         } else {
             switch (m_currentState) {
-            case Solid:
+            case kSolid:
                 break;
-            case Flash:
+            case kFlash:
                 if (System.nanoTime() - m_previousNanos > LEDConstants.flashLength) invert();
-            case FastFlash:
+                break;
+            case kFastFlash:
                 if (System.nanoTime() - m_previousNanos > LEDConstants.fastFlashLength) invert();
-            case Fade:
+                break;
+            case kFade:
                 double fade = Math.cos(2.0 * Math.PI * ((double) (System.nanoTime() - m_previousNanos)) / LEDConstants.fadePeriod) / 2.0 + 0.5;
                 fill(faded(m_currentColor, fade));
                 update();
+                break;
+            case kRainbow:
+            
+                if ((System.nanoTime() - m_previousNanos) > 10e6){
+                    int length = m_buffer.getLength();
+                    for (int i = 0; i < length; i++) {
+                        
+                        final var hue = (iRainbow + (i * 180 / length)) % 180;
+
+                        m_buffer.setHSV(i, hue, 255, 128);
+                    }
+                    iRainbow ++;
+                    iRainbow %= 180;
+                    
+                    
+                }
+                break;
             }
         }
     }

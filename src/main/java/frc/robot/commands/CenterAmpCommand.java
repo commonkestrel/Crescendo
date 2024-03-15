@@ -11,10 +11,13 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.utils.MathUtils;
 
@@ -26,6 +29,7 @@ public class CenterAmpCommand extends Command {
 
     private final Swerve m_drive;
     private final Limelight m_limelight;
+    private final Leds m_leds;
 
     private final PIDController m_rotController = new PIDController(AutoConstants.rotKP, AutoConstants.rotKI, AutoConstants.rotKD);
     private final PIDController m_xController = new PIDController(AutoConstants.xKP, AutoConstants.xKI, AutoConstants.xKD);
@@ -34,9 +38,10 @@ public class CenterAmpCommand extends Command {
     private State m_currentState;
 
 
-    public CenterAmpCommand(Swerve drive, Limelight limelight) {
+    public CenterAmpCommand(Swerve drive, Limelight limelight, Leds leds) {
         m_drive = drive;
         m_limelight = limelight;
+        m_leds = leds;
 
         addRequirements(m_drive);
     }
@@ -54,6 +59,8 @@ public class CenterAmpCommand extends Command {
         m_xController.reset();
         m_yController.reset();
         m_rotController.reset();
+
+        m_leds.set(LedState.kFade, Color.kOrange);
 
     }
 
@@ -98,6 +105,7 @@ public class CenterAmpCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         m_drive.drive(0.0, 0.0, 0.0, false, false);
+        m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
     }
 
     @Override

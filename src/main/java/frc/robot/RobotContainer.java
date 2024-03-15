@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CenterAmpCommand;
 import frc.robot.commands.ClimberReleaseCommand;
 import frc.robot.Constants.IOConstants;
@@ -42,7 +43,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Leds.State;
+import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.Toggle;
 
@@ -58,6 +59,8 @@ public class RobotContainer {
     private static final Leds m_leds = Leds.getInstance();
 
     private static Toggle m_shootingSpeaker = new Toggle(false);
+    private static 
+    Trigger m_limelightTarget;
 
     public RobotContainer() {
         configureSmartDashboard();
@@ -106,12 +109,19 @@ public class RobotContainer {
 
         m_driveController.x().whileTrue(Commands.run(m_swerve::crossWheels, m_swerve));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
-        m_driveController.b().whileTrue(new CenterAmpCommand(m_swerve, m_limelight));
+        m_driveController.b().whileTrue(new CenterAmpCommand(m_swerve, m_limelight, m_leds));
+        m_driveController.a().onTrue(Commands.runOnce(() -> m_leds.set(LedState.kRainbow, Color.kBlack)));
         m_mechController.back().onTrue(Commands.runOnce(() -> {
             System.out.println("Fill");
-            m_leds.set(State.Fade, Color.kBlue);
+            m_leds.set(LedState.kFade, Color.kBlue);
             m_leds.update();
         }));
+
+        // Initialize limelight
+        m_limelightTarget = new Trigger(m_limelight::getTV);
+        m_limelightTarget.onTrue(Commands.runOnce(() -> m_leds.set(LedState.kSolid, Color.kGreen)));
+        m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
+        m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
 
         NamedCommands.registerCommand("scoreAmp", shootAmp());
         NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());

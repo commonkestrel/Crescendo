@@ -270,7 +270,7 @@ public final class Constants {
         public static final int detectorChannel = 4;
         public static final int noteBeambreakChannel = 3;
         public static final int ledPort = 1;
-        public static final int ledLength = 20;
+        public static final int ledLength = 44;
     }
 
     public static final class LEDConstants {
