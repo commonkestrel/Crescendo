@@ -19,6 +19,7 @@ import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
+import wildlib.utils.FieldUtils;
 import wildlib.utils.MathUtils;
 
 public class CenterAmpCommand extends Command {
@@ -74,16 +75,15 @@ public class CenterAmpCommand extends Command {
                 m_drive.drive(0.0, 0.0, 0.0, false, false);
                 m_xController.setSetpoint(0.0);
                 m_yController.setSetpoint(-0.41);
-                m_rotController.setSetpoint(m_drive.getAmpOffset());
+                m_rotController.setSetpoint(FieldUtils.getAmpOffset().getDegrees());
             } else {
                 m_drive.drive(0.0, 0.0, 0.2, false, true);
             }
 
             break;
         case Found:
-
             m_yController.setSetpoint(-0.41);
-            m_rotController.setSetpoint(m_drive.getAmpOffset());
+            m_rotController.setSetpoint(FieldUtils.getAmpOffset().getDegrees());
             System.out.printf("Y PID Setpoint: %f; ", m_yController.getSetpoint());
 
             double[] botpose = m_limelight.getBotPose_TargetSpace();

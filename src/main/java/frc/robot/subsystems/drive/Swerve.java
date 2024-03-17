@@ -339,18 +339,6 @@ public class Swerve extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)).getDegrees();
     }
 
-    public double getAmpOffset() {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-
-        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
-            return Units.degreesToRadians(-90.0);
-        } else if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            return Units.degreesToRadians(90.0);
-        } else {
-            return 0.0;
-        }
-    }
-
     public ChassisSpeeds getSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }

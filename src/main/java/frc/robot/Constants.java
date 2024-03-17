@@ -283,6 +283,7 @@ public final class Constants {
 
     public static final class GameConstants {
         public static final double noteDiameter = 14.0;
+        public static final double fieldLength = 16.54;
     }
 
     public static final class DriverConstants {
