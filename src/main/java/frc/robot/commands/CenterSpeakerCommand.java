@@ -76,7 +76,7 @@ public class CenterSpeakerCommand extends Command {
 
         Translation2d difference = currentPose.getTranslation().minus(speaker);
 
-        double angle = MathUtil.clamp(Math.atan(difference.getY() / difference.getX()), -Math.PI/6, Math.PI/6);
+        double angle = FieldUtils.correctedSpeakerArc(difference);
         m_targetX = AutoConstants.speakerRadius * Math.cos(angle) + speaker.getX();
         m_targetY = AutoConstants.speakerRadius * Math.sin(angle) + speaker.getY();
         m_targetRot = 180 + Units.radiansToDegrees(angle);

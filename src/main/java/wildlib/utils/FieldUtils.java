@@ -2,6 +2,7 @@ package wildlib.utils;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,6 +11,8 @@ import frc.robot.Constants.GameConstants;
 
 public class FieldUtils {
     public static final Translation2d DEFAULT_SPEAKER_POSITION = new Translation2d(0.0, 5.4);
+    public static final double BLUE_SPEAKER_ARC = Math.PI / 6;
+    public static final double RED_SPEAKER_ARC = 5*Math.PI / 6;
     public static final Rotation2d DEFAULT_AMP_ROTATION = new Rotation2d(Math.PI / 2);
 
     public static Translation2d getAllianceSpeaker() {
@@ -18,6 +21,18 @@ public class FieldUtils {
 
     public static Rotation2d getAmpOffset() {
         return correctFieldRotation(DEFAULT_AMP_ROTATION);
+    }
+
+    public static double correctedSpeakerArc(Translation2d difference) {
+        Rotation2d angle = difference.getAngle().plus(new Rotation2d(difference.getX() < 0.0 ? Math.PI : 0.0));
+
+        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+
+        if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
+            return MathUtil.clamp(angle.getRadians(), -RED_SPEAKER_ARC, RED_SPEAKER_ARC);
+        } else {
+            return MathUtil.clamp(angle.getRadians(), -BLUE_SPEAKER_ARC, BLUE_SPEAKER_ARC);
+        }
     }
 
     /**
