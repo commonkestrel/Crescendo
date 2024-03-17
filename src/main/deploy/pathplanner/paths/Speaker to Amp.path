@@ -1,0 +1,92 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.9484516266329829,
+        "y": 6.822590942479183
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3182397535966242,
+        "y": 7.441986055143282
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9730416217589193,
+        "y": 6.637696878997361
+      },
+      "prevControl": {
+        "x": 3.213403904285286,
+        "y": 7.146155553572367
+      },
+      "nextControl": {
+        "x": 2.688556068887463,
+        "y": 6.035900517153897
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.826698428171631,
+        "y": 7.478964867839646
+      },
+      "prevControl": {
+        "x": 1.835943131345722,
+        "y": 6.841080348827364
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 130.10090754621223,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shootSpeaker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": -120.85420450589702,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

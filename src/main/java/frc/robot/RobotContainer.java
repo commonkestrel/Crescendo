@@ -120,6 +120,8 @@ public class RobotContainer {
 
         m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds));
         m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds));
+        // TODO: test this like ever
+        m_driveController.y().whileTrue(AutoBuilder.buildAuto("Speaker to Amp"));
 
         // Initialize limelight
         m_limelightTarget = new Trigger(m_limelight::getTV);
@@ -127,10 +129,11 @@ public class RobotContainer {
         m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
 
-        NamedCommands.registerCommand("scoreAmp", shootAmp());
-        NamedCommands.registerCommand("scoreSpeaker", shootSpeaker());
+        NamedCommands.registerCommand("shootAmp", shootAmp());
+        NamedCommands.registerCommand("shootSpeaker", shootSpeaker());
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
+        NamedCommands.registerCommand("centerAmp", new CenterAmpCommand(m_swerve, m_limelight, m_leds));
     }
 
     private Command shootAmp() {
@@ -146,11 +149,11 @@ public class RobotContainer {
         // return new ClimberRetractCommand(m_climber);
     }
 
-    public Command getLimelightAuto() {
-        double offset = m_swerve.getAmpOffset();
+    public Command getPathplannerAuto() {
+        // double offset = m_swerve.getAmpOffset();
 
         return Commands.sequence(
-            new ResetHeading(m_swerve, offset),
+            // new ResetHeading(m_swerve, offset),
             Commands.parallel(
                 new ClimberRetractCommand(m_climber, m_leds)
             )
