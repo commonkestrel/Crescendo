@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CenterAmpCommand;
+import frc.robot.commands.CenterCommand;
+import frc.robot.commands.CenterSpeakerCommand;
 import frc.robot.commands.ClimberReleaseCommand;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.ClimberRetractCommand;
@@ -101,7 +103,7 @@ public class RobotContainer {
         m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
         // m_mechController.x().whileTrue(new IntakeCommand(m_intake));
 
-        m_mechController.povDown().whileTrue(new ClimberRetractCommand(m_climber));
+        m_mechController.povDown().whileTrue(new ClimberRetractCommand(m_climber, m_leds));
         m_mechController.povUp().whileTrue(new ClimberReleaseCommand(m_climber));
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
 
@@ -109,17 +111,19 @@ public class RobotContainer {
 
         m_driveController.x().whileTrue(Commands.run(m_swerve::crossWheels, m_swerve));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
-        m_driveController.b().whileTrue(new CenterAmpCommand(m_swerve, m_limelight, m_leds));
+        m_driveController.b().whileTrue(new CenterAmpCommand(m_swerve, m_limelight, m_leds).andThen(Commands.print("centered")));
         m_driveController.a().onTrue(Commands.runOnce(() -> m_leds.set(LedState.kRainbow, Color.kBlack)));
-        m_mechController.back().onTrue(Commands.runOnce(() -> {
-            System.out.println("Fill");
-            m_leds.set(LedState.kFade, Color.kBlue);
-            m_leds.update();
-        }));
+
+        m_driveController.leftBumper()
+            .whileTrue(Commands.race(new CenterAmpCommand(m_swerve, m_limelight, m_leds), new RampSpeakerCommand(m_shooter))
+            .andThen(new ShootSpeakerCommand(m_intake, m_shooter)));
+
+        m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds));
+        m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds));
 
         // Initialize limelight
         m_limelightTarget = new Trigger(m_limelight::getTV);
-        m_limelightTarget.onTrue(Commands.runOnce(() -> m_leds.set(LedState.kSolid, Color.kGreen)));
+        m_limelightTarget.onTrue(Commands.runOnce(() -> m_leds.set(LedState.kSolid, Color.kBlue)));
         m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
 
@@ -148,7 +152,7 @@ public class RobotContainer {
         return Commands.sequence(
             new ResetHeading(m_swerve, offset),
             Commands.parallel(
-                new ClimberRetractCommand(m_climber)
+                new ClimberRetractCommand(m_climber, m_leds)
             )
         );
     }

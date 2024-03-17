@@ -41,6 +41,7 @@ public class Shooter extends SubsystemBase {
     private Shooter(PIDSpark drive) {
         m_motor = drive;
         m_motor.setInverted(true);
+        m_motor.setSmartCurrentLimit(60);
         m_motor.burnFlash();
     }
 
@@ -98,6 +99,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shooter Current", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Shooter Velocity", m_motor.getVelocity());
     }
 }

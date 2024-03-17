@@ -54,6 +54,7 @@ public class Intake extends SubsystemBase {
         m_motor.setPositionConversionFactor(IntakeConstants.distanceFactor);
         m_motor.setIdleMode(IdleMode.kBrake);
         m_motor.setInverted(true);
+        m_motor.setSmartCurrentLimit(100);
         m_motor.burnFlash();
     }
 
@@ -152,6 +153,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Intake Current", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Intake Velocity", m_motor.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
         SmartDashboard.putBoolean("Beam Broken", m_noteBeambreak.get());

@@ -134,8 +134,7 @@ public class Leds extends SubsystemBase {
                 update();
                 break;
             case kRainbow:
-            
-                if ((System.nanoTime() - m_previousNanos) > 10e6){
+                if ((System.nanoTime() - m_previousNanos) > 50e6){
                     int length = m_buffer.getLength();
                     for (int i = 0; i < length; i++) {
                         
@@ -146,7 +145,7 @@ public class Leds extends SubsystemBase {
                     iRainbow ++;
                     iRainbow %= 180;
                     
-                    
+                    update();
                 }
                 break;
             }

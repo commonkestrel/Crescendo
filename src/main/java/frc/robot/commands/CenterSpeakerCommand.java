@@ -19,9 +19,10 @@ import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
+import wildlib.utils.FieldUtils;
 import wildlib.utils.MathUtils;
 
-public class CenterAmpCommand extends Command {
+public class CenterSpeakerCommand extends Command {
     private enum State {
         Search,
         Found,
@@ -35,10 +36,14 @@ public class CenterAmpCommand extends Command {
     private final PIDController m_xController = new PIDController(AutoConstants.xKP, AutoConstants.xKI, AutoConstants.xKD);
     private final PIDController m_yController = new PIDController(AutoConstants.yKP, AutoConstants.yKI, AutoConstants.yKD);
 
+    private double m_targetRot;
+    private double m_targetX;
+    private double m_targetY;
+
     private State m_currentState;
 
 
-    public CenterAmpCommand(Swerve drive, Limelight limelight, Leds leds) {
+    public CenterSpeakerCommand(Swerve drive, Limelight limelight, Leds leds) {
         m_drive = drive;
         m_limelight = limelight;
         m_leds = leds;
@@ -51,6 +56,7 @@ public class CenterAmpCommand extends Command {
         m_limelight.setPipelineIndex(AutoConstants.ampPipeline);
         
         if (m_limelight.getTV()) {
+            initFound();
             m_currentState = State.Found;
         } else {
             m_currentState = State.Search;
@@ -59,9 +65,23 @@ public class CenterAmpCommand extends Command {
         m_xController.reset();
         m_yController.reset();
         m_rotController.reset();
+        m_rotController.enableContinuousInput(-180, 180);
 
         m_leds.set(LedState.kFade, Color.kOrange);
+    }
 
+    private void initFound() {
+        Pose2d currentPose = m_limelight.getBotPose2d_wpiBlue();
+        Translation2d speaker = FieldUtils.getAllianceSpeaker();
+
+        Translation2d difference = currentPose.getTranslation().minus(speaker);
+
+        double angle = MathUtil.clamp(Math.atan(difference.getY() / difference.getX()), -Math.PI/6, Math.PI/6);
+        m_targetX = AutoConstants.speakerRadius * Math.cos(angle) + speaker.getX();
+        m_targetY = AutoConstants.speakerRadius * Math.sin(angle) + speaker.getY();
+        m_targetRot = 180 + Units.radiansToDegrees(angle);
+
+        System.out.printf("Target X: %f; Target Y: %f; Target Rot: %f;%n", m_targetX, m_targetY, m_targetRot);
     }
 
     @Override
@@ -70,30 +90,27 @@ public class CenterAmpCommand extends Command {
         switch (m_currentState) {
         case Search:
             if (m_limelight.getTV()) {
+                initFound();
+
                 m_currentState = State.Found;
                 m_drive.drive(0.0, 0.0, 0.0, false, false);
-                m_xController.setSetpoint(0.0);
-                m_yController.setSetpoint(-0.41);
-                m_rotController.setSetpoint(m_drive.getAmpOffset());
+                m_xController.setSetpoint(m_targetX);
+                m_yController.setSetpoint(m_targetY);
+                m_rotController.setSetpoint(m_targetRot);
             } else {
                 m_drive.drive(0.0, 0.0, 0.2, false, true);
             }
 
             break;
         case Found:
+            m_xController.setSetpoint(m_targetX);
+            m_yController.setSetpoint(m_targetY);
+            m_rotController.setSetpoint(m_targetRot);    
 
-            m_yController.setSetpoint(-0.41);
-            m_rotController.setSetpoint(m_drive.getAmpOffset());
-            System.out.printf("Y PID Setpoint: %f; ", m_yController.getSetpoint());
-
-            double[] botpose = m_limelight.getBotPose_TargetSpace();
+            double[] botpose = m_limelight.getBotPose_wpiBlue();
             double xDistance = botpose[0];
-            double yDistance = botpose[2];
-            double angle =  - botpose[4];
-
-            System.out.printf("4: %s; 0: %s; 1: %s%n", Boolean.toString(MathUtils.closeEnough(botpose[4], 0.0, 5.0)), Boolean.toString(MathUtils.closeEnough(botpose[0], 0.0, 0.01)), Boolean.toString(MathUtils.closeEnough(botpose[1], -0.41, 0.02)));
-
-            System.out.printf("Y Distance: %f; ", yDistance);
+            double yDistance = botpose[1];
+            double angle = botpose[5];
 
             double xTranslation = MathUtil.clamp(m_xController.calculate(xDistance), -1.0, 1.0);
             double yTranslation = MathUtil.clamp(m_yController.calculate(yDistance), -1.0, 1.0);
@@ -103,7 +120,7 @@ public class CenterAmpCommand extends Command {
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
-            m_drive.drive(-yTranslation, -yTranslation, rotation, true, false);
+            m_drive.drive(xTranslation, yTranslation, rotation, true, false);
             break;
         }
     }
@@ -118,9 +135,9 @@ public class CenterAmpCommand extends Command {
     public boolean isFinished() {
         double[] botpose = m_limelight.getBotPose_TargetSpace();
 
-        return MathUtils.closeEnough(botpose[4], 0.0, 2.0)
-            && MathUtils.closeEnough(botpose[0], 0.0, 0.05)
-            && MathUtils.closeEnough(botpose[2], -0.411, 0.01)
+        return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
+            && MathUtils.closeEnough(botpose[0], m_targetX, 0.03)
+            && MathUtils.closeEnough(botpose[1], m_targetY, 0.03)
             && m_limelight.getTV();
     }
 }

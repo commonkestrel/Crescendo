@@ -12,6 +12,8 @@ public final class Constants {
     public static final class AutoConstants {
         public static final int ampPipeline = 0;
 
+        public static final double speakerRadius = 1.65;
+
         public static final double limelightAngle = 40.0;
 
         public static final double rotKP = 0.01;
@@ -20,11 +22,11 @@ public final class Constants {
 
         public static final double xKP = 0.5;
         public static final double xKI = 0.0;
-        public static final double xKD = 0.01;
+        public static final double xKD = 0.0;
 
-        public static final double yKP = 0.35;
+        public static final double yKP = 0.5;
         public static final double yKI = 0.0;
-        public static final double yKD = 0.008;
+        public static final double yKD = 0.0;
     }
 
     /** 
