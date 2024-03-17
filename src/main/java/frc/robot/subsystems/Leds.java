@@ -106,6 +106,7 @@ public class Leds extends SubsystemBase {
                 if (flashPoint / 2 == 5) {
                     m_flashPoint = Optional.empty();
                     fill(m_currentColor);
+                    update();
                     m_flashOn = true;
                     m_previousNanos = System.nanoTime();
                     return;
