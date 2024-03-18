@@ -24,7 +24,7 @@ public class FieldUtils {
     }
 
     public static Rotation2d correctedSpeakerArc(Translation2d difference) {
-        Rotation2d angle = difference.getAngle().plus(new Rotation2d(difference.getX() < 0.0 ? Math.PI : 0.0));
+        Rotation2d angle = difference.getAngle();
 
         Optional<Alliance> currentAlliance = DriverStation.getAlliance();
 
