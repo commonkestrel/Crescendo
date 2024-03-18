@@ -18,11 +18,10 @@ public class PIDSpark extends CANSparkBase {
     private static double kI = 1e-4;
     private static double kD = 0; 
 
-    private double kIz = 0; 
-    private double kFF = 0; 
+    private double kIz = 150; 
     
-    private double kMaxOutput = 0.75; 
-    private double kMinOutput = -0.75;
+    private double kMaxOutput = 1; 
+    private double kMinOutput = -1;
 
     private RelativeEncoder m_encoder;
     private SparkPIDController m_controller;
@@ -106,7 +105,6 @@ public class PIDSpark extends CANSparkBase {
         m_controller.setFF(feedforward);
         
         m_controller.setIZone(kIz);
-        m_controller.setFF(kFF);
         m_controller.setOutputRange(kMinOutput, kMaxOutput);
     }
 
