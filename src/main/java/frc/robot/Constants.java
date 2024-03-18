@@ -65,7 +65,7 @@ public final class Constants {
         public static final double maxAngularSpeed = Units.degreesToRadians(360); // TODO: Actually find this;
         public static final double maxAngularAccel = Units.degreesToRadians(540);
         /** Max translation acceleration (m/s) */
-        public static final double maxAcceleration = 4.0; // TODO: Actually find this.
+        public static final double maxAcceleration = 3.0; // TODO: Actually find this.
 
         /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
         public static final double magnitudeSlewRate = 1.0;
@@ -78,8 +78,8 @@ public final class Constants {
         public static final double speed = 1.0;
 
         public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
-            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(1.0, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(1.0, 0.0, 0.0), // TODO: Tune this
             ModuleConstants.maxSpeed,
             baseRadius,
             new ReplanningConfig()
@@ -140,7 +140,7 @@ public final class Constants {
         /** Maximum value of the absolute turn encoder in radians. */
         public static final double turnEncoderPositionPIDMaxInput = turnEncoderPositionFactor;
 
-        public static final double driveKP = 0.05;
+        public static final double driveKP = 0.04;
         public static final double driveKI = 0;
         public static final double driveKD = 0;
         public static final double driveFF = 1 / driveWheelFreeRps;
