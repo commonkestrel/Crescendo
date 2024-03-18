@@ -12,19 +12,19 @@ public final class Constants {
     public static final class AutoConstants {
         public static final int ampPipeline = 0;
 
-        public static final double speakerRadius = 1.65;
+        public static final double speakerRadius = 1.75;
 
         public static final double limelightAngle = 40.0;
 
-        public static final double rotKP = 0.01;
+        public static final double rotKP = 0.015;
         public static final double rotKI = 0.0;
         public static final double rotKD = 0.0;
 
-        public static final double xKP = 0.5;
+        public static final double xKP = 0.6;
         public static final double xKI = 0.0;
         public static final double xKD = 0.0;
 
-        public static final double yKP = 0.5;
+        public static final double yKP = 0.6;
         public static final double yKI = 0.0;
         public static final double yKD = 0.0;
     }
@@ -78,8 +78,8 @@ public final class Constants {
         public static final double speed = 1.0;
 
         public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-            new PIDConstants(5.0, 0.0, 0.0), // TODO: Tune this
-            new PIDConstants(5.0, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
             ModuleConstants.maxSpeed,
             baseRadius,
             new ReplanningConfig()
@@ -164,7 +164,7 @@ public final class Constants {
         /** Rotation motor smart current limit (in Amps).  */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
-        public static final double maxSpeed = 4.5; // TODO: Find this
+        public static final double maxSpeed = 6.0; // TODO: Find this
     }
 
     /** Various constants used for the intake subsystem and commands */
@@ -188,9 +188,9 @@ public final class Constants {
     /** Various constants used for the intake shooter and commands */
     public static final class ShooterConstants {
         // TODO: Tune target shooter velocity for speaker
-        public static final double speakerTarget = 4550;
+        public static final double speakerTarget = 6000;
         // TODO: Tune target shooter velocity for amp
-        public static final double ampTarget = 2200;
+        public static final double ampTarget = 4500;
         // 
         public static final double idleTarget = 1000;
         //
@@ -199,9 +199,9 @@ public final class Constants {
         public static final double shootTime = 5.0;
 
         // TODO: Tune shooter PID
-        public static final double motorKP = 0.0001;
-        public static final double motorKI = 5e-7;
-        public static final double motorKD = 0.03;
+        public static final double motorKP = 0.0002;
+        public static final double motorKI = 0.0000002;
+        public static final double motorKD = 0.0;
         public static final double motorKF = 0.00015;
     }
 

@@ -99,5 +99,6 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Shooter Current", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Shooter Velocity", m_motor.getVelocity());
+        SmartDashboard.putNumber("Shooter Output", m_motor.getAppliedOutput());
     }
 }

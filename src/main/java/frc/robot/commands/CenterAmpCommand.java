@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
@@ -74,24 +75,24 @@ public class CenterAmpCommand extends Command {
                 m_currentState = State.Found;
                 m_drive.drive(0.0, 0.0, 0.0, false, false);
                 m_xController.setSetpoint(0.0);
-                m_yController.setSetpoint(-0.41);
-                m_rotController.setSetpoint(FieldUtils.getAmpOffset().getDegrees());
+                m_yController.setSetpoint(-0.39);
+                m_rotController.setSetpoint(0.0 /* FieldUtils.getAmpOffset().getDegrees() */);
             } else {
                 m_drive.drive(0.0, 0.0, 0.2, false, true);
             }
 
             break;
         case Found:
-            m_yController.setSetpoint(-0.41);
-            m_rotController.setSetpoint(FieldUtils.getAmpOffset().getDegrees());
+            m_yController.setSetpoint(-0.39);
+            m_rotController.setSetpoint(0.0 /* FieldUtils.getAmpOffset().getDegrees() */);
             System.out.printf("Y PID Setpoint: %f; ", m_yController.getSetpoint());
 
             double[] botpose = m_limelight.getBotPose_TargetSpace();
             double xDistance = botpose[0];
             double yDistance = botpose[2];
-            double angle =  - botpose[4];
+            double angle =  -botpose[4];
 
-            System.out.printf("4: %s; 0: %s; 1: %s%n", Boolean.toString(MathUtils.closeEnough(botpose[4], 0.0, 5.0)), Boolean.toString(MathUtils.closeEnough(botpose[0], 0.0, 0.01)), Boolean.toString(MathUtils.closeEnough(botpose[1], -0.41, 0.02)));
+            System.out.printf("4: %s; 0: %s; 1: %s%n", Boolean.toString(MathUtils.closeEnough(botpose[4], 0.0, 5.0)), Boolean.toString(MathUtils.closeEnough(botpose[0], 0.0, 0.01)), Boolean.toString(MathUtils.closeEnough(botpose[1], -0.39, 0.02)));
 
             System.out.printf("Y Distance: %f; ", yDistance);
 
@@ -103,7 +104,7 @@ public class CenterAmpCommand extends Command {
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
-            m_drive.drive(-xTranslation, -yTranslation, rotation, true, false);
+            m_drive.drive(((DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) ? -1.0 : 1.0) * xTranslation, ((DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) ? -1.0 : 1.0) * yTranslation, rotation, true, false);
             break;
         }
     }
@@ -118,9 +119,9 @@ public class CenterAmpCommand extends Command {
     public boolean isFinished() {
         double[] botpose = m_limelight.getBotPose_TargetSpace();
 
-        return MathUtils.closeEnough(botpose[4], 0.0, 2.0)
-            && MathUtils.closeEnough(botpose[0], 0.0, 0.05)
-            && MathUtils.closeEnough(botpose[2], -0.411, 0.01)
+        return MathUtils.closeEnough(botpose[4], 0.0, 1.0)
+            && MathUtils.closeEnough(botpose[0], 0.0, 0.03)
+            && MathUtils.closeEnough(botpose[2], -0.39, 0.1)
             && m_limelight.getTV();
     }
 }

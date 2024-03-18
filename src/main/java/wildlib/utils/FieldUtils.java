@@ -23,15 +23,15 @@ public class FieldUtils {
         return correctFieldRotation(DEFAULT_AMP_ROTATION);
     }
 
-    public static double correctedSpeakerArc(Translation2d difference) {
+    public static Rotation2d correctedSpeakerArc(Translation2d difference) {
         Rotation2d angle = difference.getAngle().plus(new Rotation2d(difference.getX() < 0.0 ? Math.PI : 0.0));
 
         Optional<Alliance> currentAlliance = DriverStation.getAlliance();
 
         if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
-            return MathUtil.clamp(angle.getRadians(), -RED_SPEAKER_ARC, RED_SPEAKER_ARC);
+            return new Rotation2d(MathUtil.clamp(angle.getRadians(), -RED_SPEAKER_ARC, RED_SPEAKER_ARC));
         } else {
-            return MathUtil.clamp(angle.getRadians(), -BLUE_SPEAKER_ARC, BLUE_SPEAKER_ARC);
+            return new Rotation2d(MathUtil.clamp(angle.getRadians(), -BLUE_SPEAKER_ARC, BLUE_SPEAKER_ARC));
         }
     }
 

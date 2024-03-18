@@ -76,10 +76,10 @@ public class CenterSpeakerCommand extends Command {
 
         Translation2d difference = currentPose.getTranslation().minus(speaker);
 
-        double angle = FieldUtils.correctedSpeakerArc(difference);
-        m_targetX = AutoConstants.speakerRadius * Math.cos(angle) + speaker.getX();
-        m_targetY = AutoConstants.speakerRadius * Math.sin(angle) + speaker.getY();
-        m_targetRot = 180 + Units.radiansToDegrees(angle);
+        Rotation2d angle = FieldUtils.correctedSpeakerArc(difference);
+        m_targetX = AutoConstants.speakerRadius * angle.getCos() + speaker.getX();
+        m_targetY = AutoConstants.speakerRadius * angle.getSin() + speaker.getY();
+        m_targetRot = 180 + FieldUtils.correctFieldRotation(angle).getDegrees();
 
         System.out.printf("Target X: %f; Target Y: %f; Target Rot: %f;%n", m_targetX, m_targetY, m_targetRot);
     }
