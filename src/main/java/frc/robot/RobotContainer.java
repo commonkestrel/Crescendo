@@ -121,19 +121,20 @@ public class RobotContainer {
         m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds));
         m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds));
         // TODO: test this like ever
-        m_driveController.y().whileTrue(AutoBuilder.buildAuto("Speaker to Amp"));
-
+        
         // Initialize limelight
         m_limelightTarget = new Trigger(m_limelight::getTV);
         m_limelightTarget.onTrue(Commands.runOnce(() -> m_leds.set(LedState.kSolid, Color.kBlue)));
         m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
-
+        
         NamedCommands.registerCommand("shootAmp", shootAmp());
         NamedCommands.registerCommand("shootSpeaker", shootSpeaker());
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
         NamedCommands.registerCommand("centerAmp", new CenterAmpCommand(m_swerve, m_limelight, m_leds));
+        
+        m_driveController.y().whileTrue(AutoBuilder.buildAuto("Speaker to Amp"));
     }
 
     private Command shootAmp() {
