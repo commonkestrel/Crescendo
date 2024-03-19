@@ -75,11 +75,13 @@ public class CenterSpeakerCommand extends Command {
         Translation2d speaker = FieldUtils.getAllianceSpeaker();
 
         Translation2d difference = currentPose.getTranslation().minus(speaker);
+        System.out.println(difference.toString());
+        System.out.println(DriverStation.getAlliance().toString());
 
         Rotation2d angle = FieldUtils.correctedSpeakerArc(difference);
         m_targetX = AutoConstants.speakerRadius * angle.getCos() + speaker.getX();
         m_targetY = AutoConstants.speakerRadius * angle.getSin() + speaker.getY();
-        m_targetRot = 180 + FieldUtils.correctFieldRotation(angle).getDegrees();
+        m_targetRot = -(FieldUtils.correctFieldRotation(angle).getDegrees());
 
         System.out.printf("Target X: %f; Target Y: %f; Target Rot: %f;%n", m_targetX, m_targetY, m_targetRot);
     }
@@ -120,7 +122,7 @@ public class CenterSpeakerCommand extends Command {
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
-            m_drive.drive(xTranslation, yTranslation, rotation, true, false);
+            m_drive.drive(-xTranslation, -yTranslation, rotation, true, false);
             break;
         }
     }
@@ -133,11 +135,11 @@ public class CenterSpeakerCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        double[] botpose = m_limelight.getBotPose_TargetSpace();
+        double[] botpose = m_limelight.getBotPose_wpiBlue();
 
         return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
-            && MathUtils.closeEnough(botpose[0], m_targetX, 0.03)
-            && MathUtils.closeEnough(botpose[1], m_targetY, 0.03)
+            && MathUtils.closeEnough(botpose[0], m_targetX, 0.05)
+            && MathUtils.closeEnough(botpose[1], m_targetY, 0.05)
             && m_limelight.getTV();
     }
 }

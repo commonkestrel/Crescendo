@@ -68,6 +68,7 @@ public class Swerve extends SubsystemBase {
     /** Position of the D wheel relative to the center of the drivetrain. */
     private final Translation2d dPosition;
 
+    private double gyroOffset = 0.0;
     private double currentRotation = 0.0;
     private double currentTranslationDir = 0.0;
     private double currentTranslationMag = 0.0;
@@ -119,7 +120,7 @@ public class Swerve extends SubsystemBase {
         
         kinematics = new SwerveDriveKinematics(aPosition, bPosition, cPosition, dPosition);
         odometry = new SwerveDriveOdometry(kinematics, 
-            Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
+            Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
             new SwerveModulePosition[] {
                 aModule.getPosition(),
                 bModule.getPosition(),
@@ -152,7 +153,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // Update the odometry in the periodic block.
         odometry.update(
-            Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
+            Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
             new SwerveModulePosition[] {
                 aModule.getPosition(),
                 bModule.getPosition(),
@@ -185,7 +186,7 @@ public class Swerve extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(
-            Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
+            Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
             new SwerveModulePosition[] {
                 aModule.getPosition(),
                 bModule.getPosition(),
@@ -258,7 +259,7 @@ public class Swerve extends SubsystemBase {
 
         SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(
             fieldRelative 
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.maxTranslationalSpeed);
@@ -337,6 +338,19 @@ public class Swerve extends SubsystemBase {
     public double getHeading() {
         // Map continuous gyro degrees to -180 to 180
         return Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)).getDegrees();
+    }
+
+    public double getAngle() {
+
+        return gyro.getAngle() + gyroOffset;
+    }
+
+    public void setOffset(double offset) {
+        gyroOffset = offset;
+    }
+
+    public double getOffset() {
+        return gyroOffset;
     }
 
     public ChassisSpeeds getSpeeds() {

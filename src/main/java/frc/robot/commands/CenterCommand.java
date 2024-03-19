@@ -42,7 +42,7 @@ public class CenterCommand extends Command {
             m_currentState = State.Search;
         }
 
-        m_leds.set(LedState.kFade, Color.kOrange);
+        m_leds.set(LedState.kFade, Color.kMagenta);
 
     }
 

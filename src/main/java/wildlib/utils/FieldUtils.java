@@ -27,9 +27,17 @@ public class FieldUtils {
         Rotation2d angle = difference.getAngle();
 
         Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+        System.out.printf("Alliance: %s%n", String.valueOf((currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red)));
 
         if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
-            return new Rotation2d(MathUtil.clamp(angle.getRadians(), -RED_SPEAKER_ARC, RED_SPEAKER_ARC));
+            double radians = angle.getRadians();
+            if (radians < 0.0 && radians > -RED_SPEAKER_ARC) {
+                return new Rotation2d(-RED_SPEAKER_ARC);
+            } else if (radians > 0.0 && radians < RED_SPEAKER_ARC) {
+                return new Rotation2d(RED_SPEAKER_ARC);
+            } else {
+                return angle;
+            }
         } else {
             return new Rotation2d(MathUtil.clamp(angle.getRadians(), -BLUE_SPEAKER_ARC, BLUE_SPEAKER_ARC));
         }

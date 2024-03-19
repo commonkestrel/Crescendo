@@ -17,14 +17,14 @@ public final class Constants {
         public static final double limelightAngle = 40.0;
 
         public static final double rotKP = 0.015;
-        public static final double rotKI = 0.0;
-        public static final double rotKD = 0.0;
+        public static final double rotKI = 0.000001;
+        public static final double rotKD = 0.0001;
 
         public static final double xKP = 0.6;
         public static final double xKI = 0.0;
         public static final double xKD = 0.0;
 
-        public static final double yKP = 0.6;
+        public static final double yKP = 0.7;
         public static final double yKI = 0.0;
         public static final double yKD = 0.0;
     }
@@ -272,7 +272,7 @@ public final class Constants {
         public static final int detectorChannel = 4;
         public static final int noteBeambreakChannel = 3;
         public static final int ledPort = 1;
-        public static final int ledLength = 44;
+        public static final int ledLength = 132;
     }
 
     public static final class LEDConstants {
