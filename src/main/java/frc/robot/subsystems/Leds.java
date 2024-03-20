@@ -16,6 +16,7 @@ public class Leds extends SubsystemBase {
         kFastFlash,
         kFade,
         kRainbow,
+        kRainbowFast
     }
 
     private final AddressableLED m_led;
@@ -149,6 +150,22 @@ public class Leds extends SubsystemBase {
                     update();
                 }
                 break;
+            case kRainbowFast:
+            if ((System.nanoTime() - m_previousNanos) > 1e6){
+                int length = m_buffer.getLength();
+                for (int i = 0; i < length; i++) {
+                    
+                    final var hue = (iRainbow + (i * 180 / length)) % 180;
+
+                    m_buffer.setHSV(i, hue, 255, 128);
+                }
+                iRainbow += 2;
+                iRainbow %= 180;
+                
+                update();
+            }
+            break;
+                
             }
         }
     }

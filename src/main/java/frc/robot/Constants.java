@@ -11,6 +11,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final class AutoConstants {
         public static final int ampPipeline = 0;
+        public static final double ampDistance = -0.41;
+        public static final double sourceDistance = -0.52;
 
         public static final double speakerRadius = 1.75;
 
@@ -24,7 +26,7 @@ public final class Constants {
         public static final double xKI = 0.0;
         public static final double xKD = 0.0;
 
-        public static final double yKP = 0.7;
+        public static final double yKP = 0.35;
         public static final double yKI = 0.0;
         public static final double yKD = 0.0;
     }
@@ -164,7 +166,7 @@ public final class Constants {
         /** Rotation motor smart current limit (in Amps).  */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
-        public static final double maxSpeed = 6.0; // TODO: Find this
+        public static final double maxSpeed = 4.8; // TODO: Find this
     }
 
     /** Various constants used for the intake subsystem and commands */
@@ -201,7 +203,7 @@ public final class Constants {
         // TODO: Tune shooter PID
         public static final double motorKP = 0.0002;
         public static final double motorKI = 0.0000002;
-        public static final double motorKD = 0.0;
+        public static final double motorKD = 0.000000001;
         public static final double motorKF = 0.00015;
     }
 

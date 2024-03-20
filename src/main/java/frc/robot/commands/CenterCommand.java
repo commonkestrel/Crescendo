@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Leds.LedState;
@@ -18,16 +20,18 @@ public class CenterCommand extends Command {
     private final Limelight m_limelight;
     private final Leds m_leds;
     private final Swerve m_swerve;
-    private final CenterAmpCommand m_ampCommand;
+    private final CenterTargetCommand m_ampCommand;
+    private final CenterTargetCommand m_sourceCommand;
     private final CenterSpeakerCommand m_speakerCommand;
     private Command m_currentCommand;
 
-    public CenterCommand(Swerve swerve, Limelight limelight, Leds leds) {
+    public CenterCommand(Swerve swerve, Limelight limelight, Leds leds, XboxController xboxController) {
         m_limelight = limelight;
         m_leds = leds;
         m_swerve = swerve;
-        m_ampCommand = new CenterAmpCommand(swerve, m_limelight, leds);
-        m_speakerCommand = new CenterSpeakerCommand(swerve, limelight, leds);
+        m_ampCommand = new CenterTargetCommand(swerve, m_limelight, leds, AutoConstants.ampDistance);
+        m_sourceCommand = new CenterTargetCommand(swerve, limelight, leds, AutoConstants.sourceDistance);
+        m_speakerCommand = new CenterSpeakerCommand(swerve, limelight, leds, xboxController);
     }
 
     @Override
@@ -76,12 +80,21 @@ public class CenterCommand extends Command {
     }
 
     private void initFound() {
+        System.out.println((int) m_limelight.getFiducialID());
         switch ((int) m_limelight.getFiducialID()) {
         case 5:
         case 6:
             m_currentCommand = m_ampCommand;
-        default:
+            break;
+        case 3:
+        case 4:
+        case 7:
+        case 8:
             m_currentCommand = m_speakerCommand;
+            break;
+        default:
+            m_currentCommand = m_sourceCommand;
+            break;
         }
 
         m_currentCommand.initialize();

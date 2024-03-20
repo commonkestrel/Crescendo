@@ -129,13 +129,15 @@ public class Swerve extends SubsystemBase {
             }
         );
 
+        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+        System.out.printf("Red: %s%n", String.valueOf(currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red));
         AutoBuilder.configureHolonomic(
             this::getPose,
             this::resetOdometry,
             this::getSpeeds,
             this::driveRelative,
             DriveConstants.pathFollowerConfig,
-            () -> true,
+            () -> currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red,
             this
         );
 
@@ -271,7 +273,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void driveRelative(ChassisSpeeds fieldRelativeSpeeds) {
-        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()), 0.02);
+        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(fieldRelativeSpeeds, 0.02);
 
         SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, ModuleConstants.maxSpeed);

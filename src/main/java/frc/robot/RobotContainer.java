@@ -25,10 +25,12 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.CenterAmpCommand;
+import frc.robot.commands.CenterTargetCommand;
 import frc.robot.commands.CenterCommand;
 import frc.robot.commands.CenterSpeakerCommand;
 import frc.robot.commands.ClimberReleaseCommand;
+import frc.robot.commands.ClimberResetCommand;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.commands.ClimberRetractCommand;
 import frc.robot.commands.IntakeCommand;
@@ -105,21 +107,21 @@ public class RobotContainer {
 
         m_mechController.povDown().whileTrue(new ClimberRetractCommand(m_climber, m_leds));
         m_mechController.povUp().whileTrue(new ClimberReleaseCommand(m_climber));
+        m_mechController.rightTrigger().whileTrue(new ClimberResetCommand(m_climber, m_leds));
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
 
         m_driveController.back().onTrue(Commands.runOnce(m_swerve::capSpeed, m_swerve));
 
         m_driveController.x().whileTrue(Commands.run(m_swerve::crossWheels, m_swerve));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
-        m_driveController.b().whileTrue(new CenterAmpCommand(m_swerve, m_limelight, m_leds).andThen(Commands.print("centered")));
-        m_driveController.a().onTrue(Commands.runOnce(() -> m_leds.set(LedState.kRainbow, Color.kBlack)));
+        m_driveController.b().whileTrue(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance).andThen(Commands.print("centered")));
 
         m_driveController.leftBumper()
-            .whileTrue(Commands.race(new CenterAmpCommand(m_swerve, m_limelight, m_leds), new RampSpeakerCommand(m_shooter))
+            .whileTrue(Commands.race(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance), new RampSpeakerCommand(m_shooter))
             .andThen(new ShootSpeakerCommand(m_intake, m_shooter)));
 
-        m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds));
-        m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds));
+        m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
+        m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         // TODO: test this like ever
         
         // Initialize limelight
@@ -132,7 +134,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("shootSpeaker", shootSpeaker());
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
-        NamedCommands.registerCommand("centerAmp", new CenterAmpCommand(m_swerve, m_limelight, m_leds));
+        NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
         
         m_driveController.y().whileTrue(AutoBuilder.buildAuto("Speaker to Amp"));
     }

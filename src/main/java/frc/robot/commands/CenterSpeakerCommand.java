@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import java.sql.Driver;
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -11,8 +14,11 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Leds;
@@ -31,6 +37,7 @@ public class CenterSpeakerCommand extends Command {
     private final Swerve m_drive;
     private final Limelight m_limelight;
     private final Leds m_leds;
+    private final XboxController m_xboxController;
 
     private final PIDController m_rotController = new PIDController(AutoConstants.rotKP, AutoConstants.rotKI, AutoConstants.rotKD);
     private final PIDController m_xController = new PIDController(AutoConstants.xKP, AutoConstants.xKI, AutoConstants.xKD);
@@ -43,16 +50,19 @@ public class CenterSpeakerCommand extends Command {
     private State m_currentState;
 
 
-    public CenterSpeakerCommand(Swerve drive, Limelight limelight, Leds leds) {
+    public CenterSpeakerCommand(Swerve drive, Limelight limelight, Leds leds, XboxController xboxController) {
         m_drive = drive;
         m_limelight = limelight;
         m_leds = leds;
+        m_xboxController = xboxController;
 
         addRequirements(m_drive);
     }
 
     @Override
     public void initialize() {
+        //TODO: DELETE IMMEDIATELY
+        m_drive.setOffset(180);
         m_limelight.setPipelineIndex(AutoConstants.ampPipeline);
         
         if (m_limelight.getTV()) {
@@ -67,7 +77,7 @@ public class CenterSpeakerCommand extends Command {
         m_rotController.reset();
         m_rotController.enableContinuousInput(-180, 180);
 
-        m_leds.set(LedState.kFade, Color.kOrange);
+        m_leds.set(LedState.kFade, Color.kMagenta);
     }
 
     private void initFound() {
@@ -79,6 +89,10 @@ public class CenterSpeakerCommand extends Command {
         System.out.println(DriverStation.getAlliance().toString());
 
         Rotation2d angle = FieldUtils.correctedSpeakerArc(difference);
+        setAngle(speaker, angle);
+    }
+
+    private void setAngle(Translation2d speaker, Rotation2d angle) {
         m_targetX = AutoConstants.speakerRadius * angle.getCos() + speaker.getX();
         m_targetY = AutoConstants.speakerRadius * angle.getSin() + speaker.getY();
         m_targetRot = -(FieldUtils.correctFieldRotation(angle).getDegrees());
@@ -105,6 +119,24 @@ public class CenterSpeakerCommand extends Command {
 
             break;
         case Found:
+            int pov = m_xboxController.getPOV();
+            System.out.printf("POV: %d%n", pov);
+            if (pov == 90 || pov == 270) {
+                double distance = (Math.PI/6) / 20;
+                if (pov == 270) {
+                    distance = -distance;
+                }
+                Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+                if (currentAlliance.isPresent() || currentAlliance.get() == Alliance.Red) {
+                    distance = -distance;
+                }
+
+                Rotation2d angle = FieldUtils.clampSpeakerArc(Rotation2d.fromDegrees(-m_targetRot).plus(Rotation2d.fromRadians(distance)));
+                Translation2d speaker = FieldUtils.getAllianceSpeaker();
+
+                setAngle(speaker, angle);
+            }
+
             m_xController.setSetpoint(m_targetX);
             m_yController.setSetpoint(m_targetY);
             m_rotController.setSetpoint(m_targetRot);    
@@ -131,15 +163,18 @@ public class CenterSpeakerCommand extends Command {
     public void end(boolean interrupted) {
         m_drive.drive(0.0, 0.0, 0.0, false, false);
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
+        //TODO: DELETE IMMEDIATELY
+        m_drive.setOffset(0);
     }
 
     @Override
     public boolean isFinished() {
-        double[] botpose = m_limelight.getBotPose_wpiBlue();
+        return false;
+        // double[] botpose = m_limelight.getBotPose_wpiBlue();
 
-        return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
-            && MathUtils.closeEnough(botpose[0], m_targetX, 0.05)
-            && MathUtils.closeEnough(botpose[1], m_targetY, 0.05)
-            && m_limelight.getTV();
+        // return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
+        //     && MathUtils.closeEnough(botpose[0], m_targetX, 0.05)
+        //     && MathUtils.closeEnough(botpose[1], m_targetY, 0.05)
+        //     && m_limelight.getTV();
     }
 }

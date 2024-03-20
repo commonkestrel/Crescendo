@@ -24,7 +24,7 @@ import frc.robot.subsystems.drive.Swerve;
 import wildlib.utils.FieldUtils;
 import wildlib.utils.MathUtils;
 
-public class CenterAmpCommand extends Command {
+public class CenterTargetCommand extends Command {
     private enum State {
         Search,
         Found,
@@ -33,6 +33,7 @@ public class CenterAmpCommand extends Command {
     private final Swerve m_drive;
     private final Limelight m_limelight;
     private final Leds m_leds;
+    private final double m_yDistance;
 
     private final PIDController m_rotController = new PIDController(AutoConstants.rotKP, AutoConstants.rotKI, AutoConstants.rotKD);
     private final PIDController m_xController = new PIDController(AutoConstants.xKP, AutoConstants.xKI, AutoConstants.xKD);
@@ -41,10 +42,11 @@ public class CenterAmpCommand extends Command {
     private State m_currentState;
 
 
-    public CenterAmpCommand(Swerve drive, Limelight limelight, Leds leds) {
+    public CenterTargetCommand(Swerve drive, Limelight limelight, Leds leds, double yDistance) {
         m_drive = drive;
         m_limelight = limelight;
         m_leds = leds;
+        m_yDistance = yDistance;
 
         addRequirements(m_drive);
     }
@@ -103,7 +105,7 @@ public class CenterAmpCommand extends Command {
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
             SmartDashboard.putNumber("Angle offset", angle);
 
-            m_drive.drive(0.0 /* yTranslation */, 0.0 /*-xTranslation */, rotation, true, false);
+            m_drive.drive(yTranslation, -xTranslation, rotation, true, false);
             break;
         }
     }
@@ -113,7 +115,7 @@ public class CenterAmpCommand extends Command {
                 m_drive.drive(0.0, 0.0, 0.0, false, false);
                 m_drive.setOffset(m_drive.getHeading() + m_limelight.getBotPose_TargetSpace()[4]);
                 m_xController.setSetpoint(0.0);
-                m_yController.setSetpoint(-0.41);
+                m_yController.setSetpoint(m_yDistance);
                 m_rotController.setSetpoint(0.0 /* FieldUtils.getAmpOffset().getDegrees() */);
     }
 
@@ -128,9 +130,9 @@ public class CenterAmpCommand extends Command {
     public boolean isFinished() {
         double[] botpose = m_limelight.getBotPose_TargetSpace();
 
-        return MathUtils.closeEnough(botpose[4], 0.0, 0.05)
+        return MathUtils.closeEnough(botpose[4], 0.0, 0.01)
             && MathUtils.closeEnough(botpose[0], 0.0, 0.03)
-            && MathUtils.closeEnough(botpose[2], -0.41, 0.1)
+            && MathUtils.closeEnough(botpose[2], m_yDistance, 0.01)
             && m_limelight.getTV();
     }
 }

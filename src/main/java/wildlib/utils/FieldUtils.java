@@ -25,9 +25,11 @@ public class FieldUtils {
 
     public static Rotation2d correctedSpeakerArc(Translation2d difference) {
         Rotation2d angle = difference.getAngle();
+        return clampSpeakerArc(angle);
+    }
 
+    public static Rotation2d clampSpeakerArc(Rotation2d angle) {
         Optional<Alliance> currentAlliance = DriverStation.getAlliance();
-        System.out.printf("Alliance: %s%n", String.valueOf((currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red)));
 
         if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
             double radians = angle.getRadians();

@@ -61,6 +61,8 @@ public class Climber extends SubsystemBase {
         m_right.setPositionConversionFactor(ClimberConstants.conversionFactor);
         m_right.setIdleMode(IdleMode.kBrake);
 
+        m_right.getEncoder().setPosition(0.0);
+
         m_right.burnFlash();
     }
 
@@ -70,6 +72,18 @@ public class Climber extends SubsystemBase {
 
     public REVLibError setRightTargetPosition(double position) {
         return m_right.setTargetPosition(position);
+    }
+
+    public void disableFowardSoftLimit() {
+        m_left.enableSoftLimit(SoftLimitDirection.kForward, false);
+        m_right.enableSoftLimit(SoftLimitDirection.kForward, false);
+    }
+
+    public void enableFowardSoftLimit() {
+        m_left.getEncoder().setPosition(0.0);
+        m_right.getEncoder().setPosition(0.0);
+        m_left.enableSoftLimit(SoftLimitDirection.kForward, true);
+        m_right.enableSoftLimit(SoftLimitDirection.kForward, true);
     }
 
     public double getLeftPosition() {
