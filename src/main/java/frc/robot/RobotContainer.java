@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -63,14 +64,15 @@ public class RobotContainer {
     private static final Leds m_leds = Leds.getInstance();
 
     private static Toggle m_shootingSpeaker = new Toggle(false);
-    private static 
-    Trigger m_limelightTarget;
+    private static Trigger m_limelightTarget;
+    private static SendableChooser<Command> m_autoCommand;
 
     public RobotContainer() {
         configureSmartDashboard();
         configureDefaults();
         configureBindings();
 
+        // TODO: Invert direction based on alliance to stay consistent with WPILib coordinate systems
         m_swerve.setDefaultCommand(Commands.run(() -> {
             double forward = MathUtil.applyDeadband(m_driveController.getLeftY(), CurrentDriver.getTransDeadband());
             double strafe = MathUtil.applyDeadband(m_driveController.getLeftX(), CurrentDriver.getTransDeadband());
@@ -138,6 +140,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake, m_leds));
         
         m_driveController.y().whileTrue(AutoBuilder.buildAuto("Dual Speaker"));
+        m_autoCommand = AutoBuilder.buildAutoChooser();
     }
 
     private Command shootAmp() {
@@ -149,7 +152,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return null;
+        return m_autoCommand.getSelected();
         // return new ClimberRetractCommand(m_climber);
     }
 
