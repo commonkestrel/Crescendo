@@ -61,8 +61,6 @@ public class CenterSpeakerCommand extends Command {
 
     @Override
     public void initialize() {
-        //TODO: DELETE IMMEDIATELY
-        m_drive.setOffset(180);
         m_limelight.setPipelineIndex(AutoConstants.ampPipeline);
         
         if (m_limelight.getTV()) {
@@ -131,7 +129,6 @@ public class CenterSpeakerCommand extends Command {
                     distance = -distance;
                 }
 
-
                 Rotation2d angle = FieldUtils.clampSpeakerArc(FieldUtils.correctFieldRotation(Rotation2d.fromDegrees(m_targetRot)).unaryMinus().plus(Rotation2d.fromRadians(distance)));
                 Translation2d speaker = FieldUtils.getAllianceSpeaker();
 
@@ -155,7 +152,7 @@ public class CenterSpeakerCommand extends Command {
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
-            m_drive.drive(-xTranslation, -yTranslation, rotation, true, false);
+            m_drive.drive(xTranslation, -yTranslation, rotation, true, false);
             break;
         }
     }
@@ -164,8 +161,6 @@ public class CenterSpeakerCommand extends Command {
     public void end(boolean interrupted) {
         m_drive.drive(0.0, 0.0, 0.0, false, false);
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
-        //TODO: DELETE IMMEDIATELY
-        m_drive.setOffset(0);
     }
 
     @Override

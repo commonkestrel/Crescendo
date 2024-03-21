@@ -8,7 +8,9 @@ import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.util.PPLibTelemetry;
 
 import edu.wpi.first.math.MathUtil;
@@ -51,6 +53,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.Toggle;
+import wildlib.utils.FieldUtils;
 
 public class RobotContainer {
     private final CommandXboxController m_driveController = new CommandXboxController(IOConstants.driveControllerPort);
@@ -74,15 +77,19 @@ public class RobotContainer {
 
         // TODO: Invert direction based on alliance to stay consistent with WPILib coordinate systems
         m_swerve.setDefaultCommand(Commands.run(() -> {
+            double redInverted = FieldUtils.red() ? -1.0 : 1.0;
+            double xyInverted = (IOConstants.xyInverted ^ CurrentDriver.getXYInverted()) ? -1.0 : 1.0;
+            double rotInverted = (IOConstants.rotInverted ^ CurrentDriver.getRotInverted()) ? -1.0 : 1.0;
+
             double forward = MathUtil.applyDeadband(m_driveController.getLeftY(), CurrentDriver.getTransDeadband());
             double strafe = MathUtil.applyDeadband(m_driveController.getLeftX(), CurrentDriver.getTransDeadband());
             double rotation = MathUtil.applyDeadband(m_driveController.getRightX(), CurrentDriver.getRotDeadband());
             double speed = m_driveController.getRightTriggerAxis();
 
             m_swerve.drive(
-                forward * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
-                strafe * speed * (IOConstants.xyInverted ^ CurrentDriver.getXYInverted() ? -1.0 : 1.0),
-                rotation * speed * (IOConstants.rotInverted ^ CurrentDriver.getRotInverted() ? -1.0 : 1.0),
+                forward * speed * redInverted * xyInverted,
+                strafe * speed * redInverted * xyInverted,
+                rotation * speed * rotInverted,
                 true, false
             );
         }, m_swerve));

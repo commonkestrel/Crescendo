@@ -29,9 +29,7 @@ public class FieldUtils {
     }
 
     public static Rotation2d clampSpeakerArc(Rotation2d angle) {
-        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
-
-        if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
+        if (FieldUtils.red()) {
             double radians = angle.getRadians();
             if (radians < 0.0 && radians > -RED_SPEAKER_ARC) {
                 return new Rotation2d(-RED_SPEAKER_ARC);
@@ -52,9 +50,7 @@ public class FieldUtils {
      * @return The corrected position
      */
     public static Translation2d correctFieldPosition(Translation2d pos) {
-        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
-
-        if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
+        if (FieldUtils.red()) {
             return flipFieldPosition(pos);
         } else {
             return pos;
@@ -68,9 +64,7 @@ public class FieldUtils {
      * @return The corrected rotation
      */
     public static Rotation2d correctFieldRotation(Rotation2d rot) {
-        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
-
-        if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
+        if (FieldUtils.red()) {
             return flipFieldRotation(rot);
         } else {
             return rot;
@@ -95,5 +89,10 @@ public class FieldUtils {
     */
     public static Rotation2d flipFieldRotation(Rotation2d rot) {
         return new Rotation2d(Math.PI).minus(rot);
+    }
+
+    public static boolean red() {
+        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+        return (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red);
     }
 }
