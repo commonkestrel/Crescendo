@@ -3,66 +3,66 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2640466660243659,
-        "y": 6.864670281064701
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.6042498664334555,
-        "y": 7.444345160420327
-      },
-      "isLocked": false,
-      "linkedName": "Against to Shoot end"
-    },
-    {
-      "anchor": {
-        "x": 2.8237041089466803,
-        "y": 7.439674879349759
-      },
-      "prevControl": {
-        "x": 2.7156213119804837,
-        "y": 7.678530150732265
-      },
-      "nextControl": {
-        "x": 3.1307463400894053,
-        "y": 6.761133450888923
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.8237041089466803,
-        "y": 6.497263208862725
-      },
-      "prevControl": {
-        "x": 3.1157444732228403,
-        "y": 6.705398842438092
-      },
-      "nextControl": {
-        "x": 2.198404818263504,
-        "y": 6.0516156889962565
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 1.6881599477442544,
         "y": 6.069015566608796
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.121797513688142,
+        "y": 6.600076536319226
+      },
+      "isLocked": false,
+      "linkedName": "Shoot Another End"
+    },
+    {
+      "anchor": {
+        "x": 2.8390506231498973,
+        "y": 6.243354441107425
+      },
       "prevControl": {
-        "x": 2.359112058879246,
-        "y": 6.256487480014162
+        "x": 2.6553634868402467,
+        "y": 6.446377065449671
+      },
+      "nextControl": {
+        "x": 3.022737759459548,
+        "y": 6.04033181676518
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.945395807329169,
+        "y": 5.257244551445089
+      },
+      "prevControl": {
+        "x": 2.9260603192965737,
+        "y": 5.677791416154027
+      },
+      "nextControl": {
+        "x": 2.964731295361764,
+        "y": 4.836697686736151
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.69,
+        "y": 5.054221927102843
+      },
+      "prevControl": {
+        "x": 2.429582417246752,
+        "y": 4.959961422943943
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot Another End"
+      "linkedName": "Anotha One End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6000000000000001,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": 90.0,
       "rotateFast": false
     }
@@ -77,13 +77,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -164.30739734185707,
+    "rotation": 163.93898480677277,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Left Start",
   "previewStartingState": {
-    "rotation": -135.29,
+    "rotation": -161.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
