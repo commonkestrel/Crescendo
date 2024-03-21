@@ -131,7 +131,8 @@ public class CenterSpeakerCommand extends Command {
                     distance = -distance;
                 }
 
-                Rotation2d angle = FieldUtils.clampSpeakerArc(Rotation2d.fromDegrees(-m_targetRot).plus(Rotation2d.fromRadians(distance)));
+
+                Rotation2d angle = FieldUtils.clampSpeakerArc(FieldUtils.correctFieldRotation(Rotation2d.fromDegrees(m_targetRot)).unaryMinus().plus(Rotation2d.fromRadians(distance)));
                 Translation2d speaker = FieldUtils.getAllianceSpeaker();
 
                 setAngle(speaker, angle);
