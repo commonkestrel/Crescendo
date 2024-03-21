@@ -48,7 +48,7 @@ public class ShootAmpCommand extends Command {
             }
             break;
         case RevUp:
-            if (MathUtils.closeEnough(m_shooter.getVelocity(), ShooterConstants.ampTarget, 25.0)) {
+            if (m_shooter.getVelocity() >= ShooterConstants.ampTarget) {
                 m_intake.setSpeed(0.4);
                 m_currentState = State.Shoot;
             }

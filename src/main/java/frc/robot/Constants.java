@@ -14,7 +14,7 @@ public final class Constants {
         public static final double ampDistance = -0.41;
         public static final double sourceDistance = -0.52;
 
-        public static final double speakerRadius = 1.75;
+        public static final double speakerRadius = 1.65;
 
         public static final double limelightAngle = 40.0;
 
@@ -26,7 +26,7 @@ public final class Constants {
         public static final double xKI = 0.0;
         public static final double xKD = 0.0;
 
-        public static final double yKP = 0.35;
+        public static final double yKP = 0.5;
         public static final double yKI = 0.0;
         public static final double yKD = 0.0;
     }
@@ -201,10 +201,10 @@ public final class Constants {
         public static final double shootTime = 5.0;
 
         // TODO: Tune shooter PID
-        public static final double motorKP = 0.0002;
-        public static final double motorKI = 0.0000002;
-        public static final double motorKD = 0.000000001;
-        public static final double motorKF = 0.00015;
+        public static final double motorKP = 0.00005;
+        public static final double motorKI = 0.0;//0.000002;
+        public static final double motorKD = 0.00;//0.00000000025;
+        public static final double motorKF = 0.000165;
     }
 
     /** Various constants used for the climber subsystem and commands */
