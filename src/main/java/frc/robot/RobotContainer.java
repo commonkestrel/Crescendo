@@ -135,8 +135,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
         NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
+        NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake, m_leds));
         
-        m_driveController.y().whileTrue(AutoBuilder.buildAuto("Speaker to Amp"));
+        m_driveController.y().whileTrue(AutoBuilder.buildAuto("Dual Speaker"));
     }
 
     private Command shootAmp() {
