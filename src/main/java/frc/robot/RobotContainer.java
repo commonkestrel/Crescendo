@@ -145,8 +145,8 @@ public class RobotContainer {
         m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
         
-        NamedCommands.registerCommand("shootAmp", shootAmp());
-        NamedCommands.registerCommand("shootSpeaker", shootSpeaker());
+        NamedCommands.registerCommand("shootAmp", shootAmp().withTimeout(2.0));
+        NamedCommands.registerCommand("shootSpeaker", shootSpeaker().withTimeout(2.0));
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
         NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
