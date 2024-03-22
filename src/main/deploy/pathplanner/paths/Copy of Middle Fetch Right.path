@@ -3,67 +3,72 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6881599477442544,
-        "y": 6.069015566608796
+        "x": 1.6536338921465275,
+        "y": 5.130810261620524
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.121797513688142,
-        "y": 6.600076536319226
+        "x": 2.6536338921465275,
+        "y": 5.130810261620524
       },
       "isLocked": false,
-      "linkedName": "Shoot Another End"
+      "linkedName": "Anotha Middle End"
     },
     {
       "anchor": {
-        "x": 2.8390506231498973,
-        "y": 6.243354441107425
+        "x": 4.935229870459742,
+        "y": 4.558527578593619
       },
       "prevControl": {
-        "x": 2.8104157115886808,
-        "y": 6.515639570852576
+        "x": 4.1789621607865355,
+        "y": 5.098718799788767
       },
       "nextControl": {
-        "x": 2.8730388230007247,
-        "y": 5.920165686485219
+        "x": 6.178464664621639,
+        "y": 3.6705027256208367
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.922373537054768,
-        "y": 5.16041109005295
+        "x": 8.645200367323813,
+        "y": 4.005978781188332
       },
       "prevControl": {
-        "x": 2.903038049022173,
-        "y": 5.580957954761888
+        "x": 8.428127625486022,
+        "y": 3.78890603935054
       },
       "nextControl": {
-        "x": 2.941709025087363,
-        "y": 4.739864225344012
+        "x": 9.087620263744222,
+        "y": 4.448398677608744
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.69,
-        "y": 5.054221927102843
+        "x": 6.993775357022895,
+        "y": 1.6872472206482891
       },
       "prevControl": {
-        "x": 2.429582417246752,
-        "y": 4.959961422943943
+        "x": 6.174819103725774,
+        "y": 1.7365819347023317
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Anotha One End"
+      "linkedName": "Middle Fetch Right End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8999999999999999,
-      "rotationDegrees": 90.0,
+      "waypointRelativePos": 1.75,
+      "rotationDegrees": -169.84782317199654,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.5,
+      "rotationDegrees": -12.676935714052947,
       "rotateFast": false
     }
   ],
@@ -77,13 +82,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 163.93898480677277,
+    "rotation": 166.95,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Left Start",
+  "folder": null,
   "previewStartingState": {
-    "rotation": -161.0,
+    "rotation": 161.5,
     "velocity": 0
   },
   "useDefaultConstraints": true
