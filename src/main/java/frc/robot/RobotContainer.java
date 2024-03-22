@@ -166,7 +166,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return m_autoCommand.getSelected();
+        return m_autoCommand.getSelected().alongWith(new ClimberRetractCommand(m_climber, m_leds, Side.Both));
         // return new ClimberRetractCommand(m_climber);
     }
 
