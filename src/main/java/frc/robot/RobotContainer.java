@@ -19,6 +19,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,6 +46,7 @@ import frc.robot.commands.RampSpeakerCommand;
 import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ShootAmpCommand;
 import frc.robot.commands.ShootSpeakerCommand;
+import frc.robot.commands.ClimberRetractCommand.Side;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Leds;
@@ -114,8 +116,12 @@ public class RobotContainer {
         m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
         // m_mechController.x().whileTrue(new IntakeCommand(m_intake));
 
-        m_mechController.povDown().whileTrue(new ClimberRetractCommand(m_climber, m_leds));
-        m_mechController.povUp().whileTrue(new ClimberReleaseCommand(m_climber));
+        m_mechController.povDown().and(m_mechController.a()).whileTrue(new ClimberRetractCommand(m_climber, m_leds, Side.Left));
+        m_mechController.povDown().and(m_mechController.y()).whileTrue(new ClimberRetractCommand(m_climber, m_leds, Side.Right));
+        m_mechController.povDown().and(m_mechController.a().or(m_mechController.y()).negate()).whileTrue(new ClimberRetractCommand(m_climber, m_leds, Side.Both));
+        m_mechController.povUp().and(m_mechController.a()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Left));
+        m_mechController.povUp().and(m_mechController.y()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Right));
+        m_mechController.povUp().and(m_mechController.a().or(m_mechController.y()).negate()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Both));
         m_mechController.rightTrigger().whileTrue(new ClimberResetCommand(m_climber, m_leds));
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
 
@@ -148,6 +154,7 @@ public class RobotContainer {
         
         m_driveController.y().whileTrue(AutoBuilder.buildAuto("Dual Speaker"));
         m_autoCommand = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Command", m_autoCommand);
     }
 
     private Command shootAmp() {
@@ -169,7 +176,7 @@ public class RobotContainer {
         return Commands.sequence(
             // new ResetHeading(m_swerve, offset),
             Commands.parallel(
-                new ClimberRetractCommand(m_climber, m_leds)
+                new ClimberRetractCommand(m_climber, m_leds, Side.Both)
             )
         );
     }
