@@ -7,17 +7,47 @@ import wildlib.utils.MathUtils;
 
 public class ClimberReleaseCommand extends Command {
     private final Climber m_climber;
+    public enum Side {
+        Left,
+        Right,
+        Both
+    }
+    private Side m_side;
 
-    public ClimberReleaseCommand(Climber climber) {
+    public ClimberReleaseCommand(Climber climber, frc.robot.commands.ClimberRetractCommand.Side side) {
         m_climber = climber;
+        switch (side) {
+            case Left:
+            m_side = Side.Left;
+            break;
+            case Right:
+            m_side = Side.Right;
+            break;
+            case Both:
+            m_side = Side.Both;
+            break;
+        }
         addRequirements(m_climber);
     }
 
     @Override
     public void initialize() {
-        m_climber.setLeftTargetPosition(ClimberConstants.extendedPosition);
-        m_climber.setRightTargetPosition(ClimberConstants.extendedPosition);
+        switch (m_side) {
+            case Left:
+            m_climber.setLeft(1.0);
+            break;
+            case Right:
+            m_climber.setRight(1.0);
+            break;
+            case Both:
+            m_climber.setLeft(1.0);
+            m_climber.setRight(1.0);
+            break;
+        }
+
     }
+
+    
 
     @Override
     public void end(boolean interrupted) {

@@ -23,8 +23,9 @@ public class ClimberResetCommand extends Command{
     public void initialize() {
         m_leds.set(LedState.kRainbowFast, Color.kBeige);
         m_climber.disableFowardSoftLimit();
-        m_climber.setLeftTargetPosition(-ClimberConstants.retractedPosition);
-        m_climber.setRightTargetPosition(-ClimberConstants.retractedPosition);
+        m_climber.zeroPosition();
+        m_climber.setLeftTargetPosition(-ClimberConstants.leftMinPosition);
+        m_climber.setRightTargetPosition(-ClimberConstants.rightMinPosition);
     }
 
     @Override
