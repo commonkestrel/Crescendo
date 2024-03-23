@@ -51,7 +51,6 @@ public class Swerve extends SubsystemBase {
 
     private final double base;
     private final double track;
-
     private final AHRS gyro;
 
     private final MAXSwerveModule aModule;
@@ -129,15 +128,19 @@ public class Swerve extends SubsystemBase {
             }
         );
 
-        Optional<Alliance> currentAlliance = DriverStation.getAlliance();
-        System.out.printf("Red: %s%n", String.valueOf(currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red));
         AutoBuilder.configureHolonomic(
             this::getPose,
             this::resetOdometry,
             this::getSpeeds,
             this::driveRelative,
             DriveConstants.pathFollowerConfig,
-            () -> currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red,
+            () -> {
+                Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+                if (currentAlliance.isPresent()) {
+                    return currentAlliance.get() == Alliance.Red;
+                }
+                return false;
+            },
             this
         );
 

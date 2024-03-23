@@ -22,6 +22,7 @@ public class CenterCommand extends Command {
     private final Swerve m_swerve;
     private final CenterTargetCommand m_ampCommand;
     private final CenterTargetCommand m_sourceCommand;
+    private final CenterTargetCommand m_stageCommand;
     private final CenterSpeakerCommand m_speakerCommand;
     private Command m_currentCommand;
 
@@ -31,6 +32,7 @@ public class CenterCommand extends Command {
         m_swerve = swerve;
         m_ampCommand = new CenterTargetCommand(swerve, m_limelight, leds, AutoConstants.ampDistance);
         m_sourceCommand = new CenterTargetCommand(swerve, limelight, leds, AutoConstants.sourceDistance);
+        m_stageCommand = new CenterTargetCommand(swerve, limelight, leds, null);
         m_speakerCommand = new CenterSpeakerCommand(swerve, limelight, leds, xboxController);
     }
 
@@ -71,12 +73,15 @@ public class CenterCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_currentState == State.Found && m_currentCommand.isFinished();
+        return m_currentState == State.Found && m_currentCommand != null && m_currentCommand.isFinished();
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (m_currentCommand != null) m_currentCommand.end(interrupted);
+        if (m_currentCommand != null) {
+            m_currentCommand.end(interrupted);
+            m_currentCommand = null;
+        };
     }
 
     private void initFound() {
@@ -92,8 +97,14 @@ public class CenterCommand extends Command {
         case 8:
             m_currentCommand = m_speakerCommand;
             break;
-        default:
+        case 1:
+        case 2:
+        case 9:
+        case 10:
             m_currentCommand = m_sourceCommand;
+            break;
+        default:
+            m_currentCommand = m_stageCommand;
             break;
         }
 

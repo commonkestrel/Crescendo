@@ -3,12 +3,14 @@
   "robotLength": 0.889,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Start",
-    "Middle Start"
+    "Source Start",
+    "Middle Start",
+    "Amp Start"
   ],
   "autoFolders": [
     "Left Start",
-    "Middle Start"
+    "Middle Start",
+    "Source Start"
   ],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 3.0,

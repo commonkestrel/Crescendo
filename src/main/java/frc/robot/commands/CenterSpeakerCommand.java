@@ -152,7 +152,7 @@ public class CenterSpeakerCommand extends Command {
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
-            m_drive.drive(xTranslation, -yTranslation, rotation, true, false);
+            m_drive.drive(xTranslation, yTranslation, rotation, true, false);
             break;
         }
     }

@@ -70,7 +70,7 @@ public class RobotContainer {
 
     private static Toggle m_shootingSpeaker = new Toggle(false);
     private static Trigger m_limelightTarget;
-    private static SendableChooser<Command> m_autoCommand;
+    private static SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
     public RobotContainer() {
         configureSmartDashboard();
@@ -153,7 +153,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake, m_leds));
         
         m_driveController.y().whileTrue(AutoBuilder.buildAuto("Dual Speaker"));
-        m_autoCommand = AutoBuilder.buildAutoChooser();
+        m_autoCommand.setDefaultOption("Triple Amp Side", AutoBuilder.buildAuto("Triple Speaker"));
+        m_autoCommand.addOption("Dual Amp Side", AutoBuilder.buildAuto("Dual Speaker"));
+        m_autoCommand.addOption("Middle Start", AutoBuilder.buildAuto("Middle Start"));
+        m_autoCommand.addOption("Source Shoot", AutoBuilder.buildAuto("Source Shoot"));
         SmartDashboard.putData("Auto Command", m_autoCommand);
     }
 
@@ -166,7 +169,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return m_autoCommand.getSelected().alongWith(new ClimberRetractCommand(m_climber, m_leds, Side.Both));
+        return m_autoCommand.getSelected();//.alongWith(new ClimberRetractCommand(m_climber, m_leds, Side.Both));
         // return new ClimberRetractCommand(m_climber);
     }
 

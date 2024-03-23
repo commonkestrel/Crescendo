@@ -192,7 +192,7 @@ public final class Constants {
         // TODO: Tune target shooter velocity for speaker
         public static final double speakerTarget = 6000;
         // TODO: Tune target shooter velocity for amp
-        public static final double ampTarget = 4500;
+        public static final double ampTarget = 3000;
         // 
         public static final double idleTarget = 1000;
         //

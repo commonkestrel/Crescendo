@@ -33,7 +33,7 @@ public class CenterTargetCommand extends Command {
     private final Swerve m_drive;
     private final Limelight m_limelight;
     private final Leds m_leds;
-    private final double m_yDistance;
+    private final Double m_yDistance;
 
     private final PIDController m_rotController = new PIDController(AutoConstants.rotKP, AutoConstants.rotKI, AutoConstants.rotKD);
     private final PIDController m_xController = new PIDController(AutoConstants.xKP, AutoConstants.xKI, AutoConstants.xKD);
@@ -42,7 +42,7 @@ public class CenterTargetCommand extends Command {
     private State m_currentState;
 
 
-    public CenterTargetCommand(Swerve drive, Limelight limelight, Leds leds, double yDistance) {
+    public CenterTargetCommand(Swerve drive, Limelight limelight, Leds leds, Double yDistance) {
         m_drive = drive;
         m_limelight = limelight;
         m_leds = leds;
@@ -97,13 +97,18 @@ public class CenterTargetCommand extends Command {
             System.out.printf("Y Distance: %f; ", yDistance);
 
             double xTranslation = MathUtil.clamp(m_xController.calculate(xDistance), -1.0, 1.0);
-            double yTranslation = MathUtil.clamp(m_yController.calculate(yDistance), -1.0, 1.0);
-            System.out.printf("Y Distance: %f; Y PID Output: %f%n", yDistance, yTranslation);
-
             double rotation = MathUtil.clamp(m_rotController.calculate(angle), -1.0, 1.0);
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
             SmartDashboard.putNumber("Angle offset", angle);
+
+            double yTranslation; 
+            if (m_yDistance != null) {
+                yTranslation = MathUtil.clamp(m_yController.calculate(yDistance), -1.0, 1.0);
+                System.out.printf("Y Distance: %f; Y PID Output: %f%n", yDistance, yTranslation);
+            } else {
+                yTranslation = 0.0;
+            }
 
             m_drive.drive(yTranslation, -xTranslation, rotation, true, false);
             break;
@@ -112,11 +117,12 @@ public class CenterTargetCommand extends Command {
 
     public void initFound() {
         m_currentState = State.Found;
-                m_drive.drive(0.0, 0.0, 0.0, false, false);
-                m_drive.setOffset(m_drive.getHeading() + m_limelight.getBotPose_TargetSpace()[4]);
-                m_xController.setSetpoint(0.0);
-                m_yController.setSetpoint(m_yDistance);
-                m_rotController.setSetpoint(0.0 /* FieldUtils.getAmpOffset().getDegrees() */);
+        m_drive.drive(0.0, 0.0, 0.0, false, false);
+        m_drive.setOffset(m_drive.getHeading() + m_limelight.getBotPose_TargetSpace()[4]);
+
+        m_xController.setSetpoint(0.0);
+        if (m_yDistance != null) m_yController.setSetpoint(m_yDistance);
+        m_rotController.setSetpoint(0.0 /* FieldUtils.getAmpOffset().getDegrees() */);
     }
 
     @Override
@@ -132,7 +138,7 @@ public class CenterTargetCommand extends Command {
 
         return MathUtils.closeEnough(botpose[4], 0.0, 0.01)
             && MathUtils.closeEnough(botpose[0], 0.0, 0.03)
-            && MathUtils.closeEnough(botpose[2], m_yDistance, 0.01)
+            && (m_yDistance == null || MathUtils.closeEnough(botpose[2], m_yDistance, 0.01))
             && m_limelight.getTV();
     }
 }
