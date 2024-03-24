@@ -73,7 +73,7 @@ public class CenterCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_currentState == State.Found && m_currentCommand != null && m_currentCommand.isFinished();
+        return m_currentState == State.Found && m_currentCommand.isFinished();
     }
 
     @Override

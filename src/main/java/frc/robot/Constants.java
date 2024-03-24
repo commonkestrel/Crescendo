@@ -14,7 +14,7 @@ public final class Constants {
         public static final double ampDistance = -0.41;
         public static final double sourceDistance = -0.52;
 
-        public static final double speakerRadius = 1.65;
+        public static final double speakerRadius = 1.55;
 
         public static final double limelightAngle = 40.0;
 

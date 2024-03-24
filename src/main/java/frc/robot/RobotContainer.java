@@ -108,7 +108,8 @@ public class RobotContainer {
 
     private void configureBindings() {
         m_mechController.rightBumper().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
-        m_mechController.leftBumper().whileTrue(Commands.either(new RampSpeakerCommand(m_shooter), new RampAmpCommand(m_shooter), m_shootingSpeaker));
+        m_mechController.leftBumper().whileTrue(new IntakeCommand(m_intake));
+        m_mechController.leftTrigger().whileTrue(Commands.either(new RampSpeakerCommand(m_shooter), new RampAmpCommand(m_shooter), m_shootingSpeaker));
         m_mechController.x().whileTrue(new OuttakeCommand(m_intake));
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
@@ -157,6 +158,8 @@ public class RobotContainer {
         m_autoCommand.addOption("Dual Amp Side", AutoBuilder.buildAuto("Dual Speaker"));
         m_autoCommand.addOption("Middle Start", AutoBuilder.buildAuto("Middle Start"));
         m_autoCommand.addOption("Source Shoot", AutoBuilder.buildAuto("Source Shoot"));
+        m_autoCommand.addOption("Amp Preload", AutoBuilder.buildAuto("Amp Preload"));
+        m_autoCommand.addOption("Middle Preload", AutoBuilder.buildAuto("Middle Preload"));
         SmartDashboard.putData("Auto Command", m_autoCommand);
     }
 

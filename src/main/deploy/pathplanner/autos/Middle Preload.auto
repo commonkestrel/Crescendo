@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8097810790216173,
-      "y": 6.637696878997361
+      "x": 1.325730468864645,
+      "y": 5.597779868883561
     },
-    "rotation": -121.13897243697888
+    "rotation": 179.7167163793093
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Against to Shoot"
+                  "pathName": "Middle Shoot"
                 }
               },
               {
@@ -39,37 +39,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Speaker to Amp"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "centerAmp"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "rampAmp"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootSpeaker"
+            "pathName": "Middle Reallign"
           }
         }
       ]
     }
   },
-  "folder": "Amp Start",
+  "folder": "Middle Start",
   "choreoAuto": false
 }
