@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6495379144604458,
-        "y": 5.597779868883561
+        "x": 1.2647271448389068,
+        "y": 6.808190539458002
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5903362575955937,
-        "y": 5.594556573728532
+        "x": 0.8897833180281761,
+        "y": 6.877259139133662
       },
       "isLocked": false,
-      "linkedName": "Middle Shoot End"
+      "linkedName": "Against to Shoot end"
     },
     {
       "anchor": {
-        "x": 1.2745940876497153,
-        "y": 5.597779868883561
+        "x": 0.5641742052776519,
+        "y": 7.104198823777156
       },
       "prevControl": {
-        "x": 1.3929974013794195,
-        "y": 5.574822688106915
+        "x": 0.7516461186768542,
+        "y": 7.015396338484985
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,14 +38,14 @@
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 180.0,
+    "velocity": 0,
+    "rotation": 179.17565717915483,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Middle Start",
+  "folder": "Amp Start",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -135.67,
     "velocity": 0
   },
   "useDefaultConstraints": true

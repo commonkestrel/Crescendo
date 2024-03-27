@@ -61,7 +61,7 @@ public final class Constants {
         public static final double[] angularOffsets = {aAngularOffset, bAngularOffset, cAngularOffset, dAngularOffset};
 
         /** Max translaitonal speed (m/s) */
-        public static final double maxTranslationalSpeed = 5.0;
+        public static final double maxTranslationalSpeed = 4.8;
         public static final double kiddieMaxTranslationalSpeed = 1.2; // TODO: Actually find this;
         /** Max angular speed (rads/s) */
         public static final double maxAngularSpeed = Units.degreesToRadians(360); // TODO: Actually find this;
@@ -162,11 +162,11 @@ public final class Constants {
         public static final IdleMode turnMotorIdleMode = IdleMode.kBrake;
 
         /** Drive motor smart current limit (in Amps). */
-        public static final int driveMotorCurrentLimit = 60; // amps (A)
-        /** Rotation motor smart current limit (in Amps).  */
+        public static final int driveMotorCurrentLimit = 50; // amps (A)
+        /** Rotation motor smart current limit (in Amps). */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
-        public static final double maxSpeed = 5.0; // TODO: Find this
+        public static final double maxSpeed = 4.8; // TODO: Find this
     }
 
     /** Various constants used for the intake subsystem and commands */
