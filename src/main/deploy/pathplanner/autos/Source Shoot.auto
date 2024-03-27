@@ -35,6 +35,12 @@
           "data": {
             "name": "shootSpeaker"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New Path"
+          }
         }
       ]
     }

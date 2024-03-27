@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2550468069350564,
-        "y": 2.8432049792592164
+        "x": 1.0377874601903068,
+        "y": 4.1046482092964185
       },
       "isLocked": false,
       "linkedName": "Source Shoot End"
     },
     {
       "anchor": {
-        "x": 6.504073777378325,
-        "y": 0.7498876536214618
+        "x": 0.5247064340282543,
+        "y": 4.015845723999141
       },
       "prevControl": {
-        "x": 5.504073777378325,
-        "y": 0.7498876536214618
+        "x": 0.8897833180281756,
+        "y": 4.153982923350461
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.8,
+    "maxAcceleration": 2.8,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 540.0
   },
