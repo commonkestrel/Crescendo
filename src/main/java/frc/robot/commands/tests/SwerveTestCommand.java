@@ -25,7 +25,7 @@ public class SwerveTestCommand extends SystemTestCommand {
     private State m_currentState;
     private Timer m_timer = new Timer();
 
-    private Optional<SwerveModuleState> m_isFinished = Optional.empty();
+    private boolean m_isFinished = false;
     private Optional<SwerveModuleState> m_forwardFailure = Optional.empty();
     private Optional<SwerveModuleState> m_backwardFailure = Optional.empty();
     private Optional<SwerveModuleState> m_rightFailure = Optional.empty();
@@ -84,8 +84,10 @@ public class SwerveTestCommand extends SystemTestCommand {
             }
         case kContinuous:
             if (m_timer.advanceIfElapsed(RAMP_TIME)) {
-
+                m_swerve.driveRelative(new ChassisSpeeds(0.0, 0.0, 0.0));
+                m_isFinished = true;
             }
+            m_swerve.driveRelative(new ChassisSpeeds(Math.cos(m_timer.get() * 2*Math.PI)*DriveConstants.maxTranslationalSpeed, Math.sin(m_timer.get() * 2*Math.PI)*DriveConstants.maxTranslationalSpeed, 0.0));
         }
     }
 
