@@ -1,4 +1,4 @@
-package wildlib;
+package wildlib.errors;
 
 /**
  * Throw to indicate that the requested operation is not yet implemented.

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.ShooterConstants;
-import wildlib.PIDSpark;
+import wildlib.io.PIDSpark;
 import wildlib.utils.MathUtils;
 
 /**

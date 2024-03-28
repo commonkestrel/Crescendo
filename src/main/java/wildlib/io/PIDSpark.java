@@ -1,4 +1,4 @@
-package wildlib;
+package wildlib.io;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.REVLibError;

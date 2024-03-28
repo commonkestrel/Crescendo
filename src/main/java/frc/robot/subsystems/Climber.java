@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IOConstants;
-import wildlib.PIDSpark;
+import wildlib.io.PIDSpark;
 
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkBase.IdleMode;

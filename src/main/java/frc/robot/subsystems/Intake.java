@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import wildlib.io.PIDSpark;
 import frc.robot.Constants.IOConstants;
-import wildlib.PIDSpark;
 
 /** 
  * Subsystem representing the ground intake on our robot
