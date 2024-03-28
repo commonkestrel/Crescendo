@@ -346,8 +346,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getAngle() {
-
         return gyro.getAngle() + gyroOffset;
+    }
+
+    public double getAngularVelocity() {
+        return gyro.getRate();
     }
 
     public void setOffset(double offset) {
