@@ -99,6 +99,11 @@ public class Climber extends SubsystemBase {
         m_right.getEncoder().setPosition(0.0);
     }
 
+    public void zeroRetracted() {
+        m_left.getEncoder().setPosition(ClimberConstants.retractedPosition);
+        m_right.getEncoder().setPosition(ClimberConstants.retractedPosition);
+    }
+
     public void enableSoftLimits() {
         m_left.enableSoftLimit(SoftLimitDirection.kForward, true);
         m_right.enableSoftLimit(SoftLimitDirection.kForward, true);

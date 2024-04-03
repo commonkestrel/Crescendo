@@ -7,7 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import frc.robot.commands.tests.ClimberTestCommand;
+import frc.robot.commands.tests.IntakeTestCommand;
+import frc.robot.commands.tests.ShooterTestCommand;
 import frc.robot.commands.tests.SwerveTestCommand;
+// import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Leds;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.testing.SystemTest;
 
@@ -19,7 +26,10 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         m_robotContainer = new RobotContainer();
 
-        SystemTest.registerTest("Swerve", new SwerveTestCommand(Swerve.getInstance()));
+        SystemTest.registerTest("Swerve", new SwerveTestCommand(Swerve.getInstance(), Leds.getInstance()));
+        SystemTest.registerTest("Intake", new IntakeTestCommand(Intake.getInstance(), Leds.getInstance()));
+        SystemTest.registerTest("Shooter", new ShooterTestCommand(Shooter.getInstance(), Leds.getInstance()));
+        // SystemTest.registerTest("Climber", new ClimberTestCommand(Climber.getInstance(), Leds.getInstance()));
         SystemTest.loadTests();
     }
 
