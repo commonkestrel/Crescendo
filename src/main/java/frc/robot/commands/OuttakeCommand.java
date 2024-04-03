@@ -13,12 +13,13 @@ public class OuttakeCommand extends Command {
 
     @Override
     public void initialize() {
-        m_intake.setSpeed(-1.0);
+        m_intake.setIndexerSpeed(-1.0);
+        m_intake.setPrerollerSpeed(-1.0);
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setSpeed(0.0);
+        m_intake.stop();
     }
 
     @Override

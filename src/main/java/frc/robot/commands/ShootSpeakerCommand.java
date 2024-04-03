@@ -33,7 +33,8 @@ public class ShootSpeakerCommand extends Command {
     public void initialize() {
         if (!m_intake.noteDetected()) {
             m_currentState = State.RevUp;
-            m_intake.setTargetVelocity(IntakeConstants.idleTarget);
+            m_intake.setTargetIndexerVelocity(IntakeConstants.idleIndexerTarget);
+            m_intake.setTargetPrerollerVelocity(IntakeConstants.idlePrerollerTarget);
         }
         m_currentState = State.Feed;
         m_shooter.setTargetVelocity(ShooterConstants.speakerTarget);
@@ -46,13 +47,13 @@ public class ShootSpeakerCommand extends Command {
         switch (m_currentState) {
         case Feed:
             if (m_intake.noteDetected()) {
-                m_intake.setSpeed(0.0);
+                m_intake.stop();
                 m_currentState = State.RevUp;
             }
             break;
         case RevUp:
             if (m_shooter.getVelocity() >= ShooterConstants.speakerTarget) {
-                m_intake.setSpeed(1.0);
+                m_intake.setIndexerSpeed(1.0);
                 m_currentState = State.Shoot;
             }
             break;
@@ -69,7 +70,7 @@ public class ShootSpeakerCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setSpeed(0.0);
+        m_intake.stop();
         m_shooter.setSpeed(0.0);
     }
 

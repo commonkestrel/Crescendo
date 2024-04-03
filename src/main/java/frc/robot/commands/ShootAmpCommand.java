@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import wildlib.utils.MathUtils;
 
 public class ShootAmpCommand extends Command {
     private enum State {
@@ -32,7 +32,8 @@ public class ShootAmpCommand extends Command {
     public void initialize() {
         if (!m_intake.noteDetected()) {
             m_currentState = State.RevUp;
-            m_intake.setTargetVelocity(ShooterConstants.idleTarget);
+            m_intake.setTargetIndexerVelocity(IntakeConstants.idleIndexerTarget);
+            m_intake.setTargetPrerollerVelocity(IntakeConstants.idlePrerollerTarget);
         }
         m_currentState = State.Feed;
         m_shooter.setTargetVelocity(ShooterConstants.ampTarget);
@@ -43,13 +44,13 @@ public class ShootAmpCommand extends Command {
         switch (m_currentState) {
         case Feed:
             if (m_intake.noteDetected()) {
-                m_intake.setSpeed(0.0);
+                m_intake.stop();
                 m_currentState = State.RevUp;
             }
             break;
         case RevUp:
             if (m_shooter.getVelocity() >= ShooterConstants.ampTarget) {
-                m_intake.setSpeed(0.4);
+                m_intake.setIndexerSpeed(0.4);
                 m_currentState = State.Shoot;
             }
             break;
@@ -66,7 +67,7 @@ public class ShootAmpCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setSpeed(0.0);
+        m_intake.stop();
         m_shooter.setTargetVelocity(ShooterConstants.idleTarget);
     }
 
