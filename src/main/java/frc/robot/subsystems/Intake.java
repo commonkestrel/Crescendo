@@ -19,7 +19,8 @@ import wildlib.PIDSpark;
  * @author Jett Bergthold
  */
 public class Intake extends SubsystemBase {
-    private final PIDSpark m_motor;
+    private final PIDSpark m_indexer;
+    private final PIDSpark m_preroller;
     private final DigitalInput m_detector;
     private final DigitalInput m_noteBeambreak;
     private boolean m_overrideSensor = false;
@@ -30,13 +31,22 @@ public class Intake extends SubsystemBase {
         if (m_instance == null) {
             m_instance = new Intake(
                 new PIDSpark(
-                    IOConstants.intakeId,
+                    IOConstants.indexerId,
                     MotorType.kBrushless,
                     PIDSpark.SparkFlexModel(),
-                    IntakeConstants.motorKP,
-                    IntakeConstants.motorKI,
-                    IntakeConstants.motorKD,
-                    IntakeConstants.motorKF
+                    IntakeConstants.indexerKP,
+                    IntakeConstants.indexerKI,
+                    IntakeConstants.indexerKD,
+                    IntakeConstants.indexerKF
+                ),
+                new PIDSpark(
+                    IOConstants.prerollerId,
+                    MotorType.kBrushless,
+                    PIDSpark.SparkMaxModel(),
+                    IntakeConstants.prerollerKP,
+                    IntakeConstants.prerollerKI,
+                    IntakeConstants.prerollerKD,
+                    IntakeConstants.prerollerKF
                 ),
                 IOConstants.detectorChannel,
                 IOConstants.noteBeambreakChannel
@@ -46,74 +56,64 @@ public class Intake extends SubsystemBase {
         return m_instance;
     }
 
-    private Intake(PIDSpark drive, int detectorChannel, int noteBeambreakChannel) {
-        m_motor = drive;
+    private Intake(PIDSpark indexer, PIDSpark preroller, int detectorChannel, int noteBeambreakChannel) {
+        m_indexer = indexer;
+        m_preroller = preroller;
         m_detector = new DigitalInput(detectorChannel);
         m_noteBeambreak = new DigitalInput(noteBeambreakChannel);
 
-        m_motor.setPositionConversionFactor(IntakeConstants.distanceFactor);
-        m_motor.setIdleMode(IdleMode.kBrake);
-        m_motor.setInverted(true);
-        m_motor.setSmartCurrentLimit(100);
-        m_motor.burnFlash();
+        m_indexer.setPositionConversionFactor(IntakeConstants.distanceFactor);
+        m_indexer.setIdleMode(IdleMode.kBrake);
+        m_indexer.setInverted(true);
+        m_indexer.setSmartCurrentLimit(100);
+        m_indexer.burnFlash();
+
+        m_preroller.setIdleMode(IdleMode.kBrake);
+        m_preroller.setSmartCurrentLimit(30);
+        m_preroller.burnFlash();
     }
 
-    public void initDefaultCommand() {
-        Command defaultCommand = Commands.either(
-            Commands.runOnce(m_motor::stopMotor),
-            Commands.runOnce(() -> m_motor.set(-0.3)),
-            this::noteDetected
-        );
-        defaultCommand.addRequirements(this);
-
-        setDefaultCommand(defaultCommand);    
+    /**
+     * Sets the target velocity for the indexer wheels.
+     * 
+     * @param velocity The reference velocity to use in the velocity PID (in RPM)
+     * @return {@link REVLibError.kOk} if successful.
+     */
+    public REVLibError setTargetIndexerVelocity(double velocity) {
+        return m_indexer.setTargetVelocity(velocity);
     }
 
-    public REVLibError setTargetVelocity(double velocity) {
-        return m_motor.setTargetVelocity(velocity);
-    }
-
-    public Command advanceAmp() {
-        Command advance = waitForNote(0.5)
-            .andThen(
-                Commands.either(Commands.sequence(
-                    Commands.runOnce(() -> m_motor.setTargetVelocity(IntakeConstants.ampTarget)),
-                    // TODO: Tune the wait time
-                    Commands.waitSeconds(1.0),
-                    Commands.runOnce(m_motor::stopMotor)
-                ), Commands.none(), this::noteDetected)
-            );
-        advance.addRequirements(this);
-        
-        return advance;
-    }
-
-    public Command advanceSpeaker() {        
-        Command advance = waitForNote(0.5)
-            .andThen(
-                Commands.either(Commands.sequence(
-                    Commands.runOnce(() -> m_motor.setTargetVelocity(IntakeConstants.speakerTarget)),
-                    // TODO: Tune the wait time
-                    Commands.waitSeconds(1.0),
-                    Commands.runOnce(m_motor::stopMotor)
-                ), Commands.none(), this::noteDetected)
-            );
-        advance.addRequirements(this);
-        
-        return advance;
+    /**
+     * Sets the target velocity for the preroller wheels.
+     * 
+     * @param velocity The reference velocity to use in the velocity PID (in RPM)
+     * @return {@link REVLibError.kOk} if successful.
+     */
+    public REVLibError setTargetPrerollerVelocity(double velocity) {
+        return m_preroller.setTargetVelocity(velocity);
     }
 
     public void stop() {
-        m_motor.stopMotor();
+        m_indexer.stopMotor();
+        m_preroller.stopMotor();
     }
     
     /**
-     * Sets the speed of the intake wheels
+     * Sets the speed of the indexer wheels
      * 
      * @param speed The speed value to set. Should be between -1.0 and 1.0.
      */
-    public void setSpeed(double speed) {
-        m_motor.set(speed);
+    public void setIndexerSpeed(double speed) {
+        m_indexer.set(speed);
+    }
+
+    /**
+     * Sets the speed of the preroller wheels
+     * 
+     * @param speed The speed value to set. Should be between -1.0 and 1.0.
+     */
+    public void setPrerollerSpeed(double speed) {
+        m_preroller.set(speed);
     }
 
     public boolean noteDetected() {
@@ -123,28 +123,8 @@ public class Intake extends SubsystemBase {
         //return m_overrideSensor || m_detector.get() || m_noteBeambreak.get();
     }
 
-    /**
-     * Waits for a Note to be detected in the conveyor.
-     * 
-     * @param timeout How long to wait before giving up.
-     * @return A command that waits for a Note
-     */
-    public Command waitForNote(double timeout) {
-        if (noteDetected()) {
-            return Commands.none();
-        } else {
-            Command waitFor = Commands.runOnce(() -> m_motor.setTargetVelocity(IntakeConstants.idleTarget))
-                .andThen(
-                    Commands.waitUntil(this::noteDetected).withTimeout(timeout),
-                    Commands.runOnce(m_motor::stopMotor)
-                );
-            waitFor.addRequirements(this);
-            return waitFor;
-        }
-    }
-
     public double getVelocity() {
-        return m_motor.getVelocity();
+        return m_indexer.getVelocity();
     }
 
     public void toggleOverride() {
@@ -153,8 +133,8 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake Current", m_motor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake Velocity", m_motor.getVelocity());
+        SmartDashboard.putNumber("Intake Current", m_indexer.getOutputCurrent());
+        SmartDashboard.putNumber("Intake Velocity", m_indexer.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
         SmartDashboard.putBoolean("Beam Broken", m_noteBeambreak.get());
         SmartDashboard.putBoolean("Note Limit Switch Closed", m_detector.get());

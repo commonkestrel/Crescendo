@@ -177,19 +177,26 @@ public final class Constants {
         public static final double speakerTarget = 4750;       // TODO: Tune target intake velocity for amp
         /** Target intake velocity for shooting into the Amp */
         public static final double ampTarget = 4000;
-        public static final double idleTarget = 1800;
-        public static final double intakeTarget = -1000;
+        public static final double idleIndexerTarget = 1800;
+        public static final double outtakeIndexerTarget = -4000;
+
+        public static final double idlePrerollerTarget = 2000;
+        public static final double outtakePrerollerTarget = -4000;
 
         // TODO: Tune intake PID
-        public static final double motorKP = 0.00001;
-        public static final double motorKI = 2e-7;
-        public static final double motorKD = 0.02;
-        public static final double motorKF = 0.0002;
+        public static final double indexerKP = 0.00001;
+        public static final double indexerKI = 2e-7;
+        public static final double indexerKD = 0.02;
+        public static final double indexerKF = 0.0002;
+
+        public static final double prerollerKP = 0.00001;
+        public static final double prerollerKI = 2e-7;
+        public static final double prerollerKD = 0.02;
+        public static final double prerollerKF = 0.0002;
     }
 
     /** Various constants used for the intake shooter and commands */
     public static final class ShooterConstants {
-        // TODO: Tune target shooter velocity for speaker
         public static final double speakerTarget = 6000;
         // TODO: Tune target shooter velocity for amp
         public static final double ampTarget = 3000;
@@ -200,10 +207,9 @@ public final class Constants {
 
         public static final double shootTime = 5.0;
 
-        // TODO: Tune shooter PID
         public static final double motorKP = 0.00005;
-        public static final double motorKI = 0.0;//0.000002;
-        public static final double motorKD = 0.00;//0.00000000025;
+        public static final double motorKI = 0.0;
+        public static final double motorKD = 0.00;
         public static final double motorKF = 0.000165;
     }
 
@@ -265,7 +271,8 @@ public final class Constants {
 
         public static final int pdhId = 10;
 
-        public static final int intakeId = 11;
+        public static final int indexerId = 11;
+        public static final int prerollerId = 12;
         public static final int shooterId = 12;
 
         public static final int climbLeftId = 13;

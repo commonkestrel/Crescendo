@@ -21,7 +21,8 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void initialize() {
-        m_intake.setTargetVelocity(IntakeConstants.intakeTarget);
+        m_intake.setTargetIndexerVelocity(IntakeConstants.idleIndexerTarget);
+        m_intake.setTargetPrerollerVelocity(IntakeConstants.idlePrerollerTarget);
         m_shooter.setTargetVelocity(ShooterConstants.intakeTarget);
         m_noteDetected = m_intake.noteDetected();
     }
@@ -35,7 +36,7 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setSpeed(0.0);
+        m_intake.stop();
         m_shooter.setSpeed(0.0);
     }
 

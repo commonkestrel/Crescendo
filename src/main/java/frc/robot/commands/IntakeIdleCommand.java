@@ -30,7 +30,8 @@ public class IntakeIdleCommand extends Command {
             m_currentState = State.Stopped;
             m_intake.stop();
         } else {
-            m_intake.setSpeed(0.4);
+            m_intake.setIndexerSpeed(0.4);
+            m_intake.setPrerollerSpeed(0.6);
             m_currentState = State.Running;
         }
     }
@@ -40,14 +41,15 @@ public class IntakeIdleCommand extends Command {
         switch (m_currentState) {
         case Running:
             if (m_intake.noteDetected()) {
-                m_intake.setSpeed(0.0);
+                m_intake.stop();
                 m_currentState = State.Stopped;
                 m_leds.flash(Color.kGreen);
             }
             break;
         case Stopped:
             if (!m_intake.noteDetected()) {
-                m_intake.setSpeed(0.4);
+                m_intake.setIndexerSpeed(0.4);
+                m_intake.setPrerollerSpeed(0.6);
                 m_currentState = State.Running;
             }
             break;
