@@ -43,7 +43,7 @@ public class ShootSpeakerCommand extends Command {
     @Override
     public void execute() {
         System.out.print("Shooter: "); System.out.println(m_shooter.getVelocity());
-        System.out.print("Intake: "); System.out.println(m_intake.getVelocity());
+        System.out.print("Intake: "); System.out.println(m_intake.getIndexerVelocity());
         switch (m_currentState) {
         case Feed:
             if (m_intake.noteDetected()) {

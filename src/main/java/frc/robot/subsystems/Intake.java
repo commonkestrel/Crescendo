@@ -123,8 +123,12 @@ public class Intake extends SubsystemBase {
         //return m_overrideSensor || m_detector.get() || m_noteBeambreak.get();
     }
 
-    public double getVelocity() {
+    public double getIndexerVelocity() {
         return m_indexer.getVelocity();
+    }
+
+    public double getPrerollerVelocity() {
+        return m_preroller.getVelocity();
     }
 
     public void toggleOverride() {
