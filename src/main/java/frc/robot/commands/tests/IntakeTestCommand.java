@@ -27,7 +27,7 @@ public class IntakeTestCommand extends SystemTestCommand {
 
     @Override
     public void initializeTest() {
-        m_intake.setTargetVelocity(0);
+        m_intake.stop();
         m_currentState = State.kStopping;
     }
 
@@ -35,20 +35,20 @@ public class IntakeTestCommand extends SystemTestCommand {
     public void executeTest() {
         switch (m_currentState) {
         case kStopping:
-            if (MathUtils.closeEnough(m_intake.getVelocity(), 0.0, 5.0)) {
-                m_intake.setTargetVelocity(IntakeConstants.ampTarget);
+            if (MathUtils.closeEnough(m_intake.getIndexerVelocity(), 0.0, 5.0)) {
+                m_intake.setTargetIndexerVelocity(IntakeConstants.ampTarget);
                 m_currentState = State.kAmp;
             }
             break;
         case kAmp:
-            if (MathUtils.closeEnough(m_intake.getVelocity(), IntakeConstants.ampTarget + 50, 100.0)) {
-                m_intake.setTargetVelocity(IntakeConstants.speakerTarget);
+            if (MathUtils.closeEnough(m_intake.getIndexerVelocity(), IntakeConstants.ampTarget + 50, 100.0)) {
+                m_intake.setTargetIndexerVelocity(IntakeConstants.speakerTarget);
                 m_currentState = State.kSpeaker;
             }
             break;
         case kSpeaker:
-            if (MathUtils.closeEnough(m_intake.getVelocity(), IntakeConstants.speakerTarget + 50, 100.0)) {
-                m_intake.setSpeed(0.0);
+            if (MathUtils.closeEnough(m_intake.getIndexerVelocity(), IntakeConstants.speakerTarget + 50, 100.0)) {
+                m_intake.stop();
                 m_currentState = State.kFinished;
                 m_leds.flash(Color.kBlue);
             }
@@ -60,7 +60,7 @@ public class IntakeTestCommand extends SystemTestCommand {
 
     @Override
     public void endTest(boolean interrupted) {
-        m_intake.setSpeed(0.0);
+        m_intake.stop();
     }
 
     @Override 
