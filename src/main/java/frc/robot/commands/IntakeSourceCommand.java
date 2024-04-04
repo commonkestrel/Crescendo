@@ -21,8 +21,7 @@ public class IntakeSourceCommand extends Command {
 
     @Override
     public void initialize() {
-        m_intake.setTargetIndexerVelocity(IntakeConstants.idleIndexerTarget);
-        m_intake.setTargetPrerollerVelocity(IntakeConstants.idlePrerollerTarget);
+        m_intake.setTargetIndexerVelocity(IntakeConstants.outtakeIndexerTarget);
         m_shooter.setTargetVelocity(ShooterConstants.intakeTarget);
         m_noteDetected = m_intake.noteDetected();
     }

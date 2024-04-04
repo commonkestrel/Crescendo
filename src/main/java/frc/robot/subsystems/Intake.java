@@ -69,7 +69,7 @@ public class Intake extends SubsystemBase {
         m_indexer.burnFlash();
 
         m_preroller.setIdleMode(IdleMode.kBrake);
-        m_preroller.setSmartCurrentLimit(30);
+        m_preroller.setSmartCurrentLimit(50);
         m_preroller.burnFlash();
     }
 
@@ -138,7 +138,8 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake Current", m_indexer.getOutputCurrent());
-        SmartDashboard.putNumber("Intake Velocity", m_indexer.getVelocity());
+        SmartDashboard.putNumber("Indexer Velocity", m_indexer.getVelocity());
+        SmartDashboard.putNumber("Preroller Velocity", m_preroller.getVelocity());
         SmartDashboard.putBoolean("Note Ready", noteDetected());
         SmartDashboard.putBoolean("Beam Broken", m_noteBeambreak.get());
         SmartDashboard.putBoolean("Note Limit Switch Closed", m_detector.get());
