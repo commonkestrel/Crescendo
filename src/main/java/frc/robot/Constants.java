@@ -272,8 +272,8 @@ public final class Constants {
         public static final int pdhId = 10;
 
         public static final int indexerId = 11;
-        public static final int prerollerId = 12;
         public static final int shooterId = 12;
+        public static final int prerollerId = 15;
 
         public static final int climbLeftId = 13;
         public static final int climbRightId = 14;
