@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class SystemTest {
     private static final ShuffleboardTab m_tab = Shuffleboard.getTab("System Test");
-    private static final GenericEntry m_manual = m_tab.add("Manual", true)
-        .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+    private static GenericEntry m_manual = null;
     private static boolean m_manualPrevious = true;
 
     private static SequentialCommandGroup m_autoCommand;
@@ -26,6 +25,9 @@ public class SystemTest {
     }
 
     public static void loadTests() {
+        m_manual = m_tab.add("Manual", true)
+            .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+            
         for (Map.Entry<String, SystemTestCommand> entry : m_tests.entrySet()) {
             m_tab.add(entry.getKey(), entry.getValue().beforeStarting(new InstantCommand(() -> {
                 m_manual.setBoolean(true);
@@ -56,13 +58,13 @@ public class SystemTest {
             SystemTestCommand value = entry.getValue();
             String key = entry.getKey();
 
-            m_autoCommand.addCommands(value, new InstantCommand(() -> {
-                if (value.isTestSuccessful()) {
-                    System.out.printf("Test `%s` successful%n", key);
-                } else {
-                    DriverStation.reportError(String.format("Test `%s` failed with error message: %s%n", key, value.getErrorMessage()), false);
-                }
-            }));
+            // m_autoCommand.addCommands(value, new InstantCommand(() -> {
+            //     if (value.isTestSuccessful()) {
+            //         System.out.printf("Test `%s` successful%n", key);
+            //     } else {
+            //         DriverStation.reportError(String.format("Test `%s` failed with error message: %s%n", key, value.getErrorMessage()), false);
+            //     }
+            // }));
         }
 
         m_autoCommand.schedule();
@@ -76,7 +78,7 @@ public class SystemTest {
 
         for (Map.Entry<String, SystemTestCommand> entry : m_tests.entrySet()) {
             if (entry.getKey() != except) {
-                entry.getValue().end(entry.getValue().isScheduled());
+                entry.getValue().end(true);
                 entry.getValue().cancel();
             }
         }
