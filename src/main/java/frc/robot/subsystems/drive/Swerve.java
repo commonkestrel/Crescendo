@@ -1,6 +1,8 @@
 package frc.robot.subsystems.drive;
 
 import frc.robot.CurrentDriver;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
@@ -8,15 +10,20 @@ import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.IOConstants;
 
+import java.util.Optional;
+
 import wildlib.utils.SwerveUtils;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -26,6 +33,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,6 +71,7 @@ public class Swerve extends SubsystemBase {
     private double currentRotation = 0.0;
     private double currentTranslationDir = 0.0;
     private double currentTranslationMag = 0.0;
+    private boolean cappedSpeed = false;
 
     private SlewRateLimiter magLimiter = new SlewRateLimiter(DriveConstants.magnitudeSlewRate);
     private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.rotationalSlewRate);
@@ -130,6 +139,11 @@ public class Swerve extends SubsystemBase {
         );
 
         PathPlannerLogging.setLogActivePathCallback((poses) -> m_field.getObject("path").setPoses(poses));
+
+        final MatchType match = DriverStation.getMatchType();
+        if (match == MatchType.Elimination || match == MatchType.Qualification) {
+            PPLibTelemetry.enableCompetitionMode();
+        }
         SmartDashboard.putData("Field", m_field);
     }
 
@@ -147,8 +161,13 @@ public class Swerve extends SubsystemBase {
             }
         );
 
-        m_field.setRobotPose(odometry.getPoseMeters());
-        SmartDashboard.putData(gyro);
+        // SmartDashboard.putNumber("A Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("B Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("C Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("D Module Speed", aModule.getState().speedMetersPerSecond);
+
+        // m_field.setRobotPose(odometry.getPoseMeters());
+        // SmartDashboard.putData(gyro);
     }
     
     /** 
@@ -186,7 +205,13 @@ public class Swerve extends SubsystemBase {
      * @param fieldRelative Whether the provided x and y speeds are relative to the field.
      * @param rateLimit     Whether to enable slew rate limiting for smoother control.
      */
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean autoPosition) {
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+        if (cappedSpeed) {
+            xSpeed *= 0.25;
+            ySpeed *= 0.25;
+            rot *= 0.25;
+        }
+
         double xSpeedCommanded;
         double ySpeedCommanded;
             if (rateLimit) {
@@ -221,25 +246,12 @@ public class Swerve extends SubsystemBase {
             xSpeedCommanded = currentTranslationMag * Math.cos(currentTranslationDir);
             ySpeedCommanded = currentTranslationMag * Math.sin(currentTranslationDir);
             currentRotation = rotLimiter.calculate(rot);
-        } else if (autoPosition) {
-            //TODO: Check what needs to be inverted, don't have the target values yet
-            //TODO: Ask Jett how to fix tis
-            double tX = m_limelight.getTX() * -1.0;
-            double tY = m_limelight.getTY();
-            double kPa = .035; //TODO: Tune this
-            double kPy = .1; //TODO: Tune this
-            double kPx = .1; //TODO: Tune this
-         currentRotation = tX * kPa;
-         xSpeedCommanded = tY * kPx;
-         ySpeedCommanded = tY * Math.sin(Math.toRadians(tX)) * kPy;
-         fieldRelative = false;
-
         } else {
             xSpeedCommanded = xSpeed;
             ySpeedCommanded = ySpeed;
             currentRotation = rot;
         }
-
+        
         double xSpeedDelivered = xSpeedCommanded * DriveConstants.maxTranslationalSpeed;
         double ySpeedDelivered = ySpeedCommanded * DriveConstants.maxTranslationalSpeed;
         double rotDelivered = currentRotation * DriveConstants.maxAngularSpeed;
@@ -277,6 +289,10 @@ public class Swerve extends SubsystemBase {
         dModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     }
 
+    public void capSpeed() {
+        cappedSpeed = !cappedSpeed;
+    }
+
     /** 
      * Sets the modules to the given SwerveModuleStates
      * 
@@ -300,7 +316,17 @@ public class Swerve extends SubsystemBase {
 
     /** Zeros the heading of the robot. */
     public void zeroHeading() {
+        gyro.setAngleAdjustment(0.0);
         gyro.reset();
+    }
+
+    /** 
+     * Sets the angle offset of the gyroscope.
+     * 
+     * WARNING: Does not affect `getYaw()` or quaternion values
+     */
+    public void resetHeading(double radians) {
+        gyro.setAngleAdjustment(gyro.getAngleAdjustment() + radians);
     }
 
     /**
@@ -311,6 +337,18 @@ public class Swerve extends SubsystemBase {
     public double getHeading() {
         // Map continuous gyro degrees to -180 to 180
         return Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)).getDegrees();
+    }
+
+    public double getAmpOffset() {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
+            return Units.degreesToRadians(-90.0);
+        } else if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+            return Units.degreesToRadians(90.0);
+        } else {
+            return 0.0;
+        }
     }
 
     public ChassisSpeeds getSpeeds() {

@@ -21,14 +21,18 @@ public class Climber extends SubsystemBase {
     public static Climber getInstance() {
         if (m_instance == null) {
             m_instance = new Climber(
-                new PIDSpark(IOConstants.climbLeftId,
+                new PIDSpark(
+                    IOConstants.climbLeftId,
                     MotorType.kBrushless,
+                    PIDSpark.SparkMaxModel(),
                     ClimberConstants.leftKP,
                     ClimberConstants.leftKI,
                     ClimberConstants.leftKD
                 ),
-                new PIDSpark(IOConstants.climbRightId,
+                new PIDSpark(
+                    IOConstants.climbRightId,
                     MotorType.kBrushless,
+                    PIDSpark.SparkMaxModel(),
                     ClimberConstants.rightKP,
                     ClimberConstants.rightKI,
                     ClimberConstants.rightKD
@@ -43,17 +47,21 @@ public class Climber extends SubsystemBase {
         m_left = leftMotor;
         m_right = rightMotor;
 
-        m_left.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.minPosition);
+        m_left.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.leftMinPosition);
         m_left.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.maxPosition);
 
         m_left.setPositionConversionFactor(ClimberConstants.conversionFactor);
         m_left.setIdleMode(IdleMode.kBrake);
 
-        m_right.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.minPosition);
+        m_left.burnFlash();
+
+        m_right.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.rightMinPosition);
         m_right.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.maxPosition);
 
         m_right.setPositionConversionFactor(ClimberConstants.conversionFactor);
         m_right.setIdleMode(IdleMode.kBrake);
+
+        m_right.burnFlash();
     }
 
     public REVLibError setLeftTargetPosition(double position) {

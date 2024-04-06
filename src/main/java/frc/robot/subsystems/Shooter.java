@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -25,6 +27,7 @@ public class Shooter extends SubsystemBase {
             m_instance = new Shooter(new PIDSpark(
                 IOConstants.shooterId,
                 MotorType.kBrushless,
+                PIDSpark.SparkFlexModel(),
                 ShooterConstants.motorKP,
                 ShooterConstants.motorKI,
                 ShooterConstants.motorKD,
@@ -38,6 +41,8 @@ public class Shooter extends SubsystemBase {
     private Shooter(PIDSpark drive) {
         m_motor = drive;
         m_motor.setInverted(true);
+        m_motor.setSmartCurrentLimit(60);
+        m_motor.burnFlash();
     }
 
     public void initDefaultCommand() {
@@ -94,6 +99,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Shooter Current", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Shooter Velocity", m_motor.getVelocity());
     }
 }

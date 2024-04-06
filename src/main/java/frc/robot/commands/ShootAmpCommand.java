@@ -48,7 +48,7 @@ public class ShootAmpCommand extends Command {
             }
             break;
         case RevUp:
-            if (m_shooter.getVelocity() >= ShooterConstants.ampTarget) {
+            if (MathUtils.closeEnough(m_shooter.getVelocity(), ShooterConstants.ampTarget, 10.0)) {
                 m_intake.setSpeed(0.4);
                 m_currentState = State.Shoot;
             }
@@ -66,12 +66,13 @@ public class ShootAmpCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        m_intake.setSpeed(0.0);
         m_shooter.setTargetVelocity(ShooterConstants.idleTarget);
     }
 
     @Override
     public boolean isFinished() {
         // Wait one second after the note is last detected before ending
-        return m_currentState == State.Wait && System.nanoTime() - m_lastDetected > 1e9;
+        return m_currentState == State.Wait && System.nanoTime() - m_lastDetected >= 1e9;
     }
 }

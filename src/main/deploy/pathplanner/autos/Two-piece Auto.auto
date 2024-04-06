@@ -20,6 +20,24 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Amp To First"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "scoreAmp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Amp to Note"
           }
         },
@@ -32,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "score"
+            "name": "scoreAmp"
           }
         },
         {

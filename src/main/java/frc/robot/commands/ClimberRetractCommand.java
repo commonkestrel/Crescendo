@@ -1,8 +1,11 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Leds;
+import frc.robot.subsystems.Leds.LedState;
 import wildlib.utils.MathUtils;
 
 public class ClimberRetractCommand extends Command {
@@ -14,10 +17,12 @@ public class ClimberRetractCommand extends Command {
     }
 
     private final Climber m_climber;
+    private final Leds m_leds;
     private State m_currentState;
 
-    public ClimberRetractCommand(Climber climber) {
+    public ClimberRetractCommand(Climber climber, Leds leds) {
         m_climber = climber;
+        m_leds = leds;
         addRequirements(m_climber);
 
         m_currentState = State.Seeking;
@@ -27,6 +32,7 @@ public class ClimberRetractCommand extends Command {
     public void initialize() {
         m_climber.setLeftTargetPosition(ClimberConstants.retractedPosition);
         m_climber.setRightTargetPosition(ClimberConstants.retractedPosition);
+        m_leds.set(LedState.kRainbow, Color.kBlack);
         m_currentState = State.Seeking;
     }
 

@@ -5,8 +5,8 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Shooter;
 
 /**
- * Command that ramps the shooter to Amp speed
- * Can be used to ramp during travel to reduce cycle time
+ * Command that ramps the shooter to Amp speed.
+ * Can be used to ramp during travel to reduce cycle time.
  */
 public class RampAmpCommand extends Command {
     private final Shooter m_shooter;
@@ -23,6 +23,6 @@ public class RampAmpCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_shooter.getVelocity() >= ShooterConstants.ampTarget;
+        return false;
     }
 }

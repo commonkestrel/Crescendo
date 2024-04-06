@@ -13,7 +13,7 @@ public class IntakeSourceCommand extends Command {
     private boolean m_noteDetected;
 
     public IntakeSourceCommand(Intake intake, Shooter shooter) {
-        m_intake = intake;
+        m_intake = intake; 
         m_shooter = shooter;
         m_noteDetected = false;
         addRequirements(m_intake, m_shooter);
