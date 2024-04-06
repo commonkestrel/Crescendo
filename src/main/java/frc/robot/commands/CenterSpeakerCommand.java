@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
+import java.util.concurrent.atomic.DoubleAdder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -40,6 +43,10 @@ public class CenterSpeakerCommand extends Command {
     private double m_targetRot;
     private double m_targetX;
     private double m_targetY;
+
+    private List<Double> m_targetRotBuffer;
+    private List<Double> m_targetXBuffer;
+    private List<Double> m_targetYBuffer;
 
     private State m_currentState;
 
@@ -92,12 +99,27 @@ public class CenterSpeakerCommand extends Command {
         System.out.printf("Target X: %f; Target Y: %f; Target Rot: %f;%n", m_targetX, m_targetY, m_targetRot);
     }
 
+    private void adjustAngle(Translation2d speaker, Rotation2d angle) {
+        m_targetXBuffer.add(AutoConstants.speakerRadius * angle.getCos() + speaker.getX());
+        m_targetYBuffer.add(AutoConstants.speakerRadius * angle.getSin() + speaker.getY());
+        m_targetRotBuffer.add(-(FieldUtils.correctFieldRotation(angle).getDegrees()));
+    }
+
     private boolean isCentered() {
        double[] botpose = m_limelight.getBotPose_wpiBlue();
 
         return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
            && MathUtils.closeEnough(botpose[0], m_targetX, 0.05)
            && MathUtils.closeEnough(botpose[1], m_targetY, 0.05)
+           && m_limelight.getTV(); 
+    }
+
+    private boolean isIncremented() {
+       double[] botpose = m_limelight.getBotPose_wpiBlue();
+
+        return MathUtils.closeEnough(botpose[5], m_targetRotBuffer.get(0), 5.0)
+           && MathUtils.closeEnough(botpose[0], m_targetXBuffer.get(0), 0.05)
+           && MathUtils.closeEnough(botpose[1], m_targetYBuffer.get(0), 0.05)
            && m_limelight.getTV(); 
     }
 
@@ -138,10 +160,13 @@ public class CenterSpeakerCommand extends Command {
 
                 Rotation2d angle = CrescendoUtils.clampSpeakerArc(FieldUtils.correctFieldRotation(Rotation2d.fromDegrees(m_targetRot)).unaryMinus().plus(Rotation2d.fromRadians(distance)));
                 Translation2d speaker = CrescendoUtils.getAllianceSpeaker();
+                if (CrescendoUtils.isSpeakerClamped(angle)) {
+                adjustAngle(speaker, angle);
+                }
 
-                setAngle(speaker, angle);
+
             }
-        if (parallelTranslation || !isCentered()) {
+        if (!parallelTranslation && !isCentered() && (m_targetRotBuffer.size() + m_targetXBuffer.size() + m_targetYBuffer.size()) == 0) {
             m_xController.setSetpoint(m_targetX);
             m_yController.setSetpoint(m_targetY);
             m_rotController.setSetpoint(m_targetRot);    
@@ -160,9 +185,31 @@ public class CenterSpeakerCommand extends Command {
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
             m_drive.drive(xTranslation, yTranslation, rotation, true, false);
-        } else {
-            m_leds.set(LedState.kSolid, Color.kPlum);
+        } else if (parallelTranslation) {
+            m_xController.setSetpoint(m_targetXBuffer.get(0));
+            m_yController.setSetpoint(m_targetYBuffer.get(0));
+            m_rotController.setSetpoint(m_targetRotBuffer.get(0));    
+
+            double[] botpose = m_limelight.getBotPose_wpiBlue();
+            double xDistance = botpose[0];
+            double yDistance = botpose[1];
+            double angle = botpose[5];
+
+            double xTranslation = MathUtil.clamp(m_xController.calculate(xDistance), -1.0, 1.0);
+            double yTranslation = MathUtil.clamp(m_yController.calculate(yDistance), -1.0, 1.0);
+            System.out.printf("Y Distance: %f; Y PID Output: %f%n", yDistance, yTranslation);
+
+            double rotation = MathUtil.clamp(m_rotController.calculate(angle), -1.0, 1.0);
+            System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
+            System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
+
+            m_drive.drive(xTranslation, yTranslation, rotation, true, false);
+            if (isIncremented()) {
+                m_targetXBuffer.remove(0);
+                m_targetYBuffer.remove(0);
+                m_targetRotBuffer.remove(0);
             }
+        }
             break;
         }
     }

@@ -1,8 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import frc.robot.CurrentDriver;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
@@ -33,7 +31,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -351,6 +348,14 @@ public class Swerve extends SubsystemBase {
 
     public double getAngularVelocity() {
         return gyro.getRate();
+    }
+
+    public double getTranslationalVelocity() {
+        return Math.sqrt(Math.pow(gyro.getVelocityX(), 2) + Math.pow(gyro.getVelocityY(), 2));
+    }
+
+    public double getTranslationAcceleration() {
+        return Math.sqrt(Math.pow(gyro.getWorldLinearAccelX() * 9.8, 2) + Math.pow(gyro.getWorldLinearAccelY() * 9.8, 2));
     }
 
     public void setOffset(double offset) {

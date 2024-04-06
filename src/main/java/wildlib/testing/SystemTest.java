@@ -70,18 +70,19 @@ public class SystemTest {
         m_autoCommand.schedule();
     }
 
-    private static void cancelAllExcept(String except) {
+    private static void cancelAllExcept(String ... exceptions) {
         if (m_autoCommand != null) {
             m_autoCommand.end(true);
             m_autoCommand.cancel();
         }
-
+    for (String except: exceptions) {
         for (Map.Entry<String, SystemTestCommand> entry : m_tests.entrySet()) {
             if (entry.getKey() != except) {
                 entry.getValue().end(true);
                 entry.getValue().cancel();
             }
         }
+    }
     }
 
     private static void cancelAll() {
