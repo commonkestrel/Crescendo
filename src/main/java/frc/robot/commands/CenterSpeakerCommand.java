@@ -1,27 +1,20 @@
 package frc.robot.commands;
 
-import java.sql.Driver;
 import java.util.Optional;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.CrescendoUtils;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Leds.LedState;
@@ -99,6 +92,15 @@ public class CenterSpeakerCommand extends Command {
         System.out.printf("Target X: %f; Target Y: %f; Target Rot: %f;%n", m_targetX, m_targetY, m_targetRot);
     }
 
+    private boolean isCentered() {
+       double[] botpose = m_limelight.getBotPose_wpiBlue();
+
+        return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
+           && MathUtils.closeEnough(botpose[0], m_targetX, 0.05)
+           && MathUtils.closeEnough(botpose[1], m_targetY, 0.05)
+           && m_limelight.getTV(); 
+    }
+
     @Override
     public void execute() {
         System.out.println(m_limelight.getTV());
@@ -120,7 +122,11 @@ public class CenterSpeakerCommand extends Command {
         case Found:
             int pov = m_xboxController.getPOV();
             System.out.printf("POV: %d%n", pov);
+            boolean parallelTranslation = false;
             if (pov == 90 || pov == 270) {
+
+                parallelTranslation = true;
+
                 double distance = (Math.PI/6) / 20;
                 if (pov == 270) {
                     distance = -distance;
@@ -135,7 +141,7 @@ public class CenterSpeakerCommand extends Command {
 
                 setAngle(speaker, angle);
             }
-
+        if (parallelTranslation || !isCentered()) {
             m_xController.setSetpoint(m_targetX);
             m_yController.setSetpoint(m_targetY);
             m_rotController.setSetpoint(m_targetRot);    
@@ -154,6 +160,9 @@ public class CenterSpeakerCommand extends Command {
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
 
             m_drive.drive(xTranslation, yTranslation, rotation, true, false);
+        } else {
+            m_leds.set(LedState.kSolid, Color.kPlum);
+            }
             break;
         }
     }

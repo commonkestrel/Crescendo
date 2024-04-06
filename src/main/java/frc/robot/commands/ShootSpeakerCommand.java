@@ -5,7 +5,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import wildlib.utils.MathUtils;
 
 public class ShootSpeakerCommand extends Command {
     private enum State {
