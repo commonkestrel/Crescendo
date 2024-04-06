@@ -38,4 +38,22 @@ public class CrescendoUtils {
             return new Rotation2d(MathUtil.clamp(angle.getRadians(), -BLUE_SPEAKER_ARC, BLUE_SPEAKER_ARC));
         }
     }
+
+    public static boolean isSpeakerClamped(Rotation2d angle) {
+        double radians = angle.getRadians();
+        if (FieldUtils.red()) {
+            if (radians <= 0.0 && radians >= -RED_SPEAKER_ARC) {
+                return true;
+            } else if (radians >= 0.0 && radians <= RED_SPEAKER_ARC) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (Math.abs(radians) <= BLUE_SPEAKER_ARC) {
+            
+            return false;
+    } else {
+        return true;
+    }
+}
 }

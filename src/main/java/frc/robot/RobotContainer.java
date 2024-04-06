@@ -4,29 +4,19 @@
 
 package frc.robot;
 
-import java.util.Optional;
+
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.util.PPLibTelemetry;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CenterTargetCommand;
@@ -43,7 +33,6 @@ import frc.robot.commands.IntakeSourceCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.RampAmpCommand;
 import frc.robot.commands.RampSpeakerCommand;
-import frc.robot.commands.ResetHeading;
 import frc.robot.commands.ShootAmpCommand;
 import frc.robot.commands.ShootSpeakerCommand;
 import frc.robot.commands.ClimberRetractCommand.Side;
@@ -55,6 +44,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.Toggle;
+import wildlib.testing.SpeedTestCommand;
+import wildlib.testing.SystemTestCommand;
 import wildlib.utils.FieldUtils;
 
 public class RobotContainer {
@@ -128,6 +119,7 @@ public class RobotContainer {
 
         m_driveController.back().onTrue(Commands.runOnce(m_swerve::capSpeed, m_swerve));
 
+        m_driveController.leftStick().toggleOnTrue(new SpeedTestCommand(m_swerve));
         m_driveController.x().whileTrue(Commands.run(m_swerve::crossWheels, m_swerve));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
         m_driveController.b().whileTrue(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance).andThen(Commands.print("centered")));
@@ -138,7 +130,6 @@ public class RobotContainer {
 
         m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
-        // TODO: test this like ever
         
         // Initialize limelight
         m_limelightTarget = new Trigger(m_limelight::getTV);
