@@ -119,8 +119,6 @@ public class Intake extends SubsystemBase {
     public boolean noteDetected() {
         return m_overrideSensor || !m_noteBeambreak.get();
 
-        // TODO: Use both sensors for robustness
-        //return m_overrideSensor || m_detector.get() || m_noteBeambreak.get();
     }
 
     public double getIndexerVelocity() {
@@ -133,6 +131,10 @@ public class Intake extends SubsystemBase {
 
     public void toggleOverride() {
         m_overrideSensor = !m_overrideSensor;
+    }
+
+    public boolean getOverride() {
+        return m_overrideSensor;
     }
 
     @Override
