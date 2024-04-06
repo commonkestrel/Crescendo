@@ -1,27 +1,28 @@
 package frc.robot.commands;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.DoubleAdder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.CrescendoUtils;
 import frc.robot.Constants.AutoConstants;
+
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
+
 import wildlib.utils.FieldUtils;
 import wildlib.utils.MathUtils;
 
@@ -160,13 +161,16 @@ public class CenterSpeakerCommand extends Command {
 
                 Rotation2d angle = CrescendoUtils.clampSpeakerArc(FieldUtils.correctFieldRotation(Rotation2d.fromDegrees(m_targetRot)).unaryMinus().plus(Rotation2d.fromRadians(distance)));
                 Translation2d speaker = CrescendoUtils.getAllianceSpeaker();
-                if (CrescendoUtils.isSpeakerClamped(angle)) {
+                if (!CrescendoUtils.isSpeakerClamped(angle)) {
                 adjustAngle(speaker, angle);
                 }
 
 
             }
-        if (!parallelTranslation && !isCentered() && (m_targetRotBuffer.size() + m_targetXBuffer.size() + m_targetYBuffer.size()) == 0) {
+        if (!parallelTranslation && !isCentered()) {
+            m_targetRotBuffer.clear();
+            m_targetXBuffer.clear();
+            m_targetYBuffer.clear();
             m_xController.setSetpoint(m_targetX);
             m_yController.setSetpoint(m_targetY);
             m_rotController.setSetpoint(m_targetRot);    
