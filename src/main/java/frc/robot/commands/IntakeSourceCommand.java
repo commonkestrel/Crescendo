@@ -1,27 +1,30 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Shooter;
 
 public class IntakeSourceCommand extends Command {
     enum State {
-        notPassed,
+        NotPassed,
+        Passing,
         Passed,
         Equilibrium
     }
     private final Intake m_intake;
     private final Shooter m_shooter;
+    private final Leds m_leds;
 
-    private boolean m_noteDetected;
-    private State m_state;
+    private State m_currentState;
 
-    public IntakeSourceCommand(Intake intake, Shooter shooter) {
+    public IntakeSourceCommand(Intake intake, Shooter shooter, Leds leds) {
         m_intake = intake; 
         m_shooter = shooter;
-        m_noteDetected = false;
+        m_leds = leds;
         addRequirements(m_intake, m_shooter);
     }
 
@@ -30,29 +33,34 @@ public class IntakeSourceCommand extends Command {
         m_intake.setPrerollerSpeed(0.0);
         m_intake.setTargetIndexerVelocity(-1000);
         m_shooter.setTargetVelocity(ShooterConstants.intakeTarget);
-        m_noteDetected = m_intake.noteDetected();
-        m_state = State.notPassed;
+        m_currentState = State.NotPassed;
     }
 
     @Override
     public void execute() {
-        switch (m_state) {
-            case notPassed:
-        if (m_intake.noteDetected()) {
-            m_noteDetected = true;
-        } else if (!m_intake.noteDetected() && m_noteDetected) {
-            m_shooter.setSpeed(0.0);
-            m_state = State.Passed;
-        }
+        switch (m_currentState) {
+        case NotPassed:
+            if (m_intake.noteDetected()) {
+                m_leds.flash(Color.kOrchid);
+                m_shooter.setSpeed(0.0);
+                m_currentState = State.Passing;
+            }
             break;
-            case Passed:
-            m_intake.setIndexerSpeed(0.1);
-        if (m_intake.noteDetected()) {
-            m_state = State.Equilibrium;
-        }
+        case Passing:
+            if (!m_intake.noteDetected()) {
+                m_intake.setIndexerSpeed(0.1);
+                m_currentState = State.Passed;
+            }
             break;
-            case Equilibrium:
-                break;
+        case Passed:
+            if (m_intake.noteDetected()) {
+                m_leds.flash(Color.kGreen);
+                m_intake.stop();
+                m_currentState = State.Equilibrium;
+            }
+            break;
+        case Equilibrium:
+            break;
     }
     }
 
@@ -64,6 +72,6 @@ public class IntakeSourceCommand extends Command {
     @Override
     public boolean isFinished() {
         // Finished if we've seen a Note and it has passed the sensor completely
-        return m_state == State.Equilibrium;
+        return m_currentState == State.Equilibrium;
     }
 }

@@ -8,7 +8,9 @@ import frc.robot.subsystems.Leds;
 public class IntakeIdleCommand extends Command {
     private enum State {
         Running,
-        Stopped,
+        DebounceR,
+        DebounceF,
+        Equilibrium,
     }
 
     private final Intake m_intake;
@@ -27,7 +29,7 @@ public class IntakeIdleCommand extends Command {
     @Override
     public void initialize() {
         if (m_intake.noteDetected()) {
-            m_currentState = State.Stopped;
+            m_currentState = State.Equilibrium;
             m_intake.stop();
         } else {
             m_intake.setIndexerSpeed(0.4);
@@ -38,15 +40,32 @@ public class IntakeIdleCommand extends Command {
 
     @Override
     public void execute() {
+        if (m_intake.getOverride() && !(m_currentState == State.Equilibrium)){
+            m_intake.stop();
+            m_currentState = State.Equilibrium;
+        }
         switch (m_currentState) {
         case Running:
             if (m_intake.noteDetected()) {
+                m_currentState = State.DebounceR;
+                m_intake.setIndexerSpeed(-0.175);
+                m_leds.flash(Color.kOrchid);
+            }
+            break;
+        case DebounceR:
+            if (!m_intake.noteDetected()) {
+                m_intake.setIndexerSpeed(0.1);
+                m_currentState = State.DebounceF;
+            }
+            break;
+        case DebounceF:
+            if (m_intake.noteDetected()) {
                 m_intake.stop();
-                m_currentState = State.Stopped;
+                m_currentState = State.Equilibrium;
                 m_leds.flash(Color.kGreen);
             }
             break;
-        case Stopped:
+        case Equilibrium:
             if (!m_intake.noteDetected()) {
                 m_intake.setIndexerSpeed(0.4);
                 m_intake.setPrerollerSpeed(0.6);

@@ -114,7 +114,7 @@ public class RobotContainer {
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
-        m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
+        m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter, m_leds));
         // m_mechController.x().whileTrue(new IntakeCommand(m_intake));
 
         m_mechController.povDown().and(m_mechController.a()).whileTrue(new ClimberRetractCommand(m_climber, m_leds, Side.Left));
