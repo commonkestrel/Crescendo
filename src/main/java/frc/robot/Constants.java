@@ -11,14 +11,14 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static final class AutoConstants {
         public static final int ampPipeline = 0;
-        public static final double ampDistance = -0.41;
+        public static final double ampDistance = -0.40;
         public static final double sourceDistance = -0.52;
 
         public static final double speakerRadius = 1.55;
 
-        public static final double limelightAngle = 40.0;
+        public static final double limelightAngle = 46.0;
 
-        public static final double rotKP = 0.015;
+        public static final double rotKP = 0.01;
         public static final double rotKI = 0.000001;
         public static final double rotKD = 0.0001;
 
@@ -26,8 +26,8 @@ public final class Constants {
         public static final double xKI = 0.0;
         public static final double xKD = 0.0;
 
-        public static final double yKP = 0.5;
-        public static final double yKI = 0.0;
+        public static final double yKP = 0.75;
+        public static final double yKI = 0.00000001;
         public static final double yKD = 0.0;
     }
 

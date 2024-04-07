@@ -6,6 +6,8 @@ package frc.robot;
 
 
 
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -16,7 +18,9 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CenterTargetCommand;
@@ -144,14 +148,16 @@ public class RobotContainer {
         NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
         NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake, m_leds));
         
-        m_driveController.y().whileTrue(AutoBuilder.buildAuto("Dual Speaker"));
         m_autoCommand.setDefaultOption("Triple Amp Side", AutoBuilder.buildAuto("Triple Speaker"));
         m_autoCommand.addOption("Dual Amp Side", AutoBuilder.buildAuto("Dual Speaker"));
+        m_autoCommand.addOption("Quad Amp Side", AutoBuilder.buildAuto("Quad Speaker"));
         m_autoCommand.addOption("Middle Start", AutoBuilder.buildAuto("Middle Start"));
         m_autoCommand.addOption("Source Shoot", AutoBuilder.buildAuto("Source Shoot"));
         m_autoCommand.addOption("Amp Preload", AutoBuilder.buildAuto("Amp Preload"));
         m_autoCommand.addOption("Middle Preload", AutoBuilder.buildAuto("Middle Preload"));
+        m_autoCommand.addOption("Source Outtakes", AutoBuilder.buildAuto("Outtakes"));
         SmartDashboard.putData("Auto Command", m_autoCommand);
+        m_driveController.y().whileTrue(new ProxyCommand(m_autoCommand::getSelected));
     }
 
     private Command shootAmp() {

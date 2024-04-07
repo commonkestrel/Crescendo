@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,9 +48,9 @@ public class CenterSpeakerCommand extends Command {
     private double m_targetX;
     private double m_targetY;
 
-    private List<Double> m_targetRotBuffer;
-    private List<Double> m_targetXBuffer;
-    private List<Double> m_targetYBuffer;
+    private List<Double> m_targetRotBuffer = new ArrayList<Double>();
+    private List<Double> m_targetXBuffer = new ArrayList<Double>();
+    private List<Double> m_targetYBuffer = new ArrayList<Double>();
 
     private State m_currentState;
 
@@ -121,9 +122,9 @@ public class CenterSpeakerCommand extends Command {
        double[] botpose = m_limelight.getBotPose_wpiBlue();
 
         return MathUtils.closeEnough(botpose[5], m_targetRotBuffer.get(0), 5.0)
-           && MathUtils.closeEnough(botpose[0], m_targetXBuffer.get(0), 0.05)
-           && MathUtils.closeEnough(botpose[1], m_targetYBuffer.get(0), 0.05)
-           && m_limelight.getTV(); 
+            && MathUtils.closeEnough(botpose[0], m_targetXBuffer.get(0), 0.05)
+            && MathUtils.closeEnough(botpose[1], m_targetYBuffer.get(0), 0.05)
+            && m_limelight.getTV(); 
     }
 
     @Override
@@ -164,15 +165,17 @@ public class CenterSpeakerCommand extends Command {
                 Rotation2d angle = CrescendoUtils.clampSpeakerArc(FieldUtils.correctFieldRotation(Rotation2d.fromDegrees(m_targetRot)).unaryMinus().plus(Rotation2d.fromRadians(distance)));
                 Translation2d speaker = CrescendoUtils.getAllianceSpeaker();
                 if (!CrescendoUtils.isSpeakerClamped(angle)) {
-                adjustAngle(speaker, angle);
+                    adjustAngle(speaker, angle);
                 }
 
 
             }
         if (!parallelTranslation && !isCentered()) {
-            m_targetRotBuffer.clear();
-            m_targetXBuffer.clear();
-            m_targetYBuffer.clear();
+            if (m_targetRotBuffer != null) {
+                m_targetRotBuffer.clear();
+                m_targetXBuffer.clear();
+                m_targetYBuffer.clear();
+            }
             m_xController.setSetpoint(m_targetX);
             m_yController.setSetpoint(m_targetY);
             m_rotController.setSetpoint(m_targetRot);    
