@@ -16,57 +16,79 @@ import wildlib.utils.MathUtils;
  * A subsystem representing the shooter on our robot
  */
 public class Shooter extends SubsystemBase {
-    private final PIDSpark m_motor;
+    private final PIDSpark m_flywheel;
+    private final PIDSpark m_turret;
 
     private static Shooter m_instance;
 
     public static Shooter getInstance() {
         if (m_instance == null) {
-            m_instance = new Shooter(new PIDSpark(
-                IOConstants.shooterId,
-                MotorType.kBrushless,
-                PIDSpark.SparkFlexModel(),
-                ShooterConstants.motorKP,
-                ShooterConstants.motorKI,
-                ShooterConstants.motorKD,
-                ShooterConstants.motorKF
-            ));
+            m_instance = new Shooter(
+                new PIDSpark(
+                    IOConstants.shooterId,
+                    MotorType.kBrushless,
+                    PIDSpark.SparkFlexModel(),
+                    ShooterConstants.flywheelKP,
+                    ShooterConstants.flywheelKI,
+                    ShooterConstants.flywheelKD,
+                    ShooterConstants.flywheelKF
+                ),
+                new PIDSpark(
+                    IOConstants.turretId,
+                    MotorType.kBrushless,
+                    PIDSpark.SparkMaxModel(),
+                    ShooterConstants.turretKP,
+                    ShooterConstants.turretKI,
+                    ShooterConstants.turretKD,
+                    ShooterConstants.turretKF
+                )
+            );
         }
 
         return m_instance;
     }
 
-    private Shooter(PIDSpark drive) {
-        m_motor = drive;
-        m_motor.setInverted(true);
-        m_motor.setSmartCurrentLimit(60);
-        m_motor.burnFlash();
+    private Shooter(PIDSpark flywheel, PIDSpark turret) {
+        m_flywheel = flywheel;
+        m_flywheel.setInverted(true);
+        m_flywheel.setSmartCurrentLimit(60);
+        m_flywheel.burnFlash();
+
+        m_turret = turret;
+        m_turret.setPositionConversionFactor(ShooterConstants.turretPositionFactor);
+        m_turret.setSmartCurrentLimit(30);
+        m_turret.burnFlash();
     }
 
     public void initDefaultCommand() {
         setDefaultCommand(Commands.run(() -> {
-            m_motor.set(0);
+            m_flywheel.set(0);
         }, this));
     }
 
     public void setSpeed(double speed) {
-        m_motor.set(speed);
+        m_flywheel.set(speed);
     }
 
     public REVLibError setTargetVelocity(double velocity) {
-        return m_motor.setTargetVelocity(velocity);
+        return m_flywheel.setTargetVelocity(velocity);
     }
 
     public double getVelocity() {
-        return m_motor.getVelocity();
+        return m_flywheel.getVelocity();
+    }
+
+    /** Sets the target position of the turret in radians. */
+    public REVLibError setTargetTurretPosition(double position) {
+        return m_turret.setTargetPosition(position);
     }
 
     /**
      * Waits for the wheels to ramp to shoot for Amp
      */
     public Command rampAmp() {
-        Command shoot = Commands.runOnce(() -> m_motor.setTargetVelocity(ShooterConstants.ampTarget))
-            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_motor.getVelocity(), ShooterConstants.ampTarget, 10)));
+        Command shoot = Commands.runOnce(() -> m_flywheel.setTargetVelocity(ShooterConstants.ampTarget))
+            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_flywheel.getVelocity(), ShooterConstants.ampTarget, 10)));
         shoot.addRequirements(this);
 
         return shoot;
@@ -76,8 +98,8 @@ public class Shooter extends SubsystemBase {
      * Waits for the wheels to ramp to shoot for Speaker
      */
     public Command rampSpeaker() {
-        Command shoot = Commands.runOnce(() -> m_motor.setTargetVelocity(ShooterConstants.speakerTarget))
-            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_motor.getVelocity(), ShooterConstants.speakerTarget, 10)));
+        Command shoot = Commands.runOnce(() -> m_flywheel.setTargetVelocity(ShooterConstants.speakerTarget))
+            .andThen(Commands.waitUntil(() -> MathUtils.closeEnough(m_flywheel.getVelocity(), ShooterConstants.speakerTarget, 10)));
         shoot.addRequirements(this);
 
         return shoot;
@@ -97,8 +119,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooter Current", m_motor.getOutputCurrent());
-        SmartDashboard.putNumber("Shooter Velocity", m_motor.getVelocity());
-        SmartDashboard.putNumber("Shooter Output", m_motor.getAppliedOutput());
+        SmartDashboard.putNumber("Shooter Current", m_flywheel.getOutputCurrent());
+        SmartDashboard.putNumber("Shooter Velocity", m_flywheel.getVelocity());
+        SmartDashboard.putNumber("Shooter Output", m_flywheel.getAppliedOutput());
     }
 }

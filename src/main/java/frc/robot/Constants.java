@@ -207,10 +207,21 @@ public final class Constants {
 
         public static final double shootTime = 5.0;
 
-        public static final double motorKP = 0.00005;
-        public static final double motorKI = 0.0;
-        public static final double motorKD = 0.00;
-        public static final double motorKF = 0.000165;
+        public static final double flywheelKP = 0.00005;
+        public static final double flywheelKI = 0.0;
+        public static final double flywheelKD = 0.0;
+        public static final double flywheelKF = 0.000165;
+
+        public static final double turretKP = 1.0;
+        public static final double turretKI = 0.0;
+        public static final double turretKD = 0.0;
+        public static final double turretKF = 0.0;
+
+        /** 2pi / diametrical pitch / diameter */
+        private static final double toothAngle = 2*Math.PI / 20 / 30;
+        private static final double turretRackTeeth = 2*Math.PI / toothAngle;
+        private static final double turretGearRatio = 20 / turretRackTeeth;
+        public static final double turretPositionFactor = 2*Math.PI * turretGearRatio;
     }
 
     /** Various constants used for the climber subsystem and commands */
@@ -274,6 +285,7 @@ public final class Constants {
         public static final int indexerId = 11;
         public static final int shooterId = 12;
         public static final int prerollerId = 15;
+        public static final int turretId = 16;
 
         public static final int climbLeftId = 13;
         public static final int climbRightId = 14;
