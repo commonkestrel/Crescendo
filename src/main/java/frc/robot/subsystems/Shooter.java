@@ -78,9 +78,9 @@ public class Shooter extends SubsystemBase {
         return m_flywheel.getVelocity();
     }
 
-    /** Sets the target position of the turret in radians. */
-    public REVLibError setTargetTurretPosition(double position) {
-        return m_turret.setTargetPosition(position);
+    /** Sets the target angle of the turret in radians. */
+    public REVLibError setTargetTurretAngle(double angle) {
+        return m_turret.setTargetPosition(angle-Math.PI/9.0);
     }
 
     /**
