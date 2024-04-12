@@ -355,7 +355,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getTranslationAcceleration() {
-        return Math.sqrt(Math.pow(gyro.getWorldLinearAccelX() * 9.8, 2) + Math.pow(gyro.getWorldLinearAccelY() * 9.8, 2));
+        return Math.sqrt(Math.pow(gyro.getWorldLinearAccelX(), 2) + Math.pow(gyro.getWorldLinearAccelY(), 2));
     }
 
     public void setOffset(double offset) {

@@ -120,6 +120,9 @@ public class RobotContainer {
         m_mechController.povUp().and(m_mechController.a().or(m_mechController.y()).negate()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Both));
         m_mechController.rightTrigger().whileTrue(new ClimberResetCommand(m_climber, m_leds));
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
+        
+        m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kAquamarine)));
+        m_driveController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kMagenta)));
 
         m_driveController.back().onTrue(Commands.runOnce(m_swerve::capSpeed, m_swerve));
 
@@ -147,6 +150,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
         NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
         NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake, m_leds));
+        NamedCommands.registerCommand("outtake", new OuttakeCommand(m_intake));
         
         m_autoCommand.setDefaultOption("Triple Amp Side", AutoBuilder.buildAuto("Triple Speaker"));
         m_autoCommand.addOption("Dual Amp Side", AutoBuilder.buildAuto("Dual Speaker"));
@@ -156,6 +160,7 @@ public class RobotContainer {
         m_autoCommand.addOption("Amp Preload", AutoBuilder.buildAuto("Amp Preload"));
         m_autoCommand.addOption("Middle Preload", AutoBuilder.buildAuto("Middle Preload"));
         m_autoCommand.addOption("Source Outtakes", AutoBuilder.buildAuto("Outtakes"));
+        m_autoCommand.addOption("Outtakes2", AutoBuilder.buildAuto("Outtakes 2"));
         SmartDashboard.putData("Auto Command", m_autoCommand);
         m_driveController.y().whileTrue(new ProxyCommand(m_autoCommand::getSelected));
     }

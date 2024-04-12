@@ -68,6 +68,7 @@ public class Intake extends SubsystemBase {
 
         m_preroller.setIdleMode(IdleMode.kBrake);
         m_preroller.setSmartCurrentLimit(40);
+        m_preroller.setInverted(true);
         m_preroller.burnFlash();
     }
 

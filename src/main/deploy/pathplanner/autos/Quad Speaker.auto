@@ -37,7 +37,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -50,6 +50,25 @@
                 "type": "named",
                 "data": {
                   "name": "idleIntake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rampSpeaker"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -76,6 +95,25 @@
                 "data": {
                   "name": "idleIntake"
                 }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rampSpeaker"
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
@@ -100,6 +138,25 @@
                 "type": "named",
                 "data": {
                   "name": "idleIntake"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rampSpeaker"
+                      }
+                    }
+                  ]
                 }
               }
             ]

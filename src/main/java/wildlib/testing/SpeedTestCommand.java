@@ -29,7 +29,7 @@ public class SpeedTestCommand extends Command{
     public void execute(){
         double transV = m_drive.getTranslationalVelocity();
         double transA = m_drive.getTranslationAcceleration();
-        double angleV = Math.toRadians(m_drive.getAngularVelocity());
+        double angleV = m_drive.getAngularVelocity();
         if (System.nanoTime() - m_previousNanos == 5e6) {
             m_angleA = (angleV - m_previousAngleV)/((System.nanoTime() - m_previousNanos)/1e9);
         }

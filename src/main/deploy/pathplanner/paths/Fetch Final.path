@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.894982565999367,
-        "y": 6.991369417831561
+        "x": 7.743268895952912,
+        "y": 2.974552482628502
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3211555901642567,
-        "y": 7.249016763947788
+        "x": 6.888377828110863,
+        "y": 4.005106098657276
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Fetch Second End"
     },
     {
       "anchor": {
-        "x": 1.8,
-        "y": 7.63
+        "x": 8.059461482689013,
+        "y": 4.122214464115091
       },
       "prevControl": {
-        "x": 2.356284084893418,
-        "y": 7.249007821838753
+        "x": 7.89550977104807,
+        "y": 4.122214464115091
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +45,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 178.2465951399285,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source Start",
   "previewStartingState": {
-    "rotation": 150.0,
+    "rotation": 162.39236955189273,
     "velocity": 0
   },
   "useDefaultConstraints": true

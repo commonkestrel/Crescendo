@@ -31,7 +31,8 @@ public class IntakeSourceCommand extends Command {
     public void initialize() {
         m_intake.setPrerollerSpeed(0.0);
         m_intake.setIndexerSpeed(-0.3);
-        m_shooter.setTargetVelocity(ShooterConstants.intakeTarget);
+        // m_shooter.setTargetVelocity(ShooterConstants.intakeTarget);
+        m_shooter.setSpeed(-0.25);
         m_currentState = State.NotPassed;
     }
 

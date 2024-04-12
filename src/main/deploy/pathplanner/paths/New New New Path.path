@@ -3,26 +3,10 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7284778050297884,
-        "y": 4.403274541213847
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.044670391765889,
-        "y": 4.438407050851191
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 1.3041949160821413,
         "y": 4.272386237080167
       },
-      "prevControl": {
-        "x": 1.0448904992813568,
-        "y": 4.482949222151481
-      },
+      "prevControl": null,
       "nextControl": {
         "x": 2.616498309919698,
         "y": 3.206756413512827
@@ -126,37 +110,37 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.0,
       "rotationDegrees": 135.8014565969445,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 3.0,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": -29.931511840507792,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 3.85,
+      "waypointRelativePos": 2.85,
       "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 5.0,
+      "waypointRelativePos": 4.0,
       "rotationDegrees": -170.0651143256429,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 6.0,
+      "waypointRelativePos": 5.0,
       "rotationDegrees": 33.59750576561089,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 6.9,
+      "waypointRelativePos": 5.9,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
@@ -164,58 +148,63 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.0,
+      "name": "Start",
+      "waypointRelativePos": 0.85,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
-              "type": "named",
+              "type": "deadline",
               "data": {
-                "name": "shootSpeaker"
+                "commands": [
+                  {
+                    "type": "wait",
+                    "data": {
+                      "waitTime": 3.25
+                    }
+                  },
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "idleIntake"
+                    }
+                  }
+                ]
               }
             },
             {
-              "type": "named",
+              "type": "deadline",
               "data": {
-                "name": "idleIntake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Outtake Right",
-      "waypointRelativePos": 2.75,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "outtake"
+                "commands": [
+                  {
+                    "type": "wait",
+                    "data": {
+                      "waitTime": 3.8
+                    }
+                  },
+                  {
+                    "type": "sequential",
+                    "data": {
+                      "commands": [
+                        {
+                          "type": "named",
+                          "data": {
+                            "name": "outtake"
+                          }
+                        },
+                        {
+                          "type": "named",
+                          "data": {
+                            "name": "idleIntake"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
               }
             },
-            {
-              "type": "named",
-              "data": {
-                "name": "idleIntake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Outtake Left",
-      "waypointRelativePos": 5.9,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
             {
               "type": "named",
               "data": {
@@ -234,8 +223,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.8,
-    "maxAcceleration": 2.8,
+    "maxVelocity": 4.6,
+    "maxAcceleration": 3.2,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 540.0
   },
@@ -247,7 +236,7 @@
   "reversed": false,
   "folder": "Source Start",
   "previewStartingState": {
-    "rotation": 119.60445074600493,
+    "rotation": 138.78519524284303,
     "velocity": 0
   },
   "useDefaultConstraints": true

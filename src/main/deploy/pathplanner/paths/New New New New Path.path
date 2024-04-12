@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.004958988519973,
-        "y": 5.4806715034257465
+        "x": 1.7121880748754352,
+        "y": 5.164478916689645
       },
       "isLocked": false,
       "linkedName": "Anotha One End"
     },
     {
       "anchor": {
-        "x": 2.5202357965343594,
-        "y": 4.19247948338978
+        "x": 2.5905008158090483,
+        "y": 4.215901156481343
       },
       "prevControl": {
-        "x": 2.5085249599885775,
-        "y": 4.602358762492133
+        "x": 2.157199863615132,
+        "y": 4.391563704668066
       },
       "nextControl": {
-        "x": 2.529813240294748,
-        "y": 3.857268951776189
+        "x": 2.9012803497570427,
+        "y": 4.089909453529454
       },
       "isLocked": false,
       "linkedName": null
@@ -44,12 +44,18 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.15,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.8,
-    "maxAcceleration": 2.8,
+    "maxVelocity": 4.6,
+    "maxAcceleration": 3.2,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 540.0
   },
