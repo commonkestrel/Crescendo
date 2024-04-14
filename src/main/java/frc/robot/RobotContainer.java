@@ -144,8 +144,8 @@ public class RobotContainer {
         m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
         m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
         
-        NamedCommands.registerCommand("shootAmp", shootAmp().withTimeout(2.0));
-        NamedCommands.registerCommand("shootSpeaker", shootSpeaker().withTimeout(2.0));
+        NamedCommands.registerCommand("shootAmp", shootAmp().withTimeout(1.0));
+        NamedCommands.registerCommand("shootSpeaker", shootSpeaker().withTimeout(1.0));
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
         NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
@@ -155,6 +155,7 @@ public class RobotContainer {
         m_autoCommand.setDefaultOption("Triple Amp Side", AutoBuilder.buildAuto("Triple Speaker"));
         m_autoCommand.addOption("Dual Amp Side", AutoBuilder.buildAuto("Dual Speaker"));
         m_autoCommand.addOption("Quad Amp Side", AutoBuilder.buildAuto("Quad Speaker"));
+        m_autoCommand.addOption("Quin Amp Side", AutoBuilder.buildAuto("Quin Speaker"));
         m_autoCommand.addOption("Middle Start", AutoBuilder.buildAuto("Middle Start"));
         m_autoCommand.addOption("Source Shoot", AutoBuilder.buildAuto("Source Shoot"));
         m_autoCommand.addOption("Amp Preload", AutoBuilder.buildAuto("Amp Preload"));
