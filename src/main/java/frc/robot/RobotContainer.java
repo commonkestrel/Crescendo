@@ -161,6 +161,9 @@ public class RobotContainer {
         m_autoCommand.addOption("Middle Preload", AutoBuilder.buildAuto("Middle Preload"));
         m_autoCommand.addOption("Source Outtakes", AutoBuilder.buildAuto("Outtakes"));
         m_autoCommand.addOption("Outtakes2", AutoBuilder.buildAuto("Outtakes 2"));
+        m_autoCommand.addOption("Simple Test", AutoBuilder.buildAuto("Simple Test"));
+        m_autoCommand.addOption("Tuned Outtakes2", AutoBuilder.buildAuto("Tuned Outtakes 2"));
+
         SmartDashboard.putData("Auto Command", m_autoCommand);
         m_driveController.y().whileTrue(new ProxyCommand(m_autoCommand::getSelected));
     }

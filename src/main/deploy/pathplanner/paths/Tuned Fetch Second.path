@@ -3,56 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6536338921465275,
-        "y": 5.130810261620524
+        "x": 6.6541610971952325,
+        "y": 2.3772998187936465
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.665344728692309,
-        "y": 0.9134452505709579
+        "x": 7.146016232118055,
+        "y": 2.9042874633538145
       },
       "isLocked": false,
-      "linkedName": "Anotha Middle End"
+      "linkedName": "Fetch First End"
     },
     {
       "anchor": {
-        "x": 8.293678213604645,
-        "y": 0.6675176831095445
+        "x": 7.64958220358666,
+        "y": 2.728624915167091
       },
       "prevControl": {
-        "x": 8.29809437934541,
-        "y": 0.4798306391271032
+        "x": 7.321678780304779,
+        "y": 2.6934924055297467
       },
       "nextControl": {
-        "x": 8.27025654051308,
-        "y": 1.6629387895009728
+        "x": 8.051602042048636,
+        "y": 2.7716984692880167
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.993775357022895,
-        "y": 1.6872472206482891
+        "x": 6.8649561550193,
+        "y": 3.7708893677416455
       },
       "prevControl": {
-        "x": 7.380232963033685,
-        "y": 1.4872762413142506
+        "x": 7.099172885934932,
+        "y": 3.653781002283831
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Middle Fetch Right End"
+      "linkedName": "Fetch Second End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9,
-      "rotationDegrees": -169.84782317199654,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.15,
-      "rotationDegrees": -60.0,
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -66,13 +61,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 166.95,
+    "rotation": 165.57922687248902,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Middle Start",
+  "folder": "Source Start",
   "previewStartingState": {
-    "rotation": 161.5,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

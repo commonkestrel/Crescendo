@@ -53,7 +53,6 @@ public class CenterCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println(m_limelight.getTV());
         switch (m_currentState) {
         case Search:
             if (m_limelight.getTV()) {
@@ -84,7 +83,7 @@ public class CenterCommand extends Command {
     }
 
     private void initFound() {
-        System.out.println((int) m_limelight.getFiducialID());
+        System.out.printf("ID: %d%n", (int) m_limelight.getFiducialID());
         switch ((int) m_limelight.getFiducialID()) {
         case 5:
         case 6:

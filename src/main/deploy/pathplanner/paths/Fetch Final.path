@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.743268895952912,
-        "y": 2.974552482628502
+        "x": 6.8649561550193,
+        "y": 3.7708893677416455
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.888377828110863,
-        "y": 4.005106098657276
+        "x": 6.01006508717725,
+        "y": 4.80144298377042
       },
       "isLocked": false,
       "linkedName": "Fetch Second End"
@@ -38,9 +38,9 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.6,
-    "maxAcceleration": 3.2,
-    "maxAngularVelocity": 540.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 2.4,
+    "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 540.0
   },
   "goalEndState": {

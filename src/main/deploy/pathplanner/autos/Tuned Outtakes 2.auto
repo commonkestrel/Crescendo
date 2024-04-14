@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fetch First"
+                  "pathName": "Tuned Fetch First"
                 }
               },
               {
@@ -100,7 +100,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fetch Second"
+                  "pathName": "Tuned Fetch Second"
                 }
               },
               {
@@ -144,7 +144,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fetch Final"
+                  "pathName": "Tuned Fetch Final"
                 }
               },
               {

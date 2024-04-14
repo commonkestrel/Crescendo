@@ -14,7 +14,7 @@ public final class Constants {
         public static final double ampDistance = -0.40;
         public static final double sourceDistance = -0.52;
 
-        public static final double speakerRadius = 1.55;
+        public static final double speakerRadius = 1.9;
 
         public static final double limelightAngle = 46.0;
 
@@ -61,13 +61,13 @@ public final class Constants {
         public static final double[] angularOffsets = {aAngularOffset, bAngularOffset, cAngularOffset, dAngularOffset};
 
         /** Max translaitonal speed (m/s) */
-        public static final double maxTranslationalSpeed = 4.4;
+        public static final double maxTranslationalSpeed = 4.8;
         public static final double kiddieMaxTranslationalSpeed = 1.2; // TODO: Actually find this;
         /** Max angular speed (rads/s) */
         public static final double maxAngularSpeed = Units.degreesToRadians(360); // TODO: Actually find this;
         public static final double maxAngularAccel = Units.degreesToRadians(540);
         /** Max translation acceleration (m/s) */
-        public static final double maxAcceleration = 2.8; // TODO: Actually find this.
+        public static final double maxAcceleration = 3; // TODO: Actually find this.
 
         /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
         public static final double magnitudeSlewRate = 1.0;
@@ -80,8 +80,8 @@ public final class Constants {
         public static final double speed = 1.0;
 
         public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-            new PIDConstants(1.0, 0.0, 0.0), // TODO: Tune this
-            new PIDConstants(1.0, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
             ModuleConstants.maxSpeed,
             baseRadius,
             new ReplanningConfig()
@@ -166,7 +166,7 @@ public final class Constants {
         /** Rotation motor smart current limit (in Amps). */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
-        public static final double maxSpeed = 4.4; // TODO: Find this
+        public static final double maxSpeed = 5.0; // TODO: Find this
     }
 
     /** Various constants used for the intake subsystem and commands */
@@ -215,14 +215,14 @@ public final class Constants {
 
     /** Various constants used for the climber subsystem and commands */
     public static final class ClimberConstants {
-        public static final float rightMinPosition = -175.0f;
-        public static final float leftMinPosition = -175.0f;
+        public static final float rightMinPosition = -300.0f;
+        public static final float leftMinPosition = -300.0f;
         public static final float maxPosition = 0.0f;
 
         public static final double extendedPosition = maxPosition;
         // TODO: Tune the climber retract position
         // I figured make it a little more than `minPosition` to give the PID some room to stablize
-        public static final double retractedPosition = -200.0;
+        public static final double retractedPosition = -300.0;
 
         public static final double conversionFactor = 1.0;// 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
         public static final double spikeCurrent = 40.0;
