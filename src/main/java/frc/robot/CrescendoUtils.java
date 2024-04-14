@@ -7,8 +7,8 @@ import wildlib.utils.FieldUtils;
 
 public class CrescendoUtils {
     public static final Translation2d DEFAULT_SPEAKER_POSITION = new Translation2d(0.0, 5.4);
-    public static final double BLUE_SPEAKER_ARC = Math.PI / 6;
-    public static final double RED_SPEAKER_ARC = 5*Math.PI / 6;
+    public static final double BLUE_SPEAKER_ARC = 2*Math.PI / 6;
+    public static final double RED_SPEAKER_ARC = 4*Math.PI / 6;
     public static final Rotation2d DEFAULT_AMP_ROTATION = new Rotation2d(Math.PI / 2);
 
     public static Translation2d getAllianceSpeaker() {
