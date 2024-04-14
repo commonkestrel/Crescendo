@@ -3,58 +3,58 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6881599477442544,
-        "y": 5.515804013063089
+        "x": 1.7982478885971176,
+        "y": 5.529958243224981
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7121880748754352,
-        "y": 5.164478916689645
+        "x": 2.337552823742685,
+        "y": 5.260609002672007
       },
       "isLocked": false,
       "linkedName": "Anotha One End"
     },
     {
       "anchor": {
-        "x": 2.5905008158090483,
-        "y": 4.215901156481343
+        "x": 2.56901640479883,
+        "y": 4.22087520777128
       },
       "prevControl": {
-        "x": 2.157199863615132,
-        "y": 4.391563704668066
+        "x": 2.697835606802427,
+        "y": 4.326272736683314
       },
       "nextControl": {
-        "x": 2.9012803497570427,
-        "y": 4.089909453529454
+        "x": 2.3094718953672175,
+        "y": 4.008520609145414
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.477971343959805,
-        "y": 4.485250397034318
+        "x": 1.5290906289711232,
+        "y": 4.392157100260548
       },
       "prevControl": {
-        "x": 1.6067905459634015,
-        "y": 4.450117887396973
+        "x": 1.6579098309747198,
+        "y": 4.357024590623204
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "New New New New End"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.15,
-      "rotationDegrees": 180.0,
+      "rotationDegrees": 139.1664457242928,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 5.2,
     "maxAcceleration": 2.4,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 540.0

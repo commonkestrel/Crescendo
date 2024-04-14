@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 6.6541610971952325,
-        "y": 2.3772998187936465
+        "y": 2.1665047609695787
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.146016232118055,
-        "y": 2.9042874633538145
+        "y": 2.6934924055297467
       },
       "isLocked": false,
       "linkedName": "Fetch First End"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 6.8649561550193,
-        "y": 3.7708893677416455
+        "x": 6.853245318473517,
+        "y": 3.6537810022838304
       },
       "prevControl": {
-        "x": 7.099172885934932,
-        "y": 3.653781002283831
+        "x": 7.087462049389149,
+        "y": 3.5366726368260157
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,7 +54,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 5.2,
     "maxAcceleration": 2.4,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 540.0

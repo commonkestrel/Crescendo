@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6881599477442544,
-        "y": 5.515804013063089
+        "x": 1.7982478885971176,
+        "y": 5.529958243224981
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.374412854096222,
-        "y": 5.720662604121284
+        "x": 3.4845007949490854,
+        "y": 5.734816834283175
       },
       "isLocked": false,
       "linkedName": "Anotha One End"
@@ -101,7 +101,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 5.2,
     "maxAcceleration": 2.4,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 540.0
