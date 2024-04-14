@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import edu.wpi.first.math.MathUtil;
@@ -9,7 +7,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -17,13 +14,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CrescendoUtils;
 import frc.robot.Constants.AutoConstants;
-
-
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
-
 import wildlib.utils.FieldUtils;
 import wildlib.utils.MathUtils;
 
@@ -45,10 +39,6 @@ public class CenterSpeakerCommand extends Command {
     private double m_targetRot;
     private double m_targetX;
     private double m_targetY;
-
-    private List<Double> m_targetRotBuffer = new ArrayList<Double>();
-    private List<Double> m_targetXBuffer = new ArrayList<Double>();
-    private List<Double> m_targetYBuffer = new ArrayList<Double>();
 
     private State m_currentState;
 
@@ -90,7 +80,6 @@ public class CenterSpeakerCommand extends Command {
         System.out.println(DriverStation.getAlliance().toString());
 
         Rotation2d angle = CrescendoUtils.correctedSpeakerArc(difference);
-        System.out.printf("angle: %f%n", angle.getDegrees());
         setAngle(speaker, angle);
     }
 
@@ -102,43 +91,12 @@ public class CenterSpeakerCommand extends Command {
         System.out.printf("Target X: %f; Target Y: %f; Target Rot: %f;%n", m_targetX, m_targetY, m_targetRot);
     }
 
-    private void adjustAngle(Translation2d speaker, Rotation2d angle) {
-        double xDistance = AutoConstants.speakerRadius * angle.getCos() + speaker.getX();
-        double yDistance = AutoConstants.speakerRadius * angle.getSin() + speaker.getY();
-        double rot = -(FieldUtils.correctFieldRotation(angle).getDegrees());
-        if (m_targetRotBuffer.size() != 0) {
-        if (m_targetXBuffer.get(0) != xDistance) {
-        m_targetXBuffer.add(xDistance);
-        }
-        if (m_targetYBuffer.get(0) != yDistance) {
-        m_targetYBuffer.add(yDistance);
-        }
-
-        if (m_targetRotBuffer.get(0) != rot) {
-        m_targetRotBuffer.add(rot);
-        }
-    } else {
-    m_targetXBuffer.add(xDistance);
-    m_targetYBuffer.add(yDistance);
-    m_targetRotBuffer.add(rot);
-    }
-    }
-
     private boolean isCentered() {
        double[] botpose = m_limelight.getBotPose_wpiBlue();
 
         return MathUtils.closeEnough(botpose[5], m_targetRot, 5.0)
            && MathUtils.closeEnough(botpose[0], m_targetX, 0.05)
            && MathUtils.closeEnough(botpose[1], m_targetY, 0.05)
-           && m_limelight.getTV(); 
-    }
-
-    private boolean isIncremented() {
-       double[] botpose = m_limelight.getBotPose_wpiBlue();
-
-        return MathUtils.closeEnough(botpose[5], m_targetRotBuffer.get(0), 5.0)
-            && MathUtils.closeEnough(botpose[0], m_targetXBuffer.get(0), 0.1)
-            && MathUtils.closeEnough(botpose[1], m_targetYBuffer.get(0), 0.1)
             && m_limelight.getTV(); 
     }
 
@@ -168,7 +126,7 @@ public class CenterSpeakerCommand extends Command {
 
                 parallelTranslation = true;
 
-                double distance = (Math.PI/6) / 5;
+                double distance = (Math.PI/6) / 20;
                 if (pov == 270) {
                     distance = -distance;
                 }
@@ -179,40 +137,13 @@ public class CenterSpeakerCommand extends Command {
 
                 Rotation2d angle = CrescendoUtils.clampSpeakerArc(FieldUtils.correctFieldRotation(Rotation2d.fromDegrees(m_targetRot)).unaryMinus().plus(Rotation2d.fromRadians(distance)));
                 Translation2d speaker = CrescendoUtils.getAllianceSpeaker();
-                
-                    adjustAngle(speaker, angle);
-                
 
-
+                setAngle(speaker, angle);
             }
-        if (!parallelTranslation && !isCentered()) {
-            if (m_targetRotBuffer != null) {
-                m_targetRotBuffer.clear();
-                m_targetXBuffer.clear();
-                m_targetYBuffer.clear();
-            }
+        if (!parallelTranslation || !isCentered()) {
             m_xController.setSetpoint(m_targetX);
             m_yController.setSetpoint(m_targetY);
             m_rotController.setSetpoint(m_targetRot);    
-
-            double[] botpose = m_limelight.getBotPose_wpiBlue();
-            double xDistance = botpose[0];
-            double yDistance = botpose[1];
-            double angle = botpose[5];
-
-            double xTranslation = MathUtil.clamp(m_xController.calculate(xDistance), -1.0, 1.0);
-            double yTranslation = MathUtil.clamp(m_yController.calculate(yDistance), -1.0, 1.0);
-            System.out.printf("Y Distance: %f; Y Target: %f; Y PID Output: %f%n", yDistance, m_targetY, yTranslation);
-
-            double rotation = MathUtil.clamp(m_rotController.calculate(angle), -1.0, 1.0);
-            System.out.printf("Angle: %f; Angle Target: %f; AnglePID: %f%n", angle, m_targetRot, rotation);
-            System.out.printf("X Distance: %f; X Target: %f; XPID: %f%n", xDistance, m_targetX, xTranslation);
-
-            m_drive.drive(xTranslation, yTranslation, rotation, true, false);
-        } else if (parallelTranslation) {
-            m_xController.setSetpoint(m_targetXBuffer.get(0));
-            m_yController.setSetpoint(m_targetYBuffer.get(0));
-            m_rotController.setSetpoint(m_targetRotBuffer.get(0));    
 
             double[] botpose = m_limelight.getBotPose_wpiBlue();
             double xDistance = botpose[0];
@@ -226,15 +157,11 @@ public class CenterSpeakerCommand extends Command {
             double rotation = MathUtil.clamp(m_rotController.calculate(angle), -1.0, 1.0);
             System.out.printf("Angle: %f; AnglePID: %f%n", angle, rotation);
             System.out.printf("X Distance: %f; XPID: %f%n", xDistance, xTranslation);
-            System.out.printf("BufferRot %s%n", m_targetRotBuffer.toString());
 
             m_drive.drive(xTranslation, yTranslation, rotation, true, false);
-            if (isIncremented()) {
-                m_targetXBuffer.remove(0);
-                m_targetYBuffer.remove(0);
-                m_targetRotBuffer.remove(0);
+        } else {
+            m_leds.set(LedState.kSolid, Color.kPlum);
             }
-        }
             break;
         }
     }
