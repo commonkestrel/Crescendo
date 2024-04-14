@@ -99,7 +99,7 @@ public final class Constants {
          * This changes the drive speed of the module.
          * A pinion gear with more teeth will result in a faster but weaker drivetrain.
          */
-        public static final int drivePinionTeeth = 13;
+        public static final int drivePinionTeeth = 14;
 
         /**
          *  Invert the turning envoder since the output shaft rotates in the
@@ -166,7 +166,7 @@ public final class Constants {
         /** Rotation motor smart current limit (in Amps). */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
-        public static final double maxSpeed = 5.0; // TODO: Find this
+        public static final double maxSpeed = 5.2; // TODO: Find this
     }
 
     /** Various constants used for the intake subsystem and commands */
