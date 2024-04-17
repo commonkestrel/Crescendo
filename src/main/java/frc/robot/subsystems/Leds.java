@@ -23,6 +23,7 @@ public class Leds extends SubsystemBase {
     private final AddressableLEDBuffer m_buffer;
     private long m_previousNanos = 0;
     private LedState m_currentState = LedState.kSolid;
+    private boolean m_solidUpdated = false;
     private Color m_currentColor = Color.kBlack;
     private boolean m_flashOn = true;
     private int iRainbow = 0;
@@ -61,6 +62,7 @@ public class Leds extends SubsystemBase {
         m_currentColor = color;
         m_previousNanos = System.nanoTime();
         m_flashOn = true;
+        m_solidUpdated = false;
         
         if (m_flashPoint.isEmpty()) {
             fill(color);
@@ -123,6 +125,11 @@ public class Leds extends SubsystemBase {
         } else {
             switch (m_currentState) {
             case kSolid:
+                if (!m_solidUpdated) {
+                    fill(m_currentColor);
+                    update();
+                    m_solidUpdated = true;
+                }
                 break;
             case kFlash:
                 if (System.nanoTime() - m_previousNanos > LEDConstants.flashLength) invert();
@@ -151,21 +158,20 @@ public class Leds extends SubsystemBase {
                 }
                 break;
             case kRainbowFast:
-            if ((System.nanoTime() - m_previousNanos) > 1e6){
-                int length = m_buffer.getLength();
-                for (int i = 0; i < length; i++) {
-                    
-                    final var hue = (iRainbow + (i * 180 / length)) % 180;
+                if ((System.nanoTime() - m_previousNanos) > 1e6){
+                    int length = m_buffer.getLength();
+                    for (int i = 0; i < length; i++) {
+                        
+                        final var hue = (iRainbow + (i * 180 / length)) % 180;
 
-                    m_buffer.setHSV(i, hue, 255, 128);
+                        m_buffer.setHSV(i, hue, 255, 128);
+                    }
+                    iRainbow += 2;
+                    iRainbow %= 180;
+                    
+                    update();
                 }
-                iRainbow += 2;
-                iRainbow %= 180;
-                
-                update();
-            }
-            break;
-                
+                break;
             }
         }
     }
