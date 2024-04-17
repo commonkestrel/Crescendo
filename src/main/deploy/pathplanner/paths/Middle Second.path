@@ -3,13 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.325730468864645,
+        "x": 1.7364503659425703,
         "y": 5.597779868883561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3959954881393342,
-        "y": 5.58606903233778
+        "x": 2.4347224809819115,
+        "y": 5.7614731441014575
+      },
+      "isLocked": false,
+      "linkedName": "Middle Shoot End"
+    },
+    {
+      "anchor": {
+        "x": 2.7329640628719147,
+        "y": 6.754675028365387
+      },
+      "prevControl": {
+        "x": 2.2851632989245605,
+        "y": 6.768557709932458
+      },
+      "nextControl": {
+        "x": 2.9087648875536054,
+        "y": 6.749224866005746
       },
       "isLocked": false,
       "linkedName": null
@@ -20,15 +36,21 @@
         "y": 5.597779868883561
       },
       "prevControl": {
-        "x": 1.7130286928510075,
-        "y": 5.597779868883561
+        "x": 2.7533363884657174,
+        "y": 5.942710032643873
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Middle Shoot End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -133.09351380787325,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -48,5 +70,5 @@
     "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

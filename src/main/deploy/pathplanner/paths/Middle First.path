@@ -3,13 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.325730468864645,
+        "x": 1.7364503659425703,
         "y": 5.597779868883561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3959954881393342,
-        "y": 5.58606903233778
+        "x": 2.2290901319623244,
+        "y": 5.519621204613135
+      },
+      "isLocked": false,
+      "linkedName": "Middle Shoot End"
+    },
+    {
+      "anchor": {
+        "x": 2.555718763965535,
+        "y": 5.535857851209118
+      },
+      "prevControl": {
+        "x": 2.318147069071015,
+        "y": 5.565268874801212
+      },
+      "nextControl": {
+        "x": 2.793290458860055,
+        "y": 5.506446827617025
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +36,8 @@
         "y": 5.597779868883561
       },
       "prevControl": {
-        "x": 1.7130286928510075,
-        "y": 5.597779868883561
+        "x": 2.2278939205901334,
+        "y": 5.552051052884115
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,5 +64,5 @@
     "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
