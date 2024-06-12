@@ -33,6 +33,8 @@ public class CenterCommand extends Command {
         m_sourceCommand = new CenterTargetCommand(swerve, limelight, leds, AutoConstants.sourceDistance);
         m_stageCommand = new CenterTargetCommand(swerve, limelight, leds, null);
         m_speakerCommand = new CenterSpeakerCommand(swerve, limelight, leds, xboxController);
+
+        addRequirements(m_swerve, m_leds);
     }
 
     @Override
