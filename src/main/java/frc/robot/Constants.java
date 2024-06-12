@@ -157,12 +157,12 @@ public final class Constants {
         public static final double turnMaxOutput = 1;
         
         /** Drive motor idle mode for Spark Max. */
-        public static final IdleMode driveMotorIdleMode = IdleMode.kCoast;
+        public static final IdleMode driveMotorIdleMode = IdleMode.kBrake;
         /** Rotation motor idle mode for Spark Max. */
         public static final IdleMode turnMotorIdleMode = IdleMode.kBrake;
 
         /** Drive motor smart current limit (in Amps). */
-        public static final int driveMotorCurrentLimit = 50; // amps (A)
+        public static final int driveMotorCurrentLimit = 40; // amps (A)
         /** Rotation motor smart current limit (in Amps). */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 

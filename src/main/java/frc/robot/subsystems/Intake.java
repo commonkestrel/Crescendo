@@ -63,11 +63,11 @@ public class Intake extends SubsystemBase {
         m_indexer.setPositionConversionFactor(IntakeConstants.distanceFactor);
         m_indexer.setIdleMode(IdleMode.kBrake);
         m_indexer.setInverted(true);
-        m_indexer.setSmartCurrentLimit(100);
+        m_indexer.setSmartCurrentLimit(80);
         m_indexer.burnFlash();
 
         m_preroller.setIdleMode(IdleMode.kBrake);
-        m_preroller.setSmartCurrentLimit(40);
+        m_preroller.setSmartCurrentLimit(18);
         m_preroller.setInverted(true);
         m_preroller.burnFlash();
     }
