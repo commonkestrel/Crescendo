@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
 
         SystemTest.registerTest("Swerve", new SwerveTestCommand(Swerve.getInstance(), Leds.getInstance()));
-        SystemTest.registerTest("Intake", new IntakeTestCommand(Intake.getInstance(), Leds.getInstance()));
+        SystemTest.registerTest("Intake", new IntakeTestCommand(Intake.getInstance()));
         SystemTest.registerTest("Shooter", new ShooterTestCommand(Shooter.getInstance(), Leds.getInstance()));
         // SystemTest.registerTest("Climber", new ClimberTestCommand(Climber.getInstance(), Leds.getInstance()));
         SystemTest.loadTests();

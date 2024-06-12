@@ -15,7 +15,7 @@ public class ClimberResetCommand extends Command{
     public ClimberResetCommand(Climber climber, Leds leds) {
         m_climber = climber;
         m_leds = leds;
-        addRequirements(m_climber);
+        addRequirements(m_climber, m_leds);
     }
 
     @Override
@@ -32,6 +32,11 @@ public class ClimberResetCommand extends Command{
         m_climber.stopLeft();
         m_climber.stopRight();
         m_climber.enableFowardSoftLimit();
+        if (isFinished()) {
+            m_leds.flash(Color.kBlue);
+        } else {
+            m_leds.flash(Color.kYellow);
+        }
     }
 
     @Override

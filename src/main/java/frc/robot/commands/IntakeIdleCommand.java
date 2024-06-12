@@ -14,13 +14,11 @@ public class IntakeIdleCommand extends Command {
     }
 
     private final Intake m_intake;
-    private final Leds m_leds;
 
     private State m_currentState;
 
-    public IntakeIdleCommand(Intake intake, Leds leds) {
+    public IntakeIdleCommand(Intake intake) {
         m_intake = intake;
-        m_leds = leds;
         addRequirements(m_intake);
 
         m_currentState = State.Running;
@@ -33,7 +31,7 @@ public class IntakeIdleCommand extends Command {
             m_intake.stop();
         } else {
             m_intake.setIndexerSpeed(0.4);
-            m_intake.setPrerollerSpeed(0.6);
+            m_intake.setPrerollerSpeed(1.0);
             m_currentState = State.Running;
         }
     }
@@ -49,7 +47,6 @@ public class IntakeIdleCommand extends Command {
             if (m_intake.noteDetected()) {
                 m_currentState = State.DebounceR;
                 m_intake.setIndexerSpeed(-0.175);
-                m_leds.flash(Color.kOrchid);
             }
             break;
         case DebounceR:
@@ -62,13 +59,12 @@ public class IntakeIdleCommand extends Command {
             if (m_intake.noteDetected()) {
                 m_intake.stop();
                 m_currentState = State.Equilibrium;
-                m_leds.flash(Color.kGreen);
             }
             break;
         case Equilibrium:
             if (!m_intake.noteDetected()) {
                 m_intake.setIndexerSpeed(0.4);
-                m_intake.setPrerollerSpeed(0.6);
+                m_intake.setPrerollerSpeed(1.0);
                 m_currentState = State.Running;
             }
             break;

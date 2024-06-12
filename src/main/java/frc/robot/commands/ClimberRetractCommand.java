@@ -30,7 +30,7 @@ public class ClimberRetractCommand extends Command {
     public ClimberRetractCommand(Climber climber, Leds leds, Side side) {
         m_climber = climber;
         m_leds = leds;
-        addRequirements(m_climber);
+        addRequirements(m_climber, m_leds);
 
         m_side = side;
     }

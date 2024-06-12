@@ -49,7 +49,7 @@ public class CenterSpeakerCommand extends Command {
         m_leds = leds;
         m_xboxController = xboxController;
 
-        addRequirements(m_drive);
+        addRequirements(m_drive, m_leds);
     }
 
     @Override

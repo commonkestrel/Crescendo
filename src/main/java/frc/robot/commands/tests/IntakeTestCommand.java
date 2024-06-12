@@ -16,12 +16,10 @@ public class IntakeTestCommand extends SystemTestCommand {
     }
 
     private final Intake m_intake;
-    private final Leds m_leds;
     private State m_currentState;
 
-    public IntakeTestCommand(Intake intake, Leds leds) {
+    public IntakeTestCommand(Intake intake) {
         m_intake = intake;
-        m_leds = leds;
         addRequirements(m_intake);
     }
 
@@ -50,7 +48,6 @@ public class IntakeTestCommand extends SystemTestCommand {
             if (MathUtils.closeEnough(m_intake.getIndexerVelocity(), IntakeConstants.speakerTarget + 50, 100.0)) {
                 m_intake.stop();
                 m_currentState = State.kFinished;
-                m_leds.flash(Color.kBlue);
             }
             break;
         default:

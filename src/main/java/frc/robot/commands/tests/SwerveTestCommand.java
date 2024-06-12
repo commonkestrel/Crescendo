@@ -39,7 +39,7 @@ public class SwerveTestCommand extends SystemTestCommand {
     public SwerveTestCommand(Swerve swerve, Leds leds) {
         m_swerve = swerve;
         m_leds = leds;
-        addRequirements(m_swerve);
+        addRequirements(m_swerve, m_leds);
     }
 
     @Override

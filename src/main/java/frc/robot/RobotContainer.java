@@ -34,6 +34,7 @@ import frc.robot.commands.ClimberRetractCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeIdleCommand;
 import frc.robot.commands.IntakeSourceCommand;
+import frc.robot.commands.LedDetectorCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.RampAmpCommand;
 import frc.robot.commands.RampSpeakerCommand;
@@ -97,19 +98,21 @@ public class RobotContainer {
     }
 
     private void configureDefaults() {
-        m_intake.setDefaultCommand(new IntakeIdleCommand(m_intake, m_leds));
+        m_intake.setDefaultCommand(new IntakeIdleCommand(m_intake));
         m_shooter.initDefaultCommand();
     }
 
     private void configureBindings() {
-        m_mechController.rightBumper().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
+        m_leds.setDefaultCommand(new LedDetectorCommand(m_intake, m_leds));
+
+        m_mechController.rightTrigger().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
         m_mechController.leftBumper().whileTrue(new IntakeCommand(m_intake));
         m_mechController.leftTrigger().whileTrue(Commands.either(new RampSpeakerCommand(m_shooter), new RampAmpCommand(m_shooter), m_shootingSpeaker));
         m_mechController.x().whileTrue(new OuttakeCommand(m_intake));
 
         m_mechController.a().onTrue(m_shootingSpeaker.setFalse());
         m_mechController.y().onTrue(m_shootingSpeaker.setTrue());
-        m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter, m_leds));
+        m_mechController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
         // m_mechController.x().whileTrue(new IntakeCommand(m_intake));
 
         m_mechController.povDown().and(m_mechController.a()).whileTrue(new ClimberRetractCommand(m_climber, m_leds, Side.Left));
@@ -118,11 +121,11 @@ public class RobotContainer {
         m_mechController.povUp().and(m_mechController.a()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Left));
         m_mechController.povUp().and(m_mechController.y()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Right));
         m_mechController.povUp().and(m_mechController.a().or(m_mechController.y()).negate()).whileTrue(new ClimberReleaseCommand(m_climber, Side.Both));
-        m_mechController.rightTrigger().whileTrue(new ClimberResetCommand(m_climber, m_leds));
+        m_mechController.rightBumper().whileTrue(new ClimberResetCommand(m_climber, m_leds));
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
         
-        m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kAquamarine)));
-        m_driveController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kMagenta)));
+        m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kAquamarine), m_leds));
+        m_driveController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kMagenta), m_leds));
 
         m_driveController.back().onTrue(Commands.runOnce(m_swerve::capSpeed, m_swerve));
 
@@ -139,17 +142,13 @@ public class RobotContainer {
         m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         
         // Initialize limelight
-        m_limelightTarget = new Trigger(m_limelight::getTV);
-        m_limelightTarget.onTrue(Commands.runOnce(() -> m_leds.set(LedState.kSolid, Color.kBlue)));
-        m_limelightTarget.onFalse(Commands.runOnce(() -> m_leds.set(LedState.kFade, Color.kRed)));
-        m_leds.set(m_limelight.getTV() ? LedState.kSolid : LedState.kFade, m_limelight.getTV() ? Color.kBlue : Color.kRed);
         
         NamedCommands.registerCommand("shootAmp", shootAmp().withTimeout(1.0));
         NamedCommands.registerCommand("shootSpeaker", shootSpeaker().withTimeout(1.0));
         NamedCommands.registerCommand("rampAmp", new RampAmpCommand(m_shooter));
         NamedCommands.registerCommand("rampSpeaker", new RampSpeakerCommand(m_shooter));
         NamedCommands.registerCommand("centerAmp", new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance));
-        NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake, m_leds));
+        NamedCommands.registerCommand("idleIntake", new IntakeIdleCommand(m_intake));
         NamedCommands.registerCommand("outtake", new OuttakeCommand(m_intake));
         
         m_autoCommand.setDefaultOption("Triple Amp Side", AutoBuilder.buildAuto("Triple Speaker"));
@@ -164,6 +163,8 @@ public class RobotContainer {
         m_autoCommand.addOption("Outtakes2", AutoBuilder.buildAuto("Outtakes 2"));
         m_autoCommand.addOption("Simple Test", AutoBuilder.buildAuto("Simple Test"));
         m_autoCommand.addOption("Tuned Outtakes2", AutoBuilder.buildAuto("Tuned Outtakes 2"));
+        m_autoCommand.addOption("Quad Middle", AutoBuilder.buildAuto("Quad Middle"));
+        m_autoCommand.addOption("Better Dual", AutoBuilder.buildAuto("Better Dual Speaker"));
 
         SmartDashboard.putData("Auto Command", m_autoCommand);
         m_driveController.y().whileTrue(new ProxyCommand(m_autoCommand::getSelected));

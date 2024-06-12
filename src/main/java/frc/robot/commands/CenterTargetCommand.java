@@ -36,7 +36,7 @@ public class CenterTargetCommand extends Command {
         m_leds = leds;
         m_yDistance = yDistance;
 
-        addRequirements(m_drive);
+        addRequirements(m_drive, m_leds);
     }
 
     @Override

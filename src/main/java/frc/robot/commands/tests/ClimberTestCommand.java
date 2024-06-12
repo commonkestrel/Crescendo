@@ -21,7 +21,7 @@ public class ClimberTestCommand extends SystemTestCommand {
     public ClimberTestCommand(Climber climber, Leds leds) {
         m_climber = climber;
         m_leds = leds;
-        addRequirements(m_climber);
+        addRequirements(m_climber, m_leds);
     }
 
     @Override
