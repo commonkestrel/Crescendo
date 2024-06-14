@@ -3,13 +3,15 @@
   "robotLength": 0.89,
   "holonomicMode": true,
   "pathFolders": [
-    "Source Start",
+    "Amp Start",
     "Middle Start",
-    "Amp Start"
+    "Del Mar",
+    "Source Start"
   ],
   "autoFolders": [
     "Amp Start",
     "Middle Start",
+    "Del Mar",
     "Source Start"
   ],
   "defaultMaxVel": 5.2,

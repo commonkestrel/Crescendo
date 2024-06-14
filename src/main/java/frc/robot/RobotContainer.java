@@ -156,15 +156,18 @@ public class RobotContainer {
         m_autoCommand.addOption("Quad Amp Side", AutoBuilder.buildAuto("Quad Speaker"));
         m_autoCommand.addOption("Quin Amp Side", AutoBuilder.buildAuto("Quin Speaker"));
         m_autoCommand.addOption("Middle Start", AutoBuilder.buildAuto("Middle Start"));
-        m_autoCommand.addOption("Source Shoot", AutoBuilder.buildAuto("Source Shoot"));
+        m_autoCommand.addOption("Source Preload", AutoBuilder.buildAuto("Source Preload"));
         m_autoCommand.addOption("Amp Preload", AutoBuilder.buildAuto("Amp Preload"));
         m_autoCommand.addOption("Middle Preload", AutoBuilder.buildAuto("Middle Preload"));
+        m_autoCommand.addOption("Source Taxi", AutoBuilder.buildAuto("Source Taxi"));
         m_autoCommand.addOption("Source Outtakes", AutoBuilder.buildAuto("Outtakes"));
         m_autoCommand.addOption("Outtakes2", AutoBuilder.buildAuto("Outtakes 2"));
         m_autoCommand.addOption("Simple Test", AutoBuilder.buildAuto("Simple Test"));
         m_autoCommand.addOption("Tuned Outtakes2", AutoBuilder.buildAuto("Tuned Outtakes 2"));
         m_autoCommand.addOption("Quad Middle", AutoBuilder.buildAuto("Quad Middle"));
         m_autoCommand.addOption("Better Dual", AutoBuilder.buildAuto("Better Dual Speaker"));
+        m_autoCommand.addOption("Rush", AutoBuilder.buildAuto("Rush"));
+
 
         SmartDashboard.putData("Auto Command", m_autoCommand);
         m_driveController.y().whileTrue(new ProxyCommand(m_autoCommand::getSelected));

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0241905033354664,
-        "y": 4.165271494155409
+        "x": 0.6816344588466624,
+        "y": 0.6089635003806371
       },
       "isLocked": false,
       "linkedName": "Source Shoot End"
     },
     {
       "anchor": {
-        "x": 0.5247064340282543,
-        "y": 4.015845723999141
+        "x": 6.361390183550694,
+        "y": 0.8900235774793938
       },
       "prevControl": {
-        "x": 0.8897833180281756,
-        "y": 4.153982923350461
+        "x": 2.110356517432005,
+        "y": 1.065686125666116
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Source Start",
   "previewStartingState": {
-    "rotation": 134.19,
+    "rotation": 135.7848246029919,
     "velocity": 0
   },
   "useDefaultConstraints": true

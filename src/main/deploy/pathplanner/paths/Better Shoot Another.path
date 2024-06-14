@@ -3,51 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.290597959227301,
-        "y": 4.333009521939157
+        "x": 1.3140618588929502,
+        "y": 6.683920394867817
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2887118389182417,
-        "y": 1.8992246225466864
+        "x": 1.5975710772885374,
+        "y": 7.159870186885914
       },
       "isLocked": false,
-      "linkedName": "Source Shoot End"
+      "linkedName": "Against to Shoot end"
     },
     {
       "anchor": {
-        "x": 8.270256540513081,
-        "y": 0.7696215392430785
+        "x": 2.8715608929078047,
+        "y": 6.991369417831561
       },
       "prevControl": {
-        "x": 8.300383409954748,
-        "y": 0.380781165110697
+        "x": 2.896079820914228,
+        "y": 7.224299233892581
       },
       "nextControl": {
-        "x": 8.237116748715122,
-        "y": 1.1973489891972897
+        "x": 2.8247175467246786,
+        "y": 6.5463576290918635
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.771141247483458,
-        "y": 1.8213122213882007
+        "x": 1.3140618588929502,
+        "y": 6.683920394867817
       },
       "prevControl": {
-        "x": 7.406620882301316,
-        "y": 1.2944434977043113
+        "x": 1.5524167940687483,
+        "y": 7.0820395730879575
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Fetch First End"
+      "linkedName": "Against to Shoot end"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8,
-      "rotationDegrees": 178.72177547263698,
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -61,13 +66,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 176.24827092947407,
+    "rotation": -136.8518610649172,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Source Start",
+  "folder": "Amp Start",
   "previewStartingState": {
-    "rotation": 134.24664546008262,
+    "rotation": -135.29,
     "velocity": 0
   },
   "useDefaultConstraints": true
