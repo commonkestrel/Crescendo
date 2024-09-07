@@ -132,13 +132,17 @@ public class RobotContainer {
         m_driveController.leftStick().toggleOnTrue(new SpeedTestCommand(m_swerve));
         m_driveController.x().whileTrue(Commands.run(m_swerve::crossWheels, m_swerve));
         m_driveController.start().onTrue(Commands.runOnce(m_swerve::zeroHeading, m_swerve));
-        m_driveController.b().whileTrue(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance).andThen(Commands.print("centered")));
+        // m_driveController.b().whileTrue(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance).andThen(Commands.print("centered")));
+        m_driveController.b().whileTrue(new IntakeSourceCommand(m_intake, m_shooter));
+        m_driveController.leftBumper().whileTrue(new IntakeCommand(m_intake));
+        m_driveController.rightBumper().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
 
-        m_driveController.leftBumper()
-            .whileTrue(Commands.race(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance), new RampSpeakerCommand(m_shooter))
-            .andThen(new ShootSpeakerCommand(m_intake, m_shooter)));
 
-        m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
+        // m_driveController.leftBumper()
+        //     .whileTrue(Commands.race(new CenterTargetCommand(m_swerve, m_limelight, m_leds, AutoConstants.ampDistance), new RampSpeakerCommand(m_shooter))
+        //     .andThen(new ShootSpeakerCommand(m_intake, m_shooter)));
+
+        // m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         
         // Initialize limelight
