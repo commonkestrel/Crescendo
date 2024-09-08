@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-
-
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -20,9 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.CenterTargetCommand;
 import frc.robot.commands.CenterCommand;
 import frc.robot.commands.CenterSpeakerCommand;
@@ -46,11 +40,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Leds.LedState;
 import frc.robot.subsystems.drive.Swerve;
 import wildlib.Toggle;
 import wildlib.testing.SpeedTestCommand;
-import wildlib.testing.SystemTestCommand;
 import wildlib.utils.FieldUtils;
 
 public class RobotContainer {
@@ -65,30 +57,32 @@ public class RobotContainer {
     private static final Leds m_leds = Leds.getInstance();
 
     private static Toggle m_shootingSpeaker = new Toggle(false);
-    private static Trigger m_limelightTarget;
     private static SendableChooser<Command> m_autoCommand = new SendableChooser<>();
 
     public RobotContainer() {
+        // Configure buttons and dashboard
         configureSmartDashboard();
         configureDefaults();
         configureBindings();
 
-        // TODO: Invert direction based on alliance to stay consistent with WPILib coordinate systems
         m_swerve.setDefaultCommand(Commands.run(() -> {
+            // Multiply values by -1.0 if inverted
             double redInverted = FieldUtils.red() ? -1.0 : 1.0;
             double xyInverted = (IOConstants.xyInverted ^ CurrentDriver.getXYInverted()) ? -1.0 : 1.0;
             double rotInverted = (IOConstants.rotInverted ^ CurrentDriver.getRotInverted()) ? -1.0 : 1.0;
 
+            // Get joystick values and apply deadbands
             double forward = MathUtil.applyDeadband(m_driveController.getLeftY(), CurrentDriver.getTransDeadband());
             double strafe = MathUtil.applyDeadband(m_driveController.getLeftX(), CurrentDriver.getTransDeadband());
             double rotation = MathUtil.applyDeadband(m_driveController.getRightX(), CurrentDriver.getRotDeadband());
             double speed = m_driveController.getRightTriggerAxis();
 
+            // Drive field-relative based on joystick values
             m_swerve.drive(
                 forward * speed * redInverted * xyInverted,
                 strafe * speed * redInverted * xyInverted,
                 rotation * speed * rotInverted,
-                true, false
+                true, true
             );
         }, m_swerve));
     }
@@ -97,13 +91,21 @@ public class RobotContainer {
         CurrentDriver.initDriverStation();
     }
 
+    /**
+     * Initialize default values
+     */
     private void configureDefaults() {
         m_intake.setDefaultCommand(new IntakeIdleCommand(m_intake));
         m_shooter.initDefaultCommand();
     }
 
+    /**
+     * Initialize button bindings and autonomouse commands
+     */
     private void configureBindings() {
         m_leds.setDefaultCommand(new LedDetectorCommand(m_intake, m_leds));
+
+        //--- MECH CONTROLLER ---//
 
         m_mechController.rightTrigger().whileTrue(Commands.either(shootSpeaker(), shootAmp(), m_shootingSpeaker));
         m_mechController.leftBumper().whileTrue(new IntakeCommand(m_intake));
@@ -125,6 +127,9 @@ public class RobotContainer {
         m_mechController.start().onTrue(new InstantCommand(m_intake::toggleOverride));
         
         m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kAquamarine), m_leds));
+
+        //--- DRIVE CONTROLLER ---//
+
         m_driveController.povLeft().onTrue(Commands.runOnce(() -> m_leds.flash(Color.kMagenta), m_leds));
 
         m_driveController.back().onTrue(Commands.runOnce(m_swerve::capSpeed, m_swerve));
@@ -141,7 +146,7 @@ public class RobotContainer {
         m_driveController.rightBumper().whileTrue(new CenterSpeakerCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         m_driveController.a().whileTrue(new CenterCommand(m_swerve, m_limelight, m_leds, m_driveController.getHID()));
         
-        // Initialize limelight
+        //--- AUTO COMMANDS ---//
         
         NamedCommands.registerCommand("shootAmp", shootAmp().withTimeout(1.0));
         NamedCommands.registerCommand("shootSpeaker", shootSpeaker().withTimeout(1.0));
