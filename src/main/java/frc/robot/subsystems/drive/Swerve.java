@@ -1,19 +1,27 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.drive;
 
+import frc.robot.CurrentDriver;
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.subsystems.MAXSwerveModule.ModuleLabel;
-import wildlib.utils.SwerveUtils;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.drive.MAXSwerveModule.ModuleLabel;
 
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.IOConstants;
 
+import java.util.Optional;
+
+import wildlib.utils.SwerveUtils;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.wpilibj.I2C;
+import com.pathplanner.lib.util.PPLibTelemetry;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -40,7 +48,6 @@ public class Swerve extends SubsystemBase {
 
     private final double base;
     private final double track;
-
     private final AHRS gyro;
 
     private final MAXSwerveModule aModule;
@@ -57,9 +64,11 @@ public class Swerve extends SubsystemBase {
     /** Position of the D wheel relative to the center of the drivetrain. */
     private final Translation2d dPosition;
 
+    private double gyroOffset = 0.0;
     private double currentRotation = 0.0;
     private double currentTranslationDir = 0.0;
     private double currentTranslationMag = 0.0;
+    private boolean cappedSpeed = false;
 
     private SlewRateLimiter magLimiter = new SlewRateLimiter(DriveConstants.magnitudeSlewRate);
     private SlewRateLimiter rotLimiter = new SlewRateLimiter(DriveConstants.rotationalSlewRate);
@@ -68,6 +77,7 @@ public class Swerve extends SubsystemBase {
     final SwerveDriveKinematics kinematics;
     SwerveDriveOdometry odometry;
 
+    private static final Limelight m_limelight = Limelight.getInstance();
     private final Field2d m_field = new Field2d();
 
     /**
@@ -75,7 +85,7 @@ public class Swerve extends SubsystemBase {
      * Motors and dimensions are placed like so on the diagram:
      * <pre>
      * 
-     * &ensp;   Track
+     * &ensp;    Track
      *  ┌─────────┐
      * ┌───────────┐
      * │A         B│  ─┐
@@ -89,8 +99,6 @@ public class Swerve extends SubsystemBase {
      * Track and base dimensions are measured from the centers of each wheel.
      */
     private Swerve() {
-        SmartDashboard.putData("Field", m_field);
-
         base = DriveConstants.wheelBase;
         track = DriveConstants.trackWidth;
 
@@ -108,7 +116,7 @@ public class Swerve extends SubsystemBase {
         
         kinematics = new SwerveDriveKinematics(aPosition, bPosition, cPosition, dPosition);
         odometry = new SwerveDriveOdometry(kinematics, 
-            Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
+            Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
             new SwerveModulePosition[] {
                 aModule.getPosition(),
                 bModule.getPosition(),
@@ -123,8 +131,23 @@ public class Swerve extends SubsystemBase {
             this::getSpeeds,
             this::driveRelative,
             DriveConstants.pathFollowerConfig,
+            () -> {
+                Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+                if (currentAlliance.isPresent()) {
+                    return currentAlliance.get() == Alliance.Red;
+                }
+                return false;
+            },
             this
         );
+
+        PathPlannerLogging.setLogActivePathCallback((poses) -> m_field.getObject("path").setPoses(poses));
+
+        final MatchType match = DriverStation.getMatchType();
+        if (match == MatchType.Elimination || match == MatchType.Qualification) {
+            PPLibTelemetry.enableCompetitionMode();
+        }
+        SmartDashboard.putData("Field", m_field);
     }
 
     /** Updates the odometry every event cycle */
@@ -132,7 +155,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // Update the odometry in the periodic block.
         odometry.update(
-            Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
+            Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
             new SwerveModulePosition[] {
                 aModule.getPosition(),
                 bModule.getPosition(),
@@ -141,9 +164,14 @@ public class Swerve extends SubsystemBase {
             }
         );
 
-        m_field.setRobotPose(odometry.getPoseMeters());
-    }
+        // SmartDashboard.putNumber("A Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("B Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("C Module Speed", aModule.getState().speedMetersPerSecond);
+        // SmartDashboard.putNumber("D Module Speed", aModule.getState().speedMetersPerSecond);
 
+        // m_field.setRobotPose(odometry.getPoseMeters());
+        // SmartDashboard.putData(gyro);
+    }
     
     /** 
      * Gets the recorded pose of the robot.
@@ -160,7 +188,7 @@ public class Swerve extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(
-            Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
+            Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)),
             new SwerveModulePosition[] {
                 aModule.getPosition(),
                 bModule.getPosition(),
@@ -181,16 +209,21 @@ public class Swerve extends SubsystemBase {
      * @param rateLimit     Whether to enable slew rate limiting for smoother control.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+        if (cappedSpeed) {
+            xSpeed *= 0.25;
+            ySpeed *= 0.25;
+            rot *= 0.25;
+        }
+
         double xSpeedCommanded;
         double ySpeedCommanded;
-
-        if (rateLimit) {
+            if (rateLimit) {
             // Convewrt XY to polar for rate limiting
             double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
             double inputTranslationMag = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
 
             // Calculate the direction slew rate based on an estimate of the lateral acceleration
-            double directionSlewRate = currentTranslationMag != 0.0? Math.abs(DriveConstants.directionSlewRate / currentTranslationMag) : 500.0;
+            double directionSlewRate = currentTranslationMag != 0.0? Math.abs(CurrentDriver.getDirSlewRate() / currentTranslationMag) : 500.0;
 
             double currentTime = WPIUtilJNI.now() * 1e-6;
             double elapsedTime = currentTime - prevTime;
@@ -221,14 +254,14 @@ public class Swerve extends SubsystemBase {
             ySpeedCommanded = ySpeed;
             currentRotation = rot;
         }
-
+        
         double xSpeedDelivered = xSpeedCommanded * DriveConstants.maxTranslationalSpeed;
         double ySpeedDelivered = ySpeedCommanded * DriveConstants.maxTranslationalSpeed;
         double rotDelivered = currentRotation * DriveConstants.maxAngularSpeed;
 
         SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(
             fieldRelative 
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.maxTranslationalSpeed);
@@ -240,7 +273,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void driveRelative(ChassisSpeeds fieldRelativeSpeeds) {
-        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()), 0.02);
+        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(fieldRelativeSpeeds, 0.02);
 
         SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, ModuleConstants.maxSpeed);
@@ -257,6 +290,10 @@ public class Swerve extends SubsystemBase {
         bModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         cModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         dModule.setTargetState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    }
+
+    public void capSpeed() {
+        cappedSpeed = !cappedSpeed;
     }
 
     /** 
@@ -282,7 +319,17 @@ public class Swerve extends SubsystemBase {
 
     /** Zeros the heading of the robot. */
     public void zeroHeading() {
+        gyro.setAngleAdjustment(0.0);
         gyro.reset();
+    }
+
+    /** 
+     * Sets the angle offset of the gyroscope.
+     * 
+     * WARNING: Does not affect `getYaw()` or quaternion values
+     */
+    public void resetHeading(double radians) {
+        gyro.setAngleAdjustment(gyro.getAngleAdjustment() + radians);
     }
 
     /**
@@ -293,6 +340,30 @@ public class Swerve extends SubsystemBase {
     public double getHeading() {
         // Map continuous gyro degrees to -180 to 180
         return Rotation2d.fromDegrees(gyro.getAngle() * (DriveConstants.gyroReversed ? -1.0 : 1.0)).getDegrees();
+    }
+
+    public double getAngle() {
+        return gyro.getAngle() + gyroOffset;
+    }
+
+    public double getAngularVelocity() {
+        return gyro.getRate();
+    }
+
+    public double getTranslationalVelocity() {
+        return Math.sqrt(Math.pow(gyro.getVelocityX(), 2) + Math.pow(gyro.getVelocityY(), 2));
+    }
+
+    public double getTranslationAcceleration() {
+        return Math.sqrt(Math.pow(gyro.getWorldLinearAccelX(), 2) + Math.pow(gyro.getWorldLinearAccelY(), 2));
+    }
+
+    public void setOffset(double offset) {
+        gyroOffset = offset;
+    }
+
+    public double getOffset() {
+        return gyroOffset;
     }
 
     public ChassisSpeeds getSpeeds() {
@@ -311,13 +382,15 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-     * Returns the turn rate of the robot.
+     * Does NOT return the turn rate of the robot. >|;-) (frida khalo's unibrow)
      * 
      * @return The turn rate of the robot, in degrees per second.
      */
     public double getTurnRate() {
         return gyro.getRate() * (DriveConstants.gyroReversed? -1.0: 1.0);
     }
+
+
 
     
     /** 
@@ -336,7 +409,7 @@ public class Swerve extends SubsystemBase {
      */
     private AHRS navxInit() {
         try {
-            return new AHRS(I2C.Port.kOnboard);
+            return new AHRS(I2C.Port.kMXP);
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error instantiating mavX-micro: " + ex.getMessage(), true);
             return null;

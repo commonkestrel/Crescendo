@@ -9,6 +9,28 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+    public static final class AutoConstants {
+        public static final int ampPipeline = 0;
+        public static final double ampDistance = -0.40;
+        public static final double sourceDistance = -0.52;
+
+        public static final double speakerRadius = 1.9;
+
+        public static final double limelightAngle = 46.0;
+
+        public static final double rotKP = 0.01;
+        public static final double rotKI = 0.000001;
+        public static final double rotKD = 0.0001;
+
+        public static final double xKP = 0.6;
+        public static final double xKI = 0.0;
+        public static final double xKD = 0.0;
+
+        public static final double yKP = 0.75;
+        public static final double yKI = 0.00000001;
+        public static final double yKD = 0.0;
+    }
+
     /** 
      * Drivetrain and output control constants.
      * Most are copied from the <a href="https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java">MAXSwerve Java example</a>.
@@ -39,27 +61,27 @@ public final class Constants {
         public static final double[] angularOffsets = {aAngularOffset, bAngularOffset, cAngularOffset, dAngularOffset};
 
         /** Max translaitonal speed (m/s) */
-        public static final double maxTranslationalSpeed = 4.8; // TODO: Actually find this;
+        public static final double maxTranslationalSpeed = 4.8;
+        public static final double kiddieMaxTranslationalSpeed = 1.2; // TODO: Actually find this;
         /** Max angular speed (rads/s) */
-        public static final double maxAngularSpeed = Math.PI; // TODO: Actually find this;
+        public static final double maxAngularSpeed = Units.degreesToRadians(360); // TODO: Actually find this;
+        public static final double maxAngularAccel = Units.degreesToRadians(540);
         /** Max translation acceleration (m/s) */
-        public static final double maxAcceleration = 4.0; // TODO: Actually find this.
+        public static final double maxAcceleration = 3; // TODO: Actually find this.
 
         /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
-        public static final double directionSlewRate = Math.PI / 2;
-        /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
         public static final double magnitudeSlewRate = 1.0;
-        /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+        /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
         public static final double rotationalSlewRate = 2.0;
 
         /** Used to invert the gyroscope direction. */
         public static final boolean gyroReversed = true;
         /** Max input speed. */
-        public static final double speed = 0.5;
+        public static final double speed = 1.0;
 
         public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-            new PIDConstants(5.0, 0.0, 0.0), // TODO: Tune this
-            new PIDConstants(5.0, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
+            new PIDConstants(2.5, 0.0, 0.0), // TODO: Tune this
             ModuleConstants.maxSpeed,
             baseRadius,
             new ReplanningConfig()
@@ -77,7 +99,7 @@ public final class Constants {
          * This changes the drive speed of the module.
          * A pinion gear with more teeth will result in a faster but weaker drivetrain.
          */
-        public static final int drivePinionTeeth = 13;
+        public static final int drivePinionTeeth = 14;
 
         /**
          *  Invert the turning envoder since the output shaft rotates in the
@@ -115,19 +137,19 @@ public final class Constants {
         /** Angular velocity factor for the turn motor (in rads/s). */
         public static final double turnEncoderVelocityFactor = turnEncoderPositionFactor / 60;
 
-        /** Minimum value of the absolute turn encoder. */
+        /** Minimum value of the absolute turn encoder in radians. */
         public static final double turnEncoderPositionPIDMinInput = 0;
-        /** Maximum value of the absolute turn encoder. */
-        public static final double turnEncoderPositionPIDMaxInput = turnEncoderPositionFactor; // radians (rad)
+        /** Maximum value of the absolute turn encoder in radians. */
+        public static final double turnEncoderPositionPIDMaxInput = turnEncoderPositionFactor;
 
-        public static final double driveKP = 0.05;
+        public static final double driveKP = 0.04;
         public static final double driveKI = 0;
         public static final double driveKD = 0;
         public static final double driveFF = 1 / driveWheelFreeRps;
         public static final double driveMinOutput = -1;
         public static final double driveMaxOutput = 1;
 
-        public static final double turnKP = 1;
+        public static final double turnKP = 1.0;
         public static final double turnKI = 0;
         public static final double turnKD = 0;
         public static final double turnFF = 0;
@@ -140,11 +162,78 @@ public final class Constants {
         public static final IdleMode turnMotorIdleMode = IdleMode.kBrake;
 
         /** Drive motor smart current limit (in Amps). */
-        public static final int driveMotorCurrentLimit = 50; // amps (A)
-        /** Rotation motor smart current limit (in Amps).  */
+        public static final int driveMotorCurrentLimit = 40; // amps (A)
+        /** Rotation motor smart current limit (in Amps). */
         public static final int turnMotorCurrentLimit = 20; //amps (A)
 
-        public static final double maxSpeed = 4.5; // TODO: Find this
+        public static final double maxSpeed = 5.2; // TODO: Find this
+    }
+
+    /** Various constants used for the intake subsystem and commands */
+    public static final class IntakeConstants {
+        public static final double distanceFactor = 1.0/4.0 * 1.5 * Math.PI; // gear ratio * wheel radius * pi
+        // TODO: Tune target intake velocity for speaker
+        /** Target intake velocity for shooting into the Speaker */
+        public static final double speakerTarget = 4750;       // TODO: Tune target intake velocity for amp
+        /** Target intake velocity for shooting into the Amp */
+        public static final double ampTarget = 4000;
+        public static final double idleIndexerTarget = 1800;
+        public static final double outtakeIndexerTarget = -4000;
+
+        public static final double idlePrerollerTarget = 2000;
+        public static final double outtakePrerollerTarget = -4000;
+
+        // TODO: Tune intake PID
+        public static final double indexerKP = 0.00001;
+        public static final double indexerKI = 2e-7;
+        public static final double indexerKD = 0.02;
+        public static final double indexerKF = 0.0002;
+
+        public static final double prerollerKP = 0.00001;
+        public static final double prerollerKI = 2e-7;
+        public static final double prerollerKD = 0.02;
+        public static final double prerollerKF = 0.0002;
+    }
+
+    /** Various constants used for the intake shooter and commands */
+    public static final class ShooterConstants {
+        public static final double speakerTarget = 6000;
+        // TODO: Tune target shooter velocity for amp
+        public static final double ampTarget = 3000;
+        // 
+        public static final double idleTarget = 1000;
+        //
+        public static final double intakeTarget = -1000;
+
+        public static final double shootTime = 5.0;
+
+        public static final double motorKP = 0.00005;
+        public static final double motorKI = 0.0;
+        public static final double motorKD = 0.00;
+        public static final double motorKF = 0.000165;
+    }
+
+    /** Various constants used for the climber subsystem and commands */
+    public static final class ClimberConstants {
+        public static final float rightMinPosition = -300.0f;
+        public static final float leftMinPosition = -300.0f;
+        public static final float maxPosition = 0.0f;
+
+        public static final double extendedPosition = maxPosition;
+        // TODO: Tune the climber retract position
+        // I figured make it a little more than `minPosition` to give the PID some room to stablize
+        public static final double retractedPosition = -300.0;
+
+        public static final double conversionFactor = 1.0;// 1.0/16.0 * 2*Math.PI ; // Gear ratio * radius * tau
+        public static final double spikeCurrent = 40.0;
+
+        public static final double leftKP = 1.0;
+        public static final double leftKI = 0.0;
+        public static final double leftKD = 0.0;
+
+        public static final double rightKP = 1.0;
+        public static final double rightKI = 0.0;
+        public static final double rightKD = 0.0;
     }
 
     /** Various motor constants taken from datasheets. */
@@ -160,15 +249,12 @@ public final class Constants {
     }
 
     public static final class IOConstants {
-        public static final int controllerPort = 0;
+        public static final int driveControllerPort = 0;
+        public static final int mechControllerPort = 1;
 
         public static final boolean xyInverted = true;
 
         public static final boolean rotInverted = true;
-
-        public static final double transDeadband = 0.05;
-
-        public static final double rotDeadband = 0.05;
 
         //---------- CAN IDs ------------//
         public static final int aPowerId = 1;
@@ -184,5 +270,94 @@ public final class Constants {
         public static final int dRotId = 8;
 
         public static final int pdhId = 10;
+
+        public static final int indexerId = 11;
+        public static final int shooterId = 12;
+        public static final int prerollerId = 15;
+
+        public static final int climbLeftId = 13;
+        public static final int climbRightId = 14;
+
+        public static final int detectorChannel = 4;
+        public static final int noteBeambreakChannel = 3;
+        public static final int ledPort = 1;
+        public static final int ledLength = 133;
+    }
+
+    public static final class LEDConstants {
+        public static final long flashLength = 1_000_000_000;
+        public static final long fastFlashLength = 250_000_000;
+        public static final double fadePeriod = 2e9;
+    }
+
+    public static final class GameConstants {
+        public static final double noteDiameter = 14.0;
+        public static final double fieldLength = 16.54;
+    }
+
+    public static final class DriverConstants {
+        public static final class Default {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 3.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 3.0;
+        }
+
+        public static final class Jett {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
+
+        public static final class Chris {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
+
+        public static final class Parker {
+            public static final boolean xyInverted = false;
+
+            public static final boolean rotInverted = false;
+    
+            public static final double transDeadband = 0.05;
+    
+            public static final double rotDeadband = 0.05;
+            /** Maximum speed at which the translation vector direction ({@code Math.atan2(y, x)}) can change. Measured in rads/s. */
+            public static final double dirSlewRate = Math.PI / 2;
+            /** Maximum speed at which the translation vector magnitude ({@code Math.sqrt(x*x + y*y)}) can change. Measured in percent/s (1 = 100%). */
+            public static final double magSlewRate = 1.0;
+            /** Maximum speed at which the rotation vector magnitude can change. Measured in percent/s (1 = 100%). */
+            public static final double rotSlewRate = 2.0;
+        }
     }
 }

@@ -1,0 +1,58 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.005357996380792,
+        "y": 3.358642464631628
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.005357996380792,
+        "y": 3.9463705639493134
+      },
+      "isLocked": false,
+      "linkedName": "Fetch Second End"
+    },
+    {
+      "anchor": {
+        "x": 8.260389597702273,
+        "y": 4.134249037728845
+      },
+      "prevControl": {
+        "x": 8.09643788606133,
+        "y": 4.134249037728845
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 2.4,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 178.2465951399285,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Source Start",
+  "previewStartingState": {
+    "rotation": 162.39236955189273,
+    "velocity": 0.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,50 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.708089344106616,
+      "y": 6.683920394867817
+    },
+    "rotation": -119.37567051126861
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Against to Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rampSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot to Against"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Amp Start",
+  "choreoAuto": false
+}

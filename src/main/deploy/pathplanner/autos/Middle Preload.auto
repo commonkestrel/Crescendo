@@ -1,0 +1,50 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.325730468864645,
+      "y": 5.597779868883561
+    },
+    "rotation": 179.7167163793093
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Middle Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rampSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle Reallign"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Middle Start",
+  "choreoAuto": false
+}

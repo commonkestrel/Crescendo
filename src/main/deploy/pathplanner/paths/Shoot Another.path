@@ -1,0 +1,74 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3140618588929502,
+        "y": 6.683920394867817
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5975710772885374,
+        "y": 7.159870186885914
+      },
+      "isLocked": false,
+      "linkedName": "Against to Shoot end"
+    },
+    {
+      "anchor": {
+        "x": 2.850408085316915,
+        "y": 6.998088750275862
+      },
+      "prevControl": {
+        "x": 2.8749270133233384,
+        "y": 7.231018566336882
+      },
+      "nextControl": {
+        "x": 2.803564739133789,
+        "y": 6.553076961536164
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.8104823094892082,
+        "y": 6.153913708721605
+      },
+      "prevControl": {
+        "x": 2.0488372446650063,
+        "y": 6.5520328869417455
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Shoot Another End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 2.4,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -164.30739734185707,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Amp Start",
+  "previewStartingState": {
+    "rotation": -135.29,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

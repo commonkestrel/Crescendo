@@ -1,0 +1,90 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.7364503659425703,
+        "y": 5.597779868883561
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.324370956905011,
+        "y": 6.008968171782498
+      },
+      "isLocked": false,
+      "linkedName": "Middle Shoot End"
+    },
+    {
+      "anchor": {
+        "x": 2.8927727086223416,
+        "y": 5.900431800863602
+      },
+      "prevControl": {
+        "x": 2.881548219989927,
+        "y": 6.117438581090278
+      },
+      "nextControl": {
+        "x": 2.9223735370547677,
+        "y": 5.3281491178366975
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8927727086223416,
+        "y": 5.130810261620524
+      },
+      "prevControl": {
+        "x": 2.8335710517574895,
+        "y": 5.752427658701471
+      },
+      "nextControl": {
+        "x": 2.9519743654871937,
+        "y": 4.5091928645395765
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.6536338921465275,
+        "y": 5.130810261620524
+      },
+      "prevControl": {
+        "x": 2.4479227884166272,
+        "y": 4.839735448701667
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Anotha Middle End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 90.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 2.4,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 161.5,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Middle Start",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0.0
+  },
+  "useDefaultConstraints": true
+}

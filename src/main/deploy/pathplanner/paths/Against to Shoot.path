@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.708089344106616,
+        "y": 6.683920394867817
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.7358234536288891,
+        "y": 6.785612129782819
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.3140618588929502,
+        "y": 6.683920394867817
+      },
+      "prevControl": {
+        "x": 1.249348936674313,
+        "y": 6.563739253604634
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Against to Shoot end"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 2.4,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -135.67,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Amp Start",
+  "previewStartingState": {
+    "rotation": -119.5387822595581,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

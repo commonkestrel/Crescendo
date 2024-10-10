@@ -1,22 +1,27 @@
-package wildlib;
+package wildlib.io;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkRelativeEncoder.Type;
 
-/** Utility class for a Spark Max PID controller */
-public class PIDSparkMax extends CANSparkMax {
+/** 
+ * Utility class for a Spark Max PID controller
+ * 
+ * @author Chris Ibok
+ * @author Jett Bergthold
+ */
+public class PIDSpark extends CANSparkBase {
     private static double kP = 0.2; 
     private static double kI = 1e-4;
     private static double kD = 0; 
 
-    private double kIz = 0; 
-    private double kFF = 0; 
+    private double kIz = 150; 
     
-    private double kMaxOutput = 0.75; 
-    private double kMinOutput = -0.75;
+    private double kMaxOutput = 1; 
+    private double kMinOutput = -1;
 
     private RelativeEncoder m_encoder;
     private SparkPIDController m_controller;
@@ -26,7 +31,14 @@ public class PIDSparkMax extends CANSparkMax {
         kReverse,
     }
 
-    /** Creates a new {@link PIDSparkMax} with default {@code kP}, {@code kI}, {@code kD} values.
+    public static SparkModel SparkMaxModel() {
+        return SparkModel.SparkMax;
+    }
+
+    public static SparkModel SparkFlexModel() {
+        return SparkModel.SparkFlex;
+    }
+    /** Creates a new {@link PIDSpark} with default {@code kP}, {@code kI}, {@code kD} values.
      * <br><br>
      * Default values are:<br><br>
      * <strong><code>kP:</code></strong> <code>0.2</code> <br><br>
@@ -38,11 +50,11 @@ public class PIDSparkMax extends CANSparkMax {
      *             Brushless motor wires must be connected to their matching colors and the hall sensor must be plugged in. 
      *             Brushed motors must be connected to the Red and Black terminals only.
      */
-    public PIDSparkMax(int deviceId, MotorType type) {
-        this(deviceId, type, kP, kI, kD);
+    public PIDSpark(int deviceId, MotorType type, SparkModel model) {
+        this(deviceId, type, model, kP, kI, kD);
     }
 
-    /** Creates a new {@link PIDSparkMax} with specified {@code kP}, {@code kI}, {@code kD} values.
+    /** Creates a new {@link PIDSpark} with specified {@code kP}, {@code kI}, {@code kD} values.
      * 
      * @param deviceId The motor CAN Id
      * @param type The motor type connected to the controller. 
@@ -52,17 +64,47 @@ public class PIDSparkMax extends CANSparkMax {
      * @param integral Sets the {@code kI} of the PID.
      * @param derivative Sets the {@code kD} of the PID.
      */
-    public PIDSparkMax(int deviceId, MotorType type, double proportional, double integral, double derivative) {
-        super(deviceId, type);
-        m_encoder = super.getEncoder();
+    public PIDSpark(int deviceId, MotorType type, SparkModel model, double proportional, double integral, double derivative) {
+        this(deviceId, type, model, proportional, integral, derivative, 0.0);
+    }
+
+    @Override
+    public RelativeEncoder getEncoder() {
+        return m_encoder;
+    }
+
+    /** Creates a new {@link PIDSpark} with specified {@code kP}, {@code kI}, {@code kD} values.
+     * 
+     * @param deviceId The motor CAN Id
+     * @param type The motor type connected to the controller. 
+     *             Brushless motor wires must be connected to their matching colors and the hall sensor must be plugged in. 
+     *             Brushed motors must be connected to the Red and Black terminals only.
+     * @param proportional Sets the {@code kP} of the PID.
+     * @param integral Sets the {@code kI} of the PID.
+     * @param derivative Sets the {@code kD} of the PID.
+     * @param feedforward Sets the {@code kFF} of the PID.
+     */
+    public PIDSpark(int deviceId, MotorType type, SparkModel model, double proportional, double integral, double derivative, double feedforward) {
+        super(deviceId, type, model);
+        switch (model) {
+        case SparkMax:
+            m_encoder = super.getEncoder(Type.kHallSensor, 42);
+            break;
+        case SparkFlex:
+            m_encoder = super.getEncoder(Type.kQuadrature, 7168);
+            break;
+        default:
+            // TODO: Add exception
+            break;
+        }
         m_controller = super.getPIDController();
 
         m_controller.setP(proportional);
         m_controller.setI(integral);
         m_controller.setD(derivative);
+        m_controller.setFF(feedforward);
         
         m_controller.setIZone(kIz);
-        m_controller.setFF(kFF);
         m_controller.setOutputRange(kMinOutput, kMaxOutput);
     }
 
@@ -107,13 +149,23 @@ public class PIDSparkMax extends CANSparkMax {
     }
 
     /** 
-     * Overwrites the current position of the motor encoder.
+     * Sets the controller reference position.
      * 
      * @param position The reference position to use in the PID.
      * @return {@link REVLibError#kOk} if successful.
      */
-    public REVLibError setTargetPostion(double position) {
+    public REVLibError setTargetPosition(double position) {
         return m_controller.setReference(position, ControlType.kPosition);
+    }
+
+    /**
+     * Sets the controller reference velocity.
+     *  
+     * @param velocity The reference velocity to use in the PID.
+     * @return {@link REVLibError#kOk} if successful.
+     */
+    public REVLibError setTargetVelocity(double velocity) {
+        return m_controller.setReference(velocity, ControlType.kVelocity);
     }
 
     /**
